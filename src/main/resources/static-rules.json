@@ -1,0 +1,82 @@
+[
+  {
+    "type": "SIMPLE",
+    "logic": "",
+    "condition": {
+      "field": "creditScore",
+      "operator": ">",
+      "value": 750
+    },
+    "action": "APPROVE"
+  },
+  {
+    "type": "COMPOSITE",
+    "logic": "AND",
+    "condition": {
+      "conditions": [
+        {
+          "field": "creditScore",
+          "operator": ">",
+          "value": 700
+        },
+        {
+          "field": "income",
+          "operator": ">=",
+          "value": 50000
+        }
+      ]
+    },
+    "action": "APPROVE"
+  },
+  {
+    "type": "COMPOSITE",
+    "logic": "OR",
+    "condition": {
+      "conditions": [
+        {
+          "field": "employmentType",
+          "operator": "==",
+          "value": "Salaried"
+        },
+        {
+          "field": "yearsAtJob",
+          "operator": ">",
+          "value": 5
+        }
+      ]
+    },
+    "action": "APPROVE"
+  },
+  {
+    "type": "COMPOSITE",
+    "logic": "AND",
+    "condition": {
+      "conditions": [
+        {
+          "field": "creditScore",
+          "operator": "<",
+          "value": 600
+        },
+        {
+          "type": "COMPOSITE",
+          "logic": "OR",
+          "condition": {
+            "conditions": [
+              {
+                "field": "income",
+                "operator": "<",
+                "value": 30000
+              },
+              {
+                "field": "hasExistingLoan",
+                "operator": "==",
+                "value": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "action": "REJECT"
+  }
+]
