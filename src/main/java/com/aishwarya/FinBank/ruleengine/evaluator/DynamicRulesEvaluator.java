@@ -1,4 +1,5 @@
 package com.aishwarya.FinBank.ruleengine.evaluator;
 
-public class DslRulesEvaluator {
+public class DynamicRulesEvaluator {
+
 }

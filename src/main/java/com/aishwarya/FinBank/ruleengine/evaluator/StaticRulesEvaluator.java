@@ -1,11 +1,10 @@
 package com.aishwarya.FinBank.ruleengine.evaluator;
 
 import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.ruleengine.evaluation.RuleEvaluation;
-import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleEvaluationFactory;
-import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleEvaluationFactory;
+import com.aishwarya.FinBank.ruleengine.condition.RuleCondition;
+import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleFactory;
+import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleFactory;
 import com.aishwarya.FinBank.ruleengine.loader.StaticRuleLoader;
-import com.aishwarya.FinBank.ruleengine.model.Condition;
 import com.aishwarya.FinBank.ruleengine.model.Rule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,34 +19,34 @@ public class StaticRulesEvaluator implements RuleEvaluator{
 
     private StaticRuleLoader ruleLoader;
     @Autowired
-    private @Qualifier("compositeRuleCondition") RuleEvaluation compositeRuleCondition;
+    private @Qualifier("compositeRuleCondition") RuleCondition compositeRuleCondition;
 
     @Autowired
-    private @Qualifier("simpleRuleCondition") RuleEvaluation simpleRuleCondition;
+    private @Qualifier("simpleRuleCondition") RuleCondition simpleRuleCondition;
     @Autowired
-    private SimpleRuleEvaluationFactory factory;
+    private SimpleRuleFactory factory;
     @Autowired
-    private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
+    private CompositeRuleFactory compositeRuleEvaluationFactory;
 
     @Override
     public void evaluate(LoanApplication application,List<Rule> rules) {
         for (Rule rule : rules) {
             if(rule.getType() == null || rule.getType().equals("SIMPLE")){
-                Condition condition = rule.getCondition();
+                com.aishwarya.FinBank.ruleengine.model.Condition condition = rule.getCondition();
                 evaluateCondition(application, condition);
             }
             else if(rule.getType().equals("COMPOSITE")){
 //                List<Object> conditions = rule.getCondition().getConditions();
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode ruleNode = mapper.valueToTree(rule);
-                RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.fromJson(ruleNode);
+                RuleCondition compositeRuleEvaluationObject = compositeRuleEvaluationFactory.fromJson(ruleNode);
                 compositeRuleEvaluationObject.evaluate(application);
             }
         }
     }
 
-    public void evaluateCondition(LoanApplication application,Condition condition){
-        RuleEvaluation simpleRuleEvaluationObject = factory.createSimpleCondition(condition.getField(), condition.getOperator(), condition.getValue());
+    public void evaluateCondition(LoanApplication application, com.aishwarya.FinBank.ruleengine.model.Condition condition){
+        RuleCondition simpleRuleEvaluationObject = factory.createSimpleCondition(condition.getField(), condition.getOperator(), condition.getValue());
         boolean result = simpleRuleEvaluationObject.evaluate(application);
     }
 }

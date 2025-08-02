@@ -10,19 +10,18 @@ import java.util.List;
 @Scope("prototype")
 public class Condition {
     public String operator;
-    public String value;
+    public Object value;
     public String field;
-    private List<Object> conditions;
+    private List<Object> conditions;  // can be of type Rule or Condition
 
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
     public String getOperator() {
         return operator;
     }
-
 
     public String getField() {
         return field;

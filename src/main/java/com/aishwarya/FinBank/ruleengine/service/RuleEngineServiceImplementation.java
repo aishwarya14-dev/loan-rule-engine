@@ -1,13 +1,11 @@
 package com.aishwarya.FinBank.ruleengine.service;
 
 import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.ruleengine.evaluator.DslRulesEvaluator;
-import com.aishwarya.FinBank.ruleengine.evaluator.RuleEvaluator;
+import com.aishwarya.FinBank.ruleengine.evaluator.DynamicRulesEvaluator;
 import com.aishwarya.FinBank.ruleengine.evaluator.StaticRulesEvaluator;
 import com.aishwarya.FinBank.ruleengine.loader.StaticRuleLoader;
 import com.aishwarya.FinBank.ruleengine.model.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +17,7 @@ public class RuleEngineServiceImplementation implements RuleEngineService{
     StaticRulesEvaluator staticEvaluator;
 
     @Autowired
-    DslRulesEvaluator dslEvaluator;
+    DynamicRulesEvaluator dslEvaluator;
 
     @Autowired
     private StaticRuleLoader ruleLoader;

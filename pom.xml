@@ -11,7 +11,7 @@
 	<groupId>com.aishwarya</groupId>
 	<artifactId>FinBank</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>FinBank – Smart Credit Risk Engine</name>
+	<type>FinBank – Smart Credit Risk Engine</type>
 	<description>Rule engine for fintech</description>
 	<url/>
 	<licenses>

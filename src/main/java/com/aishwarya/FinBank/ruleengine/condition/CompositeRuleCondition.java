@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.evaluation;
+package com.aishwarya.FinBank.ruleengine.condition;
 
 import com.aishwarya.FinBank.model.LoanApplication;
 import org.springframework.stereotype.Component;
@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component("compositeRuleCondition")
-public class CompositeRuleEvaluation implements RuleEvaluation {
+public class CompositeRuleCondition implements RuleCondition {
     private String logic;
-    private List<RuleEvaluation> ruleConditions;
+    private List<RuleCondition> ruleConditions;
 
     @Override
     public boolean evaluate(LoanApplication application) {
@@ -23,7 +23,7 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
         this.logic = logic;
     }
 
-    public void setRuleConditions(List<RuleEvaluation> ruleConditions) {
+    public void setRuleConditions(List<RuleCondition> ruleConditions) {
         this.ruleConditions = ruleConditions;
     }
 }

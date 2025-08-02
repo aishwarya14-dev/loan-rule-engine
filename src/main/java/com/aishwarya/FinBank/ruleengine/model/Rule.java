@@ -10,8 +10,15 @@ import java.util.List;
 public class Rule {
     private Condition condition;
     private Action action;
-    private Logic logic;
+    private String logic;
     private String type;
+
+    public Rule(Condition condition, Action action, String logic, String type) {
+        this.condition = condition;
+        this.action = action;
+        this.logic = logic;
+        this.type = type;
+    }
 
 
     public Condition getCondition() {
@@ -22,7 +29,7 @@ public class Rule {
         return action;
     }
 
-    public Logic getLogic() {
+    public String getLogic() {
         return logic;
     }
 
@@ -30,3 +37,4 @@ public class Rule {
         return type;
     }
 }
+

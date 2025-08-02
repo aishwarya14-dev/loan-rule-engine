@@ -1,11 +1,13 @@
 package com.aishwarya.FinBank.model;
 
+import com.aishwarya.FinBank.ruleengine.model.Action;
+import com.aishwarya.FinBank.ruleengine.model.Condition;
+import com.aishwarya.FinBank.ruleengine.model.Logic;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.springframework.context.annotation.Scope;
-
-import java.util.Map;
 
 @Scope("prototype")
 @Entity
@@ -14,33 +16,32 @@ public class DslRule {
 
         @Id
         private int id;
-        private String name;
-//        private Map<String,Object> conditionParams;
-//        private Map<String,Object> actionParams;
+        private String type;
+        private String logic;
+        @Column(columnDefinition = "JSON")
+        private Condition condition;
+        private Action action;
 
-        public String getName() {
-            return name;
+
+        public String getType() {
+            return type;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setType(String type) {
+            this.type = type;
         }
 
 
-//        public Map<String, Object> getConditionParams() {
-//            return conditionParams;
-//        }
-//
-//        public void setConditionParams(Map<String, Object> conditionParams) {
-//            this.conditionParams = conditionParams;
-//        }
-//
-//        public Map<String, Object> getActionParams() {
-//            return actionParams;
-//        }
-//
-//        public void setActionParams(Map<String, Object> actionParams) {
-//            this.actionParams = actionParams;
-//        }
+        public String getLogic() {
+          return logic;
+        }
 
+
+        public Condition getCondition() {
+          return condition;
+        }
+
+        public Action getAction() {
+          return action;
+        }
 }

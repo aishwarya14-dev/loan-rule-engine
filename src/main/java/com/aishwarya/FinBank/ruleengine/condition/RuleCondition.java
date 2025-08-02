@@ -1,7 +1,7 @@
-package com.aishwarya.FinBank.ruleengine.evaluation;
+package com.aishwarya.FinBank.ruleengine.condition;
 
 import com.aishwarya.FinBank.model.LoanApplication;
 
-public interface RuleEvaluation {
+public interface RuleCondition {
     boolean evaluate(LoanApplication application);
 }

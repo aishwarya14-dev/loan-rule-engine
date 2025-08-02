@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.evaluation;
+package com.aishwarya.FinBank.ruleengine.condition;
 
 import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.utility.ComparisonEvaluator;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component("simpleRuleCondition")
-public class SimpleRuleEvaluation implements RuleEvaluation {
+public class SimpleRuleCondition implements RuleCondition {
     private String field;
     private String operator;
     private Object expectedValue;
     private FieldAccessorRegistry registry;
 
-    public SimpleRuleEvaluation(String field, String operator, Object value, FieldAccessorRegistry registry) {
+    public SimpleRuleCondition(String field, String operator, Object value, FieldAccessorRegistry registry) {
         this.field = field;
         this.operator = operator;
         this.expectedValue = value;
