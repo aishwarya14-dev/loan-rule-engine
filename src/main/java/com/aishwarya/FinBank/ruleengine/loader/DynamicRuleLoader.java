@@ -2,11 +2,9 @@ package com.aishwarya.FinBank.ruleengine.loader;
 
 import com.aishwarya.FinBank.model.DslRule;
 import com.aishwarya.FinBank.repository.RuleRepository;
-import com.aishwarya.FinBank.ruleengine.condition.RuleCondition;
-import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleFactory;
-import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleFactory;
+import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleEvaluationFactory;
+import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleEvaluationFactory;
 import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,10 +22,10 @@ public class DynamicRuleLoader implements RuleLoader {
     private ObjectMapper mapper;
 
     @Autowired
-    private SimpleRuleFactory simpleRuleEvaluationFactory;
+    private SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
 
     @Autowired
-    private CompositeRuleFactory compositeRuleEvaluationFactory;
+    private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
 
     @Override
     public List<Rule> loadRules() {
@@ -35,11 +33,11 @@ public class DynamicRuleLoader implements RuleLoader {
         List<Rule> rules = new ArrayList<>();
 
         for (DslRule entity : entities) {
-            try {
-                Rule rule = new Rule(entity.getCondition(), entity.getAction(), entity.getLogic(), entity.getType());
-                rules.add(rule);
-            } catch (Exception e) {
-            }
+//            try {
+//                Rule rule = new Rule(entity.getCondition(), entity.getAction(), entity.getLogic(), entity.getType());
+//                rules.add(rule);
+//            } catch (Exception e) {
+//            }
         }
         return rules;
     }

@@ -15,7 +15,6 @@ public class RulesController {
 
     @PostMapping("/rules/dsl")
     public void acceptRules(@RequestBody RulesRequestDto rulesRequestDto) {
-
         ruleService.processRules(rulesRequestDto);
 
     }

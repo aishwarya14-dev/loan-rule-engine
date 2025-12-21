@@ -58,22 +58,28 @@
           "value": 600
         },
         {
-          "type": "COMPOSITE",
-          "logic": "OR",
-          "condition": {
-            "conditions": [
-              {
-                "field": "income",
-                "operator": "<",
-                "value": 30000
-              },
-              {
-                "field": "hasExistingLoan",
-                "operator": "==",
-                "value": true
-              }
-            ]
-          }
+          "field": "debtToIncomeRatio",
+          "operator": ">",
+          "value": 40
+        }
+      ]
+    },
+    "action": "REJECT"
+  },
+  {
+    "type": "COMPOSITE",
+    "logic": "OR",
+    "condition": {
+      "conditions": [
+        {
+          "field": "income",
+          "operator": "<",
+          "value": 30000
+        },
+        {
+          "field": "hasExistingLoan",
+          "operator": "==",
+          "value": true
         }
       ]
     },

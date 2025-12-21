@@ -1,5 +1,8 @@
 package com.aishwarya.FinBank.dto.loanApplication;
 
+import com.aishwarya.FinBank.model.EmploymentType;
+import com.aishwarya.FinBank.model.JobTitle;
+import com.aishwarya.FinBank.model.Region;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -29,6 +32,9 @@ public class LoanApplicationRequestDto {
     double interestRate;
     @Positive @Min(15)
     int tenureMonths;
+    JobTitle title;
+    Region region;
+    EmploymentType employmentType;
 
     public LoanApplicationRequestDto(int userId, String loanType,  String applicantName, String applicantEmail, String applicantContact, int creditScore, String remarks, BigDecimal monthlyIncome, int existingLoans, BigDecimal loanAmount, double interestRate, int tenureMonths) {
         this.userId = userId;

@@ -18,7 +18,7 @@ public class StaticRuleLoader implements RuleLoader{
     @Override
     public List<Rule> loadRules() {
        try {
-           List<Rule> rules = objectMapper.readValue(new File("src/main/resources/static/static-rules.json"),new TypeReference<List<Rule>>() {});
+           List<Rule> rules = objectMapper.readValue(new File("src/main/resources/static-rules.json"),new TypeReference<List<Rule>>() {});
            return rules;
        }
        catch (IOException e){

@@ -1,27 +1,25 @@
 package com.aishwarya.FinBank.model;
 
-import com.aishwarya.FinBank.ruleengine.model.Action;
-import com.aishwarya.FinBank.ruleengine.model.Condition;
-import com.aishwarya.FinBank.ruleengine.model.Logic;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Type;
 import org.springframework.context.annotation.Scope;
 
 @Scope("prototype")
 @Entity
 @Table(name = "rule")
 public class DslRule {
-
         @Id
         private int id;
         private String type;
         private String logic;
-        @Column(columnDefinition = "JSON")
+        @Type(JsonBinaryType.class)
+        @Column(columnDefinition = "jsonb")
         private Condition condition;
-        private Action action;
-
+        private String action;
 
         public String getType() {
             return type;
@@ -31,17 +29,15 @@ public class DslRule {
             this.type = type;
         }
 
-
         public String getLogic() {
           return logic;
         }
-
 
         public Condition getCondition() {
           return condition;
         }
 
-        public Action getAction() {
+        public String getAction() {
           return action;
         }
 }

@@ -1,8 +1,6 @@
 package com.aishwarya.FinBank.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.context.annotation.Scope;
 
 
@@ -14,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "loan_application")
 public class LoanApplication {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     int userId;
     LoanType loanType;
