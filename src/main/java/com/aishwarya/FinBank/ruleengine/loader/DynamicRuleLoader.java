@@ -33,11 +33,11 @@ public class DynamicRuleLoader implements RuleLoader {
         List<Rule> rules = new ArrayList<>();
 
         for (DslRule entity : entities) {
-//            try {
-//                Rule rule = new Rule(entity.getCondition(), entity.getAction(), entity.getLogic(), entity.getType());
-//                rules.add(rule);
-//            } catch (Exception e) {
-//            }
+            try {
+                Rule rule = new Rule(entity.getCondition(), entity.getAction(), entity.getLogic(), entity.getType());
+                rules.add(rule);
+            } catch (Exception e) {
+            }
         }
         return rules;
     }

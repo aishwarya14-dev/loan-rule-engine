@@ -1,8 +1,8 @@
 grammar LoanRules;
 
-//@header {
-//package com.aishwarya.FinBank.antlr4;
-//}
+@header {
+package com.aishwarya.FinBank.antlr4;
+}
 
 options {
     visitor = true;
