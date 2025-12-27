@@ -30,10 +30,6 @@ public class DslRule {
             return type;
         }
 
-        public void setType(RuleType type) {
-            this.type = type;
-        }
-
         public Logic getLogic() {
           return logic;
         }

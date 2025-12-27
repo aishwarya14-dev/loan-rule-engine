@@ -138,7 +138,7 @@
 						<configuration>
 							<visitor>true</visitor>
 							<listener>true</listener>
-							<outputDirectory>src/main/antlr4</outputDirectory>
+							<outputDirectory>${project.build.directory}/generated-sources/antlr4</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
