@@ -24,15 +24,20 @@ public class RuleEngineServiceImplementation implements RuleEngineService{
     @Qualifier("staticRuleLoader")
     private RuleLoader staticRuleLoader;
 
+    @Autowired
+    @Qualifier("staticRuleLoader")
+    private RuleLoader dynamicRuleLoader;
+
 
     public void evaluateLoanApplication(LoanApplication application,String mode) {
         if ("STATIC".equalsIgnoreCase(mode)) {
             List<Rule> rules = staticRuleLoader.loadRules();
             boolean result = staticEvaluator.evaluateRules(application,rules);
         }
-//        else if ("DSL".equalsIgnoreCase(mode)) {
-//            staticEvaluator.evaluate(application);
-//        }
+        else if ("DSL".equalsIgnoreCase(mode)) {
+            List<Rule> rules = dynamicRuleLoader.loadRules();
+            boolean result = dslEvaluator.evaluateRules(application,rules);
+        }
         else {
             throw new IllegalArgumentException("Invalid mode: " + mode);
         }
