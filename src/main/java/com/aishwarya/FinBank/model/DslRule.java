@@ -14,15 +14,9 @@ import org.hibernate.annotations.Type;
 import org.springframework.context.annotation.Scope;
 
 @Scope("prototype")
-@Entity
-@Table(name = "rule")
 public class DslRule {
-        @Id
-        private int id;
         private RuleType type;
         private Logic logic;
-        @Type(JsonBinaryType.class)
-        @Column(columnDefinition = "jsonb")
         private Condition condition;
         private Action action;
 

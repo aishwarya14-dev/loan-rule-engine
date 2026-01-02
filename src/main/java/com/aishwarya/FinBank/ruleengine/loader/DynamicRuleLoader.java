@@ -1,11 +1,7 @@
 package com.aishwarya.FinBank.ruleengine.loader;
-
-import com.aishwarya.FinBank.model.DslRule;
 import com.aishwarya.FinBank.repository.RuleRepository;
-import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleEvaluationFactory;
-import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleEvaluationFactory;
 import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.aishwarya.FinBank.ruleengine.parser.DslRulesParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,25 +15,25 @@ public class DynamicRuleLoader implements RuleLoader {
     private RuleRepository repository;
 
     @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
-
-    @Autowired
-    private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
+    private DslRulesParser parser;
 
     @Override
     public List<Rule> loadRules() {
-        List<DslRule> entities = repository.findAll();
         List<Rule> rules = new ArrayList<>();
-
-        for (DslRule entity : entities) {
-            try {
-                Rule rule = new Rule(entity.getCondition(), entity.getAction(), entity.getLogic(), entity.getType());
-                rules.add(rule);
-            } catch (Exception e) {
+        try {
+            List<String> entities = repository.findAll();
+            for(String dslRule : entities) {
+                try {
+                    Rule parsedRule = parser.parseDslRule(dslRule);
+                    rules.add(parsedRule);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
         return rules;
     }

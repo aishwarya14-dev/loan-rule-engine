@@ -1,28 +1,27 @@
-package com.aishwarya.FinBank.service;
+package com.aishwarya.FinBank.ruleengine.parser;
 
 import com.aishwarya.FinBank.LoanRulesLexer;
 import com.aishwarya.FinBank.LoanRulesParser;
 import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.aishwarya.FinBank.ruleengine.parser.LoanRulesVisitor;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.RuleEvaluation;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 
-@Service
-public class DslRulesParserService {
+@Component
+public class DslRulesParser {
     public Rule parseDslRule(String dslRule) {
 
         CharStream charStream = CharStreams.fromString(dslRule);
         LoanRulesLexer lexer = new LoanRulesLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         LoanRulesParser parser = new LoanRulesParser(tokens);
-        ParseTree tree = parser.statement();
+        LoanRulesParser.StatementContext tree = parser.statement();
 
         LoanRulesVisitor visitor = new LoanRulesVisitor();
-        return visitor.visit(tree);
+        return visitor.visitStatement(tree);
     }
 }

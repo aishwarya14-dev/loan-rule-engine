@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RuleRepository extends JpaRepository<DslRule,Integer> {
+public interface RuleRepository extends JpaRepository<String,Integer> {
 }
