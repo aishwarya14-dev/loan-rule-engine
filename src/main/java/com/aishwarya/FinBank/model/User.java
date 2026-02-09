@@ -1,27 +1,35 @@
 package com.aishwarya.FinBank.model;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
+@Data
+@Entity
+@Table(name="users")
 public class User {
     @Id
-    private String email;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String username;
     private String password;
 
     public User(String email,String password){
-        this.email = email;
+        this.username = email;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {

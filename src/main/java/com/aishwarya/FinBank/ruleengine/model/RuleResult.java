@@ -2,8 +2,8 @@ package com.aishwarya.FinBank.ruleengine.model;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class RuleResult {
+
     private boolean passed;
     private String message;
     private Object expectedValue;

@@ -20,21 +20,21 @@ public class DynamicRuleLoader implements RuleLoader {
     @Override
     public List<Rule> loadRules() {
         List<Rule> rules = new ArrayList<>();
-        try {
-            List<String> entities = repository.findAll();
-            for(String dslRule : entities) {
-                try {
-                    Rule parsedRule = parser.parseDslRule(dslRule);
-                    rules.add(parsedRule);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            List<String> entities = repository.findAll();
+//            for(String dslRule : entities) {
+//                try {
+//                    Rule parsedRule = parser.parseDslRule(dslRule);
+//                    rules.add(parsedRule);
+//                }
+//                catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return rules;
     }
 }

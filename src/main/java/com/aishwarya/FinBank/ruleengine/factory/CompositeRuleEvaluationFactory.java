@@ -22,8 +22,6 @@ public class CompositeRuleEvaluationFactory {
     @Autowired
     private SimpleRuleEvaluationFactory factory;
 
-    @Autowired
-    private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
 
     public RuleEvaluation createCompositeRule(Logic logic, List<Condition> conditions) {
         CompositeRuleEvaluation compositeRuleEvaluation = context.getBean(CompositeRuleEvaluation.class);
@@ -34,7 +32,7 @@ public class CompositeRuleEvaluationFactory {
             if (condition instanceof CompositeCondition) {
                 CompositeCondition compositeCondition = (CompositeCondition) condition;
                 List<Condition> subConditions = compositeCondition.getConditions();
-                RuleEvaluation subCompositeRuleEvaluation = compositeRuleEvaluationFactory.createCompositeRule(compositeCondition.getLogic(), subConditions);
+                RuleEvaluation subCompositeRuleEvaluation = createCompositeRule(compositeCondition.getLogic(), subConditions);
                 ruleEvaluations.add(subCompositeRuleEvaluation);
             } else {
                 SimpleRuleEvaluation simpleRuleEvaluation = (SimpleRuleEvaluation) factory.createSimpleRule(
