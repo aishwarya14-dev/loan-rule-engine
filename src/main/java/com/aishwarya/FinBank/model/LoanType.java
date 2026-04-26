@@ -1,10 +1,29 @@
 package com.aishwarya.FinBank.model;
 
-public enum LoanType {
-    PERSONAL,
-    HOME,
-    AUTO,
-    EDUCATION,
-    BUSINESS,
-    OTHER
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+@Entity
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+public class LoanType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "loan_type")
+    private String loanType;
+    private String description;
+    @Column(name = "interest_rate")
+    private Double interestRate;
+    @Column(name = "max_term_in_months")
+    private int maxTermInMonths;
+    @Column(name = "max_loan_amount")
+    private BigDecimal maxLoanAmount;
 }

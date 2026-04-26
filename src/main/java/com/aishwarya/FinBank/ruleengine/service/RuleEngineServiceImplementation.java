@@ -4,14 +4,14 @@ import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.ruleengine.evaluator.DynamicRulesEvaluator;
 import com.aishwarya.FinBank.ruleengine.evaluator.StaticRulesEvaluator;
 import com.aishwarya.FinBank.ruleengine.loader.RuleLoader;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.ruleengine.model.RulePOJO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 public class RuleEngineServiceImplementation implements RuleEngineService{
 
     @Autowired
@@ -25,18 +25,18 @@ public class RuleEngineServiceImplementation implements RuleEngineService{
     private RuleLoader staticRuleLoader;
 
     @Autowired
-    @Qualifier("staticRuleLoader")
+    @Qualifier("dslRuleLoader")
     private RuleLoader dynamicRuleLoader;
 
 
     public void evaluateLoanApplication(LoanApplication application,String mode) {
         if ("STATIC".equalsIgnoreCase(mode)) {
-            List<Rule> rules = staticRuleLoader.loadRules();
-            boolean result = staticEvaluator.evaluateRules(application,rules);
+            List<RulePOJO> rulePOJOS = staticRuleLoader.loadRules();
+            boolean result = staticEvaluator.evaluateRules(application, rulePOJOS);
         }
         else if ("DSL".equalsIgnoreCase(mode)) {
-            List<Rule> rules = dynamicRuleLoader.loadRules();
-            boolean result = dslEvaluator.evaluateRules(application,rules);
+            List<RulePOJO> rulePOJOS = dynamicRuleLoader.loadRules();
+            boolean result = dslEvaluator.evaluateRules(application, rulePOJOS);
         }
         else {
             throw new IllegalArgumentException("Invalid mode: " + mode);

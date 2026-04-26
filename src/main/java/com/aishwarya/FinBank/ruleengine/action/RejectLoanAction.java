@@ -10,6 +10,6 @@ import java.util.Map;
 public class RejectLoanAction implements RuleAction {
     @Override
     public void applyAction(LoanApplication application) {
-       application.setStatus(ApplicationStatus.REJECTED);
+//       application.upda(ApplicationStatus.REJECTED);
     }
 }

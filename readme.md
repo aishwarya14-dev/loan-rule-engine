@@ -1,0 +1,1 @@
+You define the rules of your custom DSL in an ANTLR grammar file, and ANTLR creates the parser to understand it.

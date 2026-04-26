@@ -6,13 +6,9 @@ import com.aishwarya.FinBank.ruleengine.model.RuleResult;
 import com.aishwarya.FinBank.utility.ComparisonEvaluator;
 import com.aishwarya.FinBank.utility.FieldAccessorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.util.function.Function;
 
-@Component
-@Scope("prototype")
+
 public class SimpleRuleEvaluation implements RuleEvaluation {
     private String field;
     private String operator;
@@ -35,6 +31,6 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
 
         boolean result = ComparisonEvaluator.evaluate(actualValue, expectedValue,operator);
         String message = messageGenerator.generateMessage(field + " " + expectedValue, result);
-        return new RuleResult(result, message, expectedValue);
+        return new RuleResult(result, message, expectedValue, application);
     }
 }

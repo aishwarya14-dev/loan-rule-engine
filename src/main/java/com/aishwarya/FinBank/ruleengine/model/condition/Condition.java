@@ -1,6 +1,27 @@
 package com.aishwarya.FinBank.ruleengine.model.condition;
+import com.aishwarya.FinBank.utility.Operator;
 
 
-public sealed interface Condition
-        permits SimpleCondition, CompositeCondition {
+public class Condition implements Expression {
+    private String field;
+    private Operator operator;
+    private int value;
+
+    public Condition(String field, Operator operator, int value) {
+        this.field = field;
+        this.operator = operator;
+        this.value = value;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public Operator getOperator() {
+        return operator;
+    }
+
+    public int getValue() {
+        return value;
+    }
 }

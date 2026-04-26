@@ -11,6 +11,6 @@ public class ApproveLoanAction implements RuleAction {
 
     @Override
     public void applyAction(LoanApplication application) {
-       application.setStatus(ApplicationStatus.APPROVED);
+//       application.setStatus(ApplicationStatus.APPROVED);
     }
 }

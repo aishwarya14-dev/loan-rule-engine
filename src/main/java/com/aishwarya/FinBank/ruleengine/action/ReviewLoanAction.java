@@ -10,6 +10,6 @@ import java.util.Map;
 public class ReviewLoanAction implements RuleAction {
     @Override
     public void applyAction(LoanApplication application) {
-       application.setStatus(ApplicationStatus.UNDER_REVIEW);
+//       application.setStatus(ApplicationStatus.UNDER_REVIEW);
     }
 }

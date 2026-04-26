@@ -19,7 +19,6 @@ public class LoanService {
     private LoanApplicationMapper mapper;
 
 
-
     public void acceptLoanApplication(LoanApplicationRequestDto application) {
         LoanApplication application1 =  createLoanApplication(application);
         ruleEngineService.evaluateLoanApplication(application1, "STATIC");

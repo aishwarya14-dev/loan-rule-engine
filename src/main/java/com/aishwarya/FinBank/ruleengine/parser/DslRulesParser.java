@@ -2,18 +2,16 @@ package com.aishwarya.FinBank.ruleengine.parser;
 
 import com.aishwarya.FinBank.LoanRulesLexer;
 import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.aishwarya.FinBank.ruleengine.rule_evaluation.RuleEvaluation;
+import com.aishwarya.FinBank.ruleengine.model.RulePOJO;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class DslRulesParser {
-    public Rule parseDslRule(String dslRule) {
+    public RulePOJO parseDslRule(String dslRule) {
 
         CharStream charStream = CharStreams.fromString(dslRule);
         LoanRulesLexer lexer = new LoanRulesLexer(charStream);
