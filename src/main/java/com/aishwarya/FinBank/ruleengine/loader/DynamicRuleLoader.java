@@ -1,6 +1,6 @@
 package com.aishwarya.FinBank.ruleengine.loader;
 import com.aishwarya.FinBank.ruleengine.model.DslRule;
-import com.aishwarya.FinBank.ruleengine.model.RulePOJO;
+import com.aishwarya.FinBank.ruleengine.model.Rule;
 import com.aishwarya.FinBank.ruleengine.parser.DslRulesParser;
 import com.aishwarya.FinBank.ruleengine.repository.RuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ public class DynamicRuleLoader implements RuleLoader {
     private DslRulesParser parser;
 
     @Override
-    public List<RulePOJO> loadRules() {
-        List<RulePOJO> rulePOJOS = new ArrayList<>();
+    public List<Rule> loadRules() {
+        List<Rule> rules = new ArrayList<>();
         try {
             List<DslRule> entities = repository.findAll();
             for(DslRule dslRule : entities) {
                 try {
-                    RulePOJO parsedRulePOJO = parser.parseDslRule(dslRule.getDslRule());
-                    rulePOJOS.add(parsedRulePOJO);
+                    Rule parsedRule = parser.parseDslRule(dslRule.getDslRule());
+                    rules.add(parsedRule);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -36,6 +36,6 @@ public class DynamicRuleLoader implements RuleLoader {
         catch (Exception e) {
             e.printStackTrace();
         }
-        return rulePOJOS;
+        return rules;
     }
 }

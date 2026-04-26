@@ -4,7 +4,7 @@ package com.aishwarya.FinBank.service;
 import com.aishwarya.FinBank.LoanRulesLexer;
 import com.aishwarya.FinBank.LoanRulesParser;
 import com.aishwarya.FinBank.dto.rules.RulesRequestDto;
-import com.aishwarya.FinBank.ruleengine.model.RulePOJO;
+import com.aishwarya.FinBank.ruleengine.model.Rule;
 import com.aishwarya.FinBank.ruleengine.parser.LoanRulesVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RuleService {
-    public RulePOJO processRules(RulesRequestDto rulesRequestDto) {
+    public Rule processRules(RulesRequestDto rulesRequestDto) {
         String dslRule = rulesRequestDto.getRuleText();
         CharStream charStream = CharStreams.fromString(dslRule);
         LoanRulesLexer lexer = new LoanRulesLexer(charStream);

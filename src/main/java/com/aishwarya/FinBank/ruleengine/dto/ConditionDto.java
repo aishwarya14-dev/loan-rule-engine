@@ -1,4 +1,5 @@
-package com.aishwarya.FinBank.ruleengine.model.condition;
+package com.aishwarya.FinBank.ruleengine.dto;
+
 import com.aishwarya.FinBank.utility.Operator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,12 +8,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Condition implements Expression {
+public class ConditionDto implements ExpressionDto {
     private String field;
     private Operator operator;
     private int value;
 
-    public Condition(String field, Operator operator, int value) {
+    public ConditionDto(String field, Operator operator, int value) {
         this.field = field;
         this.operator = operator;
         this.value = value;

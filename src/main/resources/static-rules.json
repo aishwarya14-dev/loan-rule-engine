@@ -1,88 +1,154 @@
 [
   {
     "type": "SIMPLE",
-    "logic": "",
-    "condition": {
+    "action": "APPROVE",
+    "expression": {
+      "expressionType": "CONDITION",
       "field": "creditScore",
       "operator": ">",
       "value": 750
-    },
-    "action": "APPROVE"
+    }
   },
   {
     "type": "COMPOSITE",
-    "logic": "AND",
-    "condition": {
-      "conditions": [
-        {
+    "action": "APPROVE",
+    "expression": {
+      "expressionType": "AND",
+      "left": {
+        "expressionType": "CONDITION",
+        "field": "creditScore",
+        "operator": ">",
+        "value": 700
+      },
+      "right": {
+        "expressionType": "CONDITION",
+        "field": "monthlyIncome",
+        "operator": ">=",
+        "value": 50000
+      }
+    }
+  },
+  {
+    "type": "COMPOSITE",
+    "action": "APPROVE",
+    "expression": {
+      "expressionType": "OR",
+      "left": {
+        "expressionType": "CONDITION",
+        "field": "employmentType",
+        "operator": "==",
+        "value": "SALARIED"
+      },
+      "right": {
+        "expressionType": "CONDITION",
+        "field": "employmentTenure",
+        "operator": ">",
+        "value": 5
+      }
+    }
+  },
+  {
+    "type": "COMPOSITE",
+    "action": "REJECT",
+    "expression": {
+      "expressionType": "AND",
+      "left": {
+        "expressionType": "CONDITION",
+        "field": "creditScore",
+        "operator": "<",
+        "value": 600
+      },
+      "right": {
+        "expressionType": "CONDITION",
+        "field": "existingLoans",
+        "operator": ">",
+        "value": 3
+      }
+    }
+  },
+  {
+    "type": "COMPOSITE",
+    "action": "REJECT",
+    "expression": {
+      "expressionType": "OR",
+      "left": {
+        "expressionType": "CONDITION",
+        "field": "monthlyIncome",
+        "operator": "<",
+        "value": 30000
+      },
+      "right": {
+        "expressionType": "CONDITION",
+        "field": "existingLoans",
+        "operator": ">",
+        "value": 5
+      }
+    }
+  },
+  {
+    "type": "SIMPLE",
+    "action": "REVIEW",
+    "expression": {
+      "expressionType": "CONDITION",
+      "field": "companyRating",
+      "operator": ">=",
+      "value": 4
+    }
+  },
+  {
+    "type": "COMPOSITE",
+    "action": "REVIEW",
+    "expression": {
+      "expressionType": "AND",
+      "left": {
+        "expressionType": "CONDITION",
+        "field": "region",
+        "operator": "==",
+        "value": "NORTH"
+      },
+      "right": {
+        "expressionType": "CONDITION",
+        "field": "loanAmount",
+        "operator": "<=",
+        "value": 500000
+      }
+    }
+  },
+  {
+    "type": "COMPOSITE",
+    "action": "APPROVE",
+    "expression": {
+      "expressionType": "AND",
+      "left": {
+        "expressionType": "AND",
+        "left": {
+          "expressionType": "CONDITION",
           "field": "creditScore",
           "operator": ">",
           "value": 700
         },
-        {
-          "field": "income",
+        "right": {
+          "expressionType": "CONDITION",
+          "field": "monthlyIncome",
           "operator": ">=",
           "value": 50000
         }
-      ]
-    },
-    "action": "APPROVE"
-  },
-  {
-    "type": "COMPOSITE",
-    "logic": "OR",
-    "condition": {
-      "conditions": [
-        {
+      },
+      "right": {
+        "expressionType": "OR",
+        "left": {
+          "expressionType": "CONDITION",
           "field": "employmentType",
           "operator": "==",
-          "value": "Salaried"
+          "value": "SALARIED"
         },
-        {
-          "field": "yearsAtJob",
+        "right": {
+          "expressionType": "CONDITION",
+          "field": "employmentTenure",
           "operator": ">",
-          "value": 5
+          "value": 3
         }
-      ]
-    },
-    "action": "APPROVE"
-  },
-  {
-    "type": "COMPOSITE",
-    "logic": "AND",
-    "condition": {
-      "conditions": [
-        {
-          "field": "creditScore",
-          "operator": "<",
-          "value": 600
-        },
-        {
-          "field": "debtToIncomeRatio",
-          "operator": ">",
-          "value": 40
-        }
-      ]
-    },
-    "action": "REJECT"
-  },
-  {
-    "type": "COMPOSITE",
-    "logic": "OR",
-    "condition": {
-      "conditions": [
-        {
-          "field": "income",
-          "operator": "<",
-          "value": 30000
-        },
-        {
-          "field": "hasExistingLoan",
-          "operator": "==",
-          "value": true
-        }
-      ]
-    },
-    "action": "REJECT"
+      }
+    }
   }
 ]

@@ -1,17 +1,19 @@
 package com.aishwarya.FinBank.ruleengine.model;
 import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
-public class RulePOJO {
+@NoArgsConstructor
+public class Rule {
     private Expression expression;
-    private final Action action;
-    private final RuleType type;
+    private Action action;
+    private RuleType type;
 
-    public RulePOJO(Expression expression, Action action, RuleType type) {
+    public Rule(Expression expression, Action action, RuleType type) {
         this.expression = expression;
         this.action = action;
         this.type = type;

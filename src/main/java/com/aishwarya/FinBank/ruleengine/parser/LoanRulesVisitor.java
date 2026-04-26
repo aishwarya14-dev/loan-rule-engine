@@ -3,7 +3,7 @@ package com.aishwarya.FinBank.ruleengine.parser;
 import com.aishwarya.FinBank.LoanRulesBaseVisitor;
 import com.aishwarya.FinBank.LoanRulesParser;
 import com.aishwarya.FinBank.ruleengine.model.Action;
-import com.aishwarya.FinBank.ruleengine.model.RulePOJO;
+import com.aishwarya.FinBank.ruleengine.model.Rule;
 import com.aishwarya.FinBank.ruleengine.model.RuleType;
 import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
 import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
@@ -15,15 +15,15 @@ import com.aishwarya.FinBank.utility.Operator;
 public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
 
     @Override
-    public RulePOJO visitStatement(LoanRulesParser.StatementContext ctx) {
+    public Rule visitStatement(LoanRulesParser.StatementContext ctx) {
         Expression expression = (Expression) visit(ctx.expression());
         Action action = (Action) visit(ctx.action());
         RuleType type = (expression instanceof Condition) ? RuleType.SIMPLE : RuleType.COMPOSITE;
-        return new RulePOJO(expression, action, type);
+        return new Rule(expression, action, type);
     }
 
     @Override
-    public RulePOJO visitValue(LoanRulesParser.ValueContext ctx) {
+    public Rule visitValue(LoanRulesParser.ValueContext ctx) {
         return null;
     }
 

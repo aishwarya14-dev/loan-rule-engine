@@ -5,7 +5,7 @@ import com.aishwarya.FinBank.model.LoanApplication;
 
 import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleEvaluationFactory;
 import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleEvaluationFactory;
-import com.aishwarya.FinBank.ruleengine.model.RulePOJO;
+import com.aishwarya.FinBank.ruleengine.model.Rule;
 import com.aishwarya.FinBank.ruleengine.model.RuleResult;
 import com.aishwarya.FinBank.ruleengine.model.RuleType;
 import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
@@ -25,14 +25,14 @@ public class StaticRulesEvaluator implements RulesEvaluator {
 
 
     @Override
-    public boolean evaluateRules(LoanApplication application, List<RulePOJO> rulePOJOS) {
-        for (RulePOJO rulePOJO : rulePOJOS) {
-            if(rulePOJO.getType() == null || rulePOJO.getType() == RuleType.SIMPLE){
-                Condition condition = (Condition) rulePOJO.getExpression();
+    public boolean evaluateRules(LoanApplication application, List<Rule> rules) {
+        for (Rule rule : rules) {
+            if(rule.getType() == null || rule.getType() == RuleType.SIMPLE){
+                Condition condition = (Condition) rule.getExpression();
                 RuleResult result = evaluateExpression(application,condition);
             }
-            else if(rulePOJO.getType() == RuleType.COMPOSITE){
-               RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildEvaluation(rulePOJO.getExpression());
+            else if(rule.getType() == RuleType.COMPOSITE){
+               RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildEvaluation(rule.getExpression());
                RuleResult result = compositeRuleEvaluationObject.evaluate(application);
             }
         }
