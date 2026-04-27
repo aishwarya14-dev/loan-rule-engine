@@ -31,7 +31,7 @@ public class SpringSecurity {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/loan/**").authenticated().
-                        requestMatchers("/public/**").permitAll()
+                        requestMatchers("/public/**","/actuator/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(session ->

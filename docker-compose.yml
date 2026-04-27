@@ -1,17 +1,29 @@
+version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: loan-postgres
-    restart: always
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: loan_app_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - "9090:9090"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # lets prometheus reach your localhost app
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
 
 volumes:
-  pgdata:
+  grafana-data:
