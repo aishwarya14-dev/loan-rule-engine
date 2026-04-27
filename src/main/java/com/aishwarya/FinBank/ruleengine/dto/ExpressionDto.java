@@ -1,9 +1,4 @@
 package com.aishwarya.FinBank.ruleengine.dto;
-
-
-import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
-import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
-import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -13,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "expressionType"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Condition.class,name = "CONDITION"),
-        @JsonSubTypes.Type(value = AndExpression.class, name = "AND"),
-        @JsonSubTypes.Type(value = OrExpression.class,  name = "OR")
+        @JsonSubTypes.Type(value = ConditionDto.class,name = "CONDITION"),
+        @JsonSubTypes.Type(value = AndExpressionDto.class, name = "AND"),
+        @JsonSubTypes.Type(value = OrExpressionDto.class,  name = "OR")
 })
 public interface ExpressionDto {}

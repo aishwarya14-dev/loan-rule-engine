@@ -1,5 +1,7 @@
 package com.aishwarya.FinBank.ruleengine.model.condition;
+import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
 import com.aishwarya.FinBank.utility.Operator;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,26 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
 public class Condition implements Expression {
     private String field;
     private Operator operator;
-    private int value;
-
-    public Condition(String field, Operator operator, int value) {
-        this.field = field;
-        this.operator = operator;
-        this.value = value;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public Operator getOperator() {
-        return operator;
-    }
-
-    public int getValue() {
-        return value;
-    }
+    private RuleValue value;
 }

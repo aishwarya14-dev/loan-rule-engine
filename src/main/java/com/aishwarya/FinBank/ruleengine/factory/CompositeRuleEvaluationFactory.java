@@ -9,7 +9,7 @@ import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.CompositeRuleEvaluation;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.RuleEvaluation;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.SimpleRuleEvaluation;
-import com.aishwarya.FinBank.utility.FieldAccessorRegistry;
+import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -19,13 +19,13 @@ import java.util.List;
 public class CompositeRuleEvaluationFactory {
 
     @Autowired
-    public FieldAccessorRegistry registry;
+    public LoanFieldAccessorRegistry registry;
 
     public RuleEvaluation buildEvaluation(Expression expression) {
         if (expression instanceof Condition condition) {
             return new SimpleRuleEvaluation(
                     condition.getField(),
-                    condition.getOperator().getSymbol(),
+                    condition.getOperator(),
                     condition.getValue(),
                     registry
             );

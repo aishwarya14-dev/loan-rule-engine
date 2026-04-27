@@ -20,8 +20,8 @@ public class LoanService {
 
 
     public void acceptLoanApplication(LoanApplicationRequestDto application) {
-        LoanApplication application1 =  createLoanApplication(application);
-        ruleEngineService.evaluateLoanApplication(application1, "STATIC");
+        LoanApplication loanApplication =  createLoanApplication(application);
+        ruleEngineService.evaluateLoanApplication(loanApplication, "STATIC");
         System.out.println("Loan application accepted for: " + application.getApplicantName());
     }
 

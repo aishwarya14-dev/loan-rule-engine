@@ -3,21 +3,22 @@ package com.aishwarya.FinBank.ruleengine.rule_evaluation;
 import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.ruleengine.model.RuleMessageGenerator;
 import com.aishwarya.FinBank.ruleengine.model.RuleResult;
+import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
 import com.aishwarya.FinBank.utility.ComparisonEvaluator;
-import com.aishwarya.FinBank.utility.FieldAccessorRegistry;
+import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.FinBank.utility.Operator;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.function.Function;
+import org.springframework.stereotype.Component;
 
+import java.util.function.Function;
 
 public class SimpleRuleEvaluation implements RuleEvaluation {
     private String field;
-    private String operator;
-    private Object expectedValue;
-    private FieldAccessorRegistry registry;
-    @Autowired
-    private RuleMessageGenerator messageGenerator;
+    private Operator operator;
+    private RuleValue expectedValue;
+    private LoanFieldAccessorRegistry registry;
 
-   public SimpleRuleEvaluation(String field, String operator, Object expectedValue, FieldAccessorRegistry registry) {
+   public SimpleRuleEvaluation(String field, Operator operator, RuleValue expectedValue, LoanFieldAccessorRegistry registry) {
         this.field = field;
         this.operator = operator;
         this.expectedValue = expectedValue;
@@ -30,7 +31,7 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
         Object actualValue = function.apply(application);
 
         boolean result = ComparisonEvaluator.evaluate(actualValue, expectedValue,operator);
-        String message = messageGenerator.generateMessage(field + " " + expectedValue, result);
-        return new RuleResult(result, message, expectedValue, application);
+//      String message = messageGenerator.generateMessage(field + " " + expectedValue, result);
+        return new RuleResult(result, "", String.valueOf(expectedValue), application);
     }
 }

@@ -37,7 +37,7 @@ public class DynamicRulesEvaluator implements RulesEvaluator {
     }
 
     public RuleResult evaluateExpression(LoanApplication application, Condition condition){
-        RuleEvaluation simpleRuleEvaluationObject = factory.createSimpleRule(condition.getField(), condition.getOperator().toString(), condition.getValue());
+        RuleEvaluation simpleRuleEvaluationObject = factory.createSimpleRule(condition.getField(), condition.getOperator(), condition.getValue());
         RuleResult result =  simpleRuleEvaluationObject.evaluate(application);
         return result;
     }

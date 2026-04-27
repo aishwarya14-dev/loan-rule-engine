@@ -9,6 +9,7 @@ import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
 import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
 import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
 import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
+import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
 import com.aishwarya.FinBank.utility.Operator;
 
 
@@ -55,7 +56,7 @@ public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
     public Condition visitCondition(LoanRulesParser.ConditionContext ctx) {
         String field    = ctx.IDENTIFIER().getText();
         Operator op     = (Operator) visit(ctx.operator());
-        int value       = Integer.parseInt(ctx.value().NUMBER().getText());
+        RuleValue value = ctx.value() != null ? (RuleValue) visit(ctx.value()) : null;
         return new Condition(field, op, value);
     }
 

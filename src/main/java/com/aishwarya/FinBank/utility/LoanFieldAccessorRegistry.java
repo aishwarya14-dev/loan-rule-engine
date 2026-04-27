@@ -4,17 +4,16 @@ import com.aishwarya.FinBank.model.LoanApplication;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 @Component
-public class FieldAccessorRegistry {
+public class LoanFieldAccessorRegistry {
     private final Map<String, Function<LoanApplication,Object>> fieldAccessors = new ConcurrentHashMap<>();
 
-    public FieldAccessorRegistry(){
+    public LoanFieldAccessorRegistry(){
         fieldAccessors.put("creditScore",LoanApplication :: getCreditScore);
         fieldAccessors.put("loanAmount",LoanApplication :: getLoanAmount);
         fieldAccessors.put("monthlyIncome",LoanApplication :: getMonthlyIncome);

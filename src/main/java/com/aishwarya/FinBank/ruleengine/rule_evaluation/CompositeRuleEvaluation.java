@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 public class CompositeRuleEvaluation implements RuleEvaluation {
     private Logic logic;
     private List<RuleEvaluation> ruleEvaluations;
-    @Autowired
-    private RuleMessageGenerator ruleMessageGenerator;
+
 
     public CompositeRuleEvaluation(List<RuleEvaluation> ruleEvaluations, Logic logic) {
         this.ruleEvaluations = ruleEvaluations;
@@ -33,11 +32,11 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
             case OR  -> results.stream().anyMatch(RuleResult::isPassed);
         };
 
-        String message = ruleMessageGenerator.generateMessage(
-                buildMessageSummary(results), finalResult
-        );
+//        String message = ruleMessageGenerator.generateMessage(
+//                buildMessageSummary(results), finalResult
+//        );
 
-        return new RuleResult(finalResult, message, collectExpectedValues(results),application);
+        return new RuleResult(finalResult, "", String.valueOf(collectExpectedValues(results)),application);
     }
 
     private String buildMessageSummary(List<RuleResult> results) {
@@ -47,7 +46,7 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
     }
 
     // Collects all expected values
-    private List<Object> collectExpectedValues(List<RuleResult> results) {
+    private List<String> collectExpectedValues(List<RuleResult> results) {
         return results.stream()
                 .map(RuleResult::getExpectedValue)
                 .toList();

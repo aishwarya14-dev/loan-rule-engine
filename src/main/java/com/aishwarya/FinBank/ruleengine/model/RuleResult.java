@@ -15,14 +15,14 @@ public class RuleResult {
     private boolean passed;
     private String message;
     @Column(name = "expected_value", columnDefinition = "TEXT")
-    private Object expectedValue;
+    private String expectedValue;
     private String description;
     @ManyToOne
     @JoinColumn(name = "loan_application_id")
     private LoanApplication loanApplication;
 
     @Builder
-    public RuleResult(boolean passed, String message,Object expectedValue,LoanApplication loanApplication) {
+    public RuleResult(boolean passed, String message,String expectedValue,LoanApplication loanApplication) {
         this.passed = passed;
         this.message = message;
         this.expectedValue = expectedValue;
