@@ -1,6 +1,7 @@
 package com.aishwarya.FinBank.service;
 
 import com.aishwarya.FinBank.dto.loanApplication.LoanApplicationRequestDto;
+import com.aishwarya.FinBank.mapper.LoanApplicationMapper;
 import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.repository.LoanRepository;
 import com.aishwarya.FinBank.ruleengine.service.RuleEngineService;
@@ -25,7 +26,6 @@ public class LoanService {
         System.out.println("Loan application accepted for: " + application.getApplicantName());
     }
 
-    @Transactional
     public LoanApplication createLoanApplication(LoanApplicationRequestDto dto) {
         // Convert DTO → Entity
         LoanApplication entity = mapper.toEntity(dto);

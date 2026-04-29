@@ -1,13 +1,11 @@
-package com.aishwarya.FinBank.service;
+package com.aishwarya.FinBank.mapper;
 import com.aishwarya.FinBank.model.*;
 import com.aishwarya.FinBank.repository.*;
-import lombok.AllArgsConstructor;
 import org.mapstruct.Mapper;
 
 import com.aishwarya.FinBank.dto.loanApplication.LoanApplicationRequestDto;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public abstract class LoanApplicationMapper {

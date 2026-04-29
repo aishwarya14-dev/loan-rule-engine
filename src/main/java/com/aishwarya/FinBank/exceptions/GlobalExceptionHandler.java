@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,4 +42,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler(DslValidationException.class)
+    public ResponseEntity<?> handleDslValidationException(DslValidationException ex){
+        return ResponseEntity.badRequest().body(Map.of(
+                "status", "INVALID_RULE",
+                "errors", ex.getMessage()
+        ));
+    }
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -15,8 +17,9 @@ public class DslRule {
     private Long id;
     @Column(name = "dsl_rule", columnDefinition = "TEXT")
     private String dslRule;
-    private int version;
     @ManyToOne
     @JoinColumn(name = "loan_type_id")
     private LoanType loanType;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
