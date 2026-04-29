@@ -76,19 +76,19 @@ public class DslSemanticValidator {
                                      List<String> errors) {
         switch (field) {
             case "region" -> {
-                if (!regionRepository.existsByRegionCode(value))
+                if (!regionRepository.existsByRegionName(value))
                     errors.add("Invalid region '" + value);
             }
             case "employmentType" -> {
-                if (!employmentTypeRepository.existsByType(value))
+                if (!employmentTypeRepository.existsByEmploymentType(value))
                     errors.add("Invalid employmentType '" + value);
             }
             case "jobTitle" -> {
-                if (!jobTitleRepository.existsByTitle(value))
+                if (!jobTitleRepository.existsByJobTitle(value))
                     errors.add("Invalid jobTitle '" + value);
             }
             case "loanType" -> {
-                if (!loanTypeRepository.existsByType(value))
+                if (!loanTypeRepository.existsByLoanType(value))
                     errors.add("Invalid loanType '" + value);
             }
         }

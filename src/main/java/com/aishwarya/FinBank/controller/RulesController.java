@@ -21,6 +21,6 @@ public class RulesController {
     @PostMapping("/dsl")
     public ResponseEntity<DslRule> acceptRules(@RequestBody RulesRequestDto rulesRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                        .body(ruleService.processRules(rulesRequestDto));
+                        .body(ruleService.save(rulesRequestDto));
     }
 }

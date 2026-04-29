@@ -20,6 +20,8 @@ public class DslRule {
     @ManyToOne
     @JoinColumn(name = "loan_type_id")
     private LoanType loanType;
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
