@@ -1,5 +1,5 @@
-package com.aishwarya.FinBank.ruleengine.model;
-import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
+package com.aishwarya.FinBank.model;
+import com.aishwarya.FinBank.model.expression.Expression;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

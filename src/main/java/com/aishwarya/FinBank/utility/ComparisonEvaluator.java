@@ -1,9 +1,9 @@
 package com.aishwarya.FinBank.utility;
 
-import com.aishwarya.FinBank.ruleengine.model.value.DoubleValue;
-import com.aishwarya.FinBank.ruleengine.model.value.IntValue;
-import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
-import com.aishwarya.FinBank.ruleengine.model.value.StringValue;
+import com.aishwarya.FinBank.model.value.DoubleValue;
+import com.aishwarya.FinBank.model.value.IntValue;
+import com.aishwarya.FinBank.model.value.RuleValue;
+import com.aishwarya.FinBank.model.value.StringValue;
 import org.springframework.stereotype.Component;
 
 @Component

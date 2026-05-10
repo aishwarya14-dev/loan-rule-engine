@@ -1,11 +1,11 @@
 package com.aishwarya.FinBank.ruleengine.factory;
 
 
-import com.aishwarya.FinBank.ruleengine.model.Logic;
-import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
-import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
-import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
-import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
+import com.aishwarya.FinBank.model.Logic;
+import com.aishwarya.FinBank.model.condition.AndExpression;
+import com.aishwarya.FinBank.model.condition.Condition;
+import com.aishwarya.FinBank.model.condition.Expression;
+import com.aishwarya.FinBank.model.condition.OrExpression;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.CompositeRuleEvaluation;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.RuleEvaluation;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.SimpleRuleEvaluation;

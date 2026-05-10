@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.dto;
+package com.aishwarya.FinBank.dto.rules.staticrules;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

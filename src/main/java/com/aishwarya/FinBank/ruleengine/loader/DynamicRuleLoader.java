@@ -1,8 +1,8 @@
 package com.aishwarya.FinBank.ruleengine.loader;
-import com.aishwarya.FinBank.ruleengine.model.DslRule;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.model.DslRule;
+import com.aishwarya.FinBank.model.Rule;
 import com.aishwarya.FinBank.ruleengine.parser.DslRulesParser;
-import com.aishwarya.FinBank.ruleengine.repository.RuleRepository;
+import com.aishwarya.FinBank.repository.RuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,5 @@
-package com.aishwarya.FinBank.ruleengine.model;
+package com.aishwarya.FinBank.model;
 
-import com.aishwarya.FinBank.model.LoanType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

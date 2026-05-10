@@ -1,7 +1,7 @@
 package com.aishwarya.FinBank.controller;
 
 import com.aishwarya.FinBank.dto.rules.RulesRequestDto;
-import com.aishwarya.FinBank.ruleengine.model.DslRule;
+import com.aishwarya.FinBank.model.DslRule;
 import com.aishwarya.FinBank.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

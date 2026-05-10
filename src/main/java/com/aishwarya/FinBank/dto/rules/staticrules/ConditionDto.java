@@ -1,6 +1,6 @@
-package com.aishwarya.FinBank.ruleengine.dto;
+package com.aishwarya.FinBank.dto.rules.staticrules;
 
-import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
+import com.aishwarya.FinBank.model.value.RuleValue;
 import com.aishwarya.FinBank.utility.Operator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

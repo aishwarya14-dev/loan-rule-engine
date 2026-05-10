@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleDslValidationException(DslValidationException ex){
         return ResponseEntity.badRequest().body(Map.of(
                 "status", "INVALID_RULE",
-                "errors", ex.getMessage()
+                "errors", ex.getErrors()
         ));
     }
 }

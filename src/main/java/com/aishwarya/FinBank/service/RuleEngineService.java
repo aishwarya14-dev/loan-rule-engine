@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.service;
+package com.aishwarya.FinBank.service;
 
 import com.aishwarya.FinBank.model.LoanApplication;
 

@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.model.value;
+package com.aishwarya.FinBank.model.value;
 
 
 public sealed interface RuleValue permits DoubleValue, IntValue, StringValue {

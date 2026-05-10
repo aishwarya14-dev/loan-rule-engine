@@ -4,8 +4,6 @@ import com.aishwarya.FinBank.dto.loanApplication.LoanApplicationRequestDto;
 import com.aishwarya.FinBank.mapper.LoanApplicationMapper;
 import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.repository.LoanRepository;
-import com.aishwarya.FinBank.ruleengine.service.RuleEngineService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;

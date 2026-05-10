@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.model.value;
+package com.aishwarya.FinBank.model.value;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

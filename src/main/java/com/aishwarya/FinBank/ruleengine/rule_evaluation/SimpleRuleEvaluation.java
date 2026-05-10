@@ -1,14 +1,11 @@
 package com.aishwarya.FinBank.ruleengine.rule_evaluation;
 
 import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.ruleengine.model.RuleMessageGenerator;
-import com.aishwarya.FinBank.ruleengine.model.RuleResult;
-import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
+import com.aishwarya.FinBank.model.RuleResult;
+import com.aishwarya.FinBank.model.value.RuleValue;
 import com.aishwarya.FinBank.utility.ComparisonEvaluator;
 import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.FinBank.utility.Operator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 

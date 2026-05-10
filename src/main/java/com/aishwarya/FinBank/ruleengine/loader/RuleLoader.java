@@ -1,6 +1,6 @@
 package com.aishwarya.FinBank.ruleengine.loader;
 
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.model.Rule;
 
 import java.util.List;
 

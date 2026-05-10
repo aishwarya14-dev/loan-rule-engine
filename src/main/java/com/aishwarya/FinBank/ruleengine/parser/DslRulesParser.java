@@ -2,7 +2,7 @@ package com.aishwarya.FinBank.ruleengine.parser;
 
 import com.aishwarya.FinBank.LoanRulesLexer;
 import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.model.Rule;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

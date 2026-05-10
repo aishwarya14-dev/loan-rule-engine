@@ -1,10 +1,10 @@
-package com.aishwarya.FinBank.ruleengine.service;
+package com.aishwarya.FinBank.service;
 
 import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.ruleengine.evaluator.DynamicRulesEvaluator;
 import com.aishwarya.FinBank.ruleengine.evaluator.StaticRulesEvaluator;
 import com.aishwarya.FinBank.ruleengine.loader.RuleLoader;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.model.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

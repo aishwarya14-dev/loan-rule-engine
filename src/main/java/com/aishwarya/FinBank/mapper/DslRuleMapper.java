@@ -2,7 +2,7 @@ package com.aishwarya.FinBank.mapper;
 import com.aishwarya.FinBank.dto.rules.RulesRequestDto;
 import com.aishwarya.FinBank.model.LoanType;
 import com.aishwarya.FinBank.repository.LoanTypeRepo;
-import com.aishwarya.FinBank.ruleengine.model.DslRule;
+import com.aishwarya.FinBank.model.DslRule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;

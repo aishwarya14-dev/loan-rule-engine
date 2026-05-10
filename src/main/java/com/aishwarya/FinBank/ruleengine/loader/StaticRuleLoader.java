@@ -1,8 +1,8 @@
 package com.aishwarya.FinBank.ruleengine.loader;
 
-import com.aishwarya.FinBank.ruleengine.dto.RuleDto;
-import com.aishwarya.FinBank.ruleengine.dto.mappers.RuleMapper;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.dto.rules.staticrules.RuleDto;
+import com.aishwarya.FinBank.mappers.RuleMapper;
+import com.aishwarya.FinBank.model.Rule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

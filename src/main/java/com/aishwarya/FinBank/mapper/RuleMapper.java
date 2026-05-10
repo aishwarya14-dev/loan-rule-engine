@@ -1,12 +1,12 @@
-package com.aishwarya.FinBank.ruleengine.dto.mappers;
+package com.aishwarya.FinBank.mapper;
 
-import com.aishwarya.FinBank.ruleengine.dto.*;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.aishwarya.FinBank.ruleengine.model.RuleType;
-import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
-import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
-import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
-import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
+import com.aishwarya.FinBank.dto.rules.staticrules.*;
+import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.FinBank.model.RuleType;
+import com.aishwarya.FinBank.model.expression.AndExpression;
+import com.aishwarya.FinBank.model.expression.Condition;
+import com.aishwarya.FinBank.model.expression.Expression;
+import com.aishwarya.FinBank.model.expression.OrExpression;
 import com.aishwarya.FinBank.utility.Operator;
 import org.springframework.stereotype.Component;
 

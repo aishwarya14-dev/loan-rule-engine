@@ -1,7 +1,7 @@
 package com.aishwarya.FinBank.ruleengine.factory;
 
 
-import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
+import com.aishwarya.FinBank.model.value.RuleValue;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.RuleEvaluation;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.SimpleRuleEvaluation;
 import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;

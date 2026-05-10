@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.dto;
+package com.aishwarya.FinBank.dto.rules.staticrules;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 

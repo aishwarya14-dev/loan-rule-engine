@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.model.condition;
+package com.aishwarya.FinBank.model.expression;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -6,11 +6,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AndExpression implements  Expression {
+public class OrExpression implements Expression {
     private Expression left;
     private Expression right;
 
-    public AndExpression(Expression left, Expression right) {
+    public OrExpression(Expression left, Expression right) {
         this.left = left;
         this.right = right;
     }

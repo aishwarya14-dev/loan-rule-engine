@@ -14,31 +14,33 @@ public class DslSyntaxValidator {
     List<String> errors = new ArrayList<>();
 
     public LoanRulesParser.StatementContext validate(String dslRule) {
-        CharStream input = CharStreams.fromString(dslRule);
-        LoanRulesParser loanRulesParser = getLoanRulesParser(input);
-        loanRulesParser.addErrorListener(new BaseErrorListener(){
+        CharStream chars = CharStreams.fromString(dslRule);
+        LoanRulesLexer lexer = new LoanRulesLexer(chars);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer,
                                     Object offendingSymbol,
                                     int line, int charPositionInLine,
-                                    String msg, RecognitionException e){
-                errors.add("Parser error at " + line + ":"
+                                    String msg, RecognitionException e) {
+                errors.add("Lexer error at " + line + ":"
                         + charPositionInLine + " — " + msg);
             }
         });
-        LoanRulesParser.StatementContext tree = loanRulesParser.statement();
         if (!errors.isEmpty()) {
             throw new DslValidationException(errors);
         }
 
-        return tree;
+        return getLoanRulesParser(lexer);
 
     }
 
-    private LoanRulesParser getLoanRulesParser(CharStream input) {
-        LoanRulesLexer lexer = new LoanRulesLexer(input);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(new BaseErrorListener(){
+    private LoanRulesParser.StatementContext getLoanRulesParser(LoanRulesLexer lexer) {
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        LoanRulesParser parser = new LoanRulesParser(tokens);
+
+        parser.removeErrorListeners();
+        parser.addErrorListener(new BaseErrorListener(){
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer,
                                      Object offendingSymbol,
@@ -49,11 +51,13 @@ public class DslSyntaxValidator {
             }
         });
 
-        CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-        LoanRulesParser loanRulesParser = new LoanRulesParser(commonTokenStream);
+        LoanRulesParser.StatementContext tree = parser.statement();
 
-        loanRulesParser.removeErrorListeners();
-        return loanRulesParser;
+        if (!errors.isEmpty()) {
+            throw new DslValidationException(errors);
+        }
+
+        return tree;
     }
 
 }

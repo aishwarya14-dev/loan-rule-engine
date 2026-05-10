@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.model.value;
+package com.aishwarya.FinBank.model.value;
 
 public record StringValue(String value) implements RuleValue{
     public Object returnValue() {

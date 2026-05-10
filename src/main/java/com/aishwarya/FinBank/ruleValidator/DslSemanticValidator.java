@@ -32,7 +32,6 @@ public class DslSemanticValidator {
     }
 
     private void validateExpression(LoanRulesParser.ExpressionContext ctx, List<String> errors){
-
         if(ctx instanceof LoanRulesParser.AndExpressionContext andExpressionContext){
             validateExpression(andExpressionContext.expression(0), errors);  // validate left
             validateExpression(andExpressionContext.expression(1), errors);

@@ -2,14 +2,14 @@ package com.aishwarya.FinBank.ruleengine.parser;
 
 import com.aishwarya.FinBank.LoanRulesBaseVisitor;
 import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.ruleengine.model.Action;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.aishwarya.FinBank.ruleengine.model.RuleType;
-import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
-import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
-import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
-import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
-import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
+import com.aishwarya.FinBank.model.Action;
+import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.FinBank.model.RuleType;
+import com.aishwarya.FinBank.model.expression.AndExpression;
+import com.aishwarya.FinBank.model.expression.Condition;
+import com.aishwarya.FinBank.model.expression.Expression;
+import com.aishwarya.FinBank.model.expression.OrExpression;
+import com.aishwarya.FinBank.model.value.RuleValue;
 import com.aishwarya.FinBank.utility.Operator;
 
 

@@ -5,13 +5,12 @@ import com.aishwarya.FinBank.model.LoanApplication;
 
 import com.aishwarya.FinBank.ruleengine.factory.CompositeRuleEvaluationFactory;
 import com.aishwarya.FinBank.ruleengine.factory.SimpleRuleEvaluationFactory;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.aishwarya.FinBank.ruleengine.model.RuleResult;
-import com.aishwarya.FinBank.ruleengine.model.RuleType;
-import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
+import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.FinBank.model.RuleResult;
+import com.aishwarya.FinBank.model.RuleType;
+import com.aishwarya.FinBank.model.condition.Condition;
 import com.aishwarya.FinBank.ruleengine.rule_evaluation.RuleEvaluation;
 import com.aishwarya.FinBank.service.RuleResultService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
