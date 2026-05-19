@@ -2,6 +2,7 @@ package com.aishwarya.FinBank.validator;
 
 import com.aishwarya.FinBank.LoanRulesLexer;
 import com.aishwarya.FinBank.LoanRulesParser;
+import com.aishwarya.FinBank.exceptions.DslValidationException;
 import com.aishwarya.FinBank.repository.EmploymentTypeRepo;
 import com.aishwarya.FinBank.repository.JobTitleRepo;
 import com.aishwarya.FinBank.repository.LoanTypeRepo;
@@ -11,6 +12,7 @@ import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class DslSemanticValidatorTest {
-
-    private DslSemanticValidator dslSemanticValidator;
 
     @Mock
     private LoanFieldAccessorRegistry registry;
@@ -52,13 +52,17 @@ public class DslSemanticValidatorTest {
 
     @Test
     void shouldPassForValidSimpleRule(String dsl){
-
+        Assertions.assertDoesNotThrow(() -> semanticValidator.validate(parseRule("IF creditScore > 700 THEN approve")));
     }
-
 
 
     @Test
     void shouldPassForValidCompositeRule(String dsl){
+        Assertions.assertDoesNotThrow(() -> semanticValidator.validate(parseRule("IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve")));
+    }
 
+    @Test
+    void shouldFailForInvalidField(String dsl){
+        Assertions.assertThrows(DslValidationException.class,() -> semanticValidator.validate(parseRule("IF points > 700 THEN approve")));
     }
 }

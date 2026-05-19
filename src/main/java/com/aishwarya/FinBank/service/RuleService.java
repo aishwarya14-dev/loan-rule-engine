@@ -1,11 +1,14 @@
 package com.aishwarya.FinBank.service;
 import com.aishwarya.FinBank.LoanRulesParser;
 import com.aishwarya.FinBank.dto.rules.RulesRequestDto;
+import com.aishwarya.FinBank.model.LoanType;
+import com.aishwarya.FinBank.repository.LoanTypeRepo;
 import com.aishwarya.FinBank.ruleValidator.DslDuplicateValidator;
 import com.aishwarya.FinBank.ruleValidator.DslSemanticValidator;
 import com.aishwarya.FinBank.ruleValidator.DslSyntaxValidator;
 import com.aishwarya.FinBank.model.DslRule;
 import com.aishwarya.FinBank.repository.RuleRepository;
+import com.aishwarya.FinBank.ruleengine.loader.DynamicRuleLoader;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ public class RuleService {
     private final DslSemanticValidator semanticValidator;
     private final DslDuplicateValidator duplicateValidator;
     private final RuleRepository dslRuleRepository;
+    private final DynamicRuleLoader dynamicRuleLoader;
+    private final LoanTypeRepo loanTypeRepo;
 
     @Transactional
     public DslRule save(RulesRequestDto dto) {
@@ -40,6 +45,11 @@ public class RuleService {
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
 
-        return dslRuleRepository.save(entity);
+        DslRule savedRule =  dslRuleRepository.save(entity);
+        LoanType loanType = loanTypeRepo.fetchByLoanTypeId(dto.getLoanTypeId());
+
+        dynamicRuleLoader.evictByLoanType(loanType);
+        return savedRule;
+
     }
 }

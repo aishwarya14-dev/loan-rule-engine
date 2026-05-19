@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class Rule {
+public class Rule implements Serializable {
     private Expression expression;
     private Action action;
     private RuleType type;

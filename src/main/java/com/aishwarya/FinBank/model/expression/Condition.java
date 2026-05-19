@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-public class Condition implements Expression {
+public class Condition implements Expression , Serializable {
     private String field;
     private Operator operator;
     private RuleValue value;

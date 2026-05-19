@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.config;
+package com.aishwarya.FinBank.config;
 
 import com.aishwarya.FinBank.model.value.RuleValue;
 import com.aishwarya.FinBank.model.value.RuleValueDeserializer;
