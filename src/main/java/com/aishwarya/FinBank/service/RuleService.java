@@ -12,6 +12,8 @@ import com.aishwarya.FinBank.ruleengine.loader.DynamicRuleLoader;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 
@@ -39,17 +41,33 @@ public class RuleService {
         // duplicate — normalized string check
         duplicateValidator.validate(dslText);
 
-        // all passed
+        // create entity
         DslRule entity = new DslRule();
         entity.setDslRule(dslText.trim().replaceAll("\\s+", " "));
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
 
+        LoanType loanType = loanTypeRepo.findById(dto.getLoanTypeId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "LoanType not found for id: " + dto.getLoanTypeId()
+                ));
+        entity.setLoanType(loanType);
+
+        // save rule to the db
         DslRule savedRule =  dslRuleRepository.save(entity);
-        LoanType loanType = loanTypeRepo.fetchByLoanTypeId(dto.getLoanTypeId());
-
-        dynamicRuleLoader.evictByLoanType(loanType);
+        // evict cache
+        evictByLoanType(loanType);
         return savedRule;
+    }
 
+    public void evictByLoanType(LoanType loanType){
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        dynamicRuleLoader.evictByLoanType(loanType);
+                    }
+                }
+        );
     }
 }

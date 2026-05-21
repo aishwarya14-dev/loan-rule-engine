@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.ResponseEntity.status;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
@@ -18,14 +20,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleBadRequest(IllegalArgumentException ex) {
         log.error("Invalid input", ex);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return status(HttpStatus.BAD_REQUEST)
                 .body( ex.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleBadRequest(UserNotFoundException ex) {
         log.error("Invalid input", ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return status(HttpStatus.NOT_FOUND)
                 .body( ex.getMessage());
     }
 
@@ -48,5 +50,15 @@ public class GlobalExceptionHandler {
                 "status", "INVALID_RULE",
                 "errors", ex.getErrors()
         ));
+    }
+
+    @ExceptionHandler(DslParsingException.class)
+    public ResponseEntity<?> handleDslParsingException(DslParsingException ex){
+        return ResponseEntity.badRequest().body("INVALID_RULE");
+    }
+
+    @ExceptionHandler(LoanEvaluationException.class)
+    public ResponseEntity<?> handleDslParsingException(LoanEvaluationException ex){
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Service Unavailable");
     }
 }

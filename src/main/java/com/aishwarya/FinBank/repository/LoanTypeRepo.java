@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LoanTypeRepo extends JpaRepository<LoanType, Long> {
     boolean existsByLoanType(String value);
-    LoanType fetchByLoanTypeId(Long id);
 }

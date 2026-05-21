@@ -1,4 +1,6 @@
 package com.aishwarya.FinBank.ruleengine.loader;
+import com.aishwarya.FinBank.exceptions.DslParsingException;
+import com.aishwarya.FinBank.exceptions.LoanEvaluationException;
 import com.aishwarya.FinBank.model.DslRule;
 import com.aishwarya.FinBank.model.LoanType;
 import com.aishwarya.FinBank.model.Rule;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 
 @Component
@@ -36,12 +37,14 @@ public class DynamicRuleLoader implements RuleLoader {
                     rules.add(parsedRule);
                 }
                 catch (Exception e) {
-                    log.error("Failed to parse DSL rule: {}", dslRule.getDslRule(), e);
+                    throw new DslParsingException("" + e);
+//                    log.error("Failed to parse DSL rule: {}", dslRule.getDslRule(), e);
                 }
             }
         }
         catch (Exception e) {
-            log.error("Failed to fetch rules for loan type: {}", loanType.getLoanType(), e);
+//            log.error("Failed to fetch rules for loan type: {}", loanType.getLoanType(), e);
+            throw new LoanEvaluationException("loan evaluation temporarily unavailable");
         }
         return rules;
     }
