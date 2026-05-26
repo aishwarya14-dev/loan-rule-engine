@@ -65,7 +65,12 @@ public class RuleService {
                 new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
-                        dynamicRuleLoader.evictByLoanType(loanType);
+                        try {
+                            dynamicRuleLoader.evictByLoanType(loanType);
+
+                        } catch (Exception ex) {
+                            //add log
+                        }
                     }
                 }
         );

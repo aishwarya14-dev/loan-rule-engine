@@ -16,8 +16,8 @@ public abstract class DslRuleMapper {
         @Mapping(target = "loanType", expression = "java(mapLoanType(dto.getLoanTypeId()))")
         public abstract DslRule toEntity(RulesRequestDto dto);
 
-        protected LoanType mapLoanType(Integer id) {
-            return loanTypeRepo.findById(Long.valueOf(id))
+        protected LoanType mapLoanType(Long id) {
+            return loanTypeRepo.findById(id)
                     .orElseThrow(() -> new RuntimeException("LoanType not found"));
         }
 }

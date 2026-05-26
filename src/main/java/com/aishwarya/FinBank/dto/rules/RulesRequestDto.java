@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class RulesRequestDto {
     @NotBlank(message = "Rule text cannot be blank")
     private String dslRule;

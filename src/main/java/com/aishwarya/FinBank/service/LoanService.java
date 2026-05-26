@@ -20,14 +20,14 @@ public class LoanService {
 
     public void acceptLoanApplication(LoanApplicationRequestDto application) {
         // create loan object
-        LoanApplication loanApplication =  createLoanApplication(application);
+        LoanApplication loanApplication =  createLoanApplicationObject(application);
 
         // send for evaluation
         ruleEngineService.evaluateLoanApplication(loanApplication);
         System.out.println("Loan application accepted for: " + application.getApplicantName());
     }
 
-    public LoanApplication createLoanApplication(LoanApplicationRequestDto dto) {
+    public LoanApplication createLoanApplicationObject(LoanApplicationRequestDto dto) {
         // Convert DTO to Entity
         LoanApplication entity = loanApplicationMapper.toEntity(dto);
         return loanRepository.save(entity);

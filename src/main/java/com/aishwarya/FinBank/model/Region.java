@@ -1,16 +1,14 @@
 package com.aishwarya.FinBank.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

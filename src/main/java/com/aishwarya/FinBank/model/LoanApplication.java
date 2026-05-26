@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Table(name = "loan_application")
 @NoArgsConstructor
 @Getter
-@Builder
 public class LoanApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

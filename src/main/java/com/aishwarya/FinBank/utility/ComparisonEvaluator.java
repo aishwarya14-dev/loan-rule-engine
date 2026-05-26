@@ -34,8 +34,8 @@ public class ComparisonEvaluator {
         return switch (operator){
             case ">" -> actual.compareTo(expected) > 0;
             case "<" -> actual.compareTo(expected) < 0;
-            case "==" -> actual == expected;
-            case "!=" -> actual != expected;
+            case "==" -> actual.equals(expected);
+            case "!=" -> !actual.equals(expected);
             default -> false;
         };
     }
