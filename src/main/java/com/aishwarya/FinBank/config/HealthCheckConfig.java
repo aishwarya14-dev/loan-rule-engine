@@ -12,7 +12,7 @@ public class HealthCheckConfig {
     @Value("${spring.data.redis.url:NOT_FOUND}")
     private String redisUrl;
 
-    @Value("${spring.datasource.url}")
+    @Value("${spring.datasource.url:NOT_FOUND}")
     private String dbUrl;
 
     @PostConstruct
