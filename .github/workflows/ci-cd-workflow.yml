@@ -34,9 +34,9 @@ jobs:
       - name: Run Tests
         env:
           SPRING_PROFILES_ACTIVE: test
-          DB_URL: ${DB_URL}
-          DB_USERNAME: ${DB_USERNAME}
-          DB_PASSWORD: ${DB_PASSWORD}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn test
 
       - name: Package Application
