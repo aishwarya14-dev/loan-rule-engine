@@ -12,8 +12,13 @@ public class HealthCheckConfig {
     @Value("${spring.data.redis.url:NOT_FOUND}")
     private String redisUrl;
 
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
     @PostConstruct
     public void init(){
         System.out.println("REDIS URL = " + redisUrl);
+        System.out.println("DATABASE URL = " + dbUrl);
+        System.out.println("JWT = " + System.getenv("JWT_SECRET"));
     }
 }

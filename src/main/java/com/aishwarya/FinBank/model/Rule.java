@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Rule implements Serializable {
+public class Rule {
     private Expression expression;
     private Action action;
     private RuleType type;

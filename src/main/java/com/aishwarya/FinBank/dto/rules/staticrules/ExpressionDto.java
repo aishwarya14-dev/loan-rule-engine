@@ -2,6 +2,7 @@ package com.aishwarya.FinBank.dto.rules.staticrules;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+// Jackson polymorphic deserialization configuration
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
