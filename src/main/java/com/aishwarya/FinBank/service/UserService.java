@@ -1,5 +1,8 @@
 package com.aishwarya.FinBank.service;
 
+import com.aishwarya.FinBank.dto.response.UserResponseDto;
+import com.aishwarya.FinBank.exceptions.DuplicateUserException;
+import com.aishwarya.FinBank.exceptions.UserCreationException;
 import com.aishwarya.FinBank.model.User;
 import com.aishwarya.FinBank.repository.UserRepository;
 import org.slf4j.Logger;
@@ -13,21 +16,29 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+
     private final static Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public void saveUser(User user){
+    public UserResponseDto saveUser(User user){
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            throw new DuplicateUserException(
+                    "Username already exists");
+        }
+
+        if (userRepository.findByMobileNumber(user.getMobileNumber()) != null) {
+            throw new DuplicateUserException(
+                    "Mobile number already exists");
+        }
         try{
             user.setPassword(passwordEncoder.encode(user.getPassword()));
              userRepository.save(user);
-        }catch (Exception e){
+             return new UserResponseDto(user.getUsername(), user.getMobileNumber());
+        } catch (Exception e){
             logger.error("error occured for {} ", user.getUsername(),e);
+            throw new UserCreationException(
+                    "Failed to create user", e);
         }
-    }
-
-
-    public User verifyUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
     }
 }
