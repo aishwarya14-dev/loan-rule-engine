@@ -9,16 +9,14 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 
-
-@Component
-public class HealthCheckConfig {
-
-    @Value("${spring.data.redis.url:NOT_FOUND}")
-    private String redisUrl;
-
-    @Value("${spring.datasource.url:NOT_FOUND}")
-    private String dbUrl;
-
+//public class HealthCheckConfig {
+//
+//    @Value("${spring.data.redis.url:NOT_FOUND}")
+//    private String redisUrl;
+//
+//    @Value("${spring.datasource.url:NOT_FOUND}")
+//    private String dbUrl;
+//
 //    @PostConstruct
 //    public void init(){
 //        System.out.println("REDIS URL = " + redisUrl);
@@ -31,4 +29,4 @@ public class HealthCheckConfig {
 //        System.out.println(secret);
 //
 //    }
-}
+//}
