@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class DslRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
