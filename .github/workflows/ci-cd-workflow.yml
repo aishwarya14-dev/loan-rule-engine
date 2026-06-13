@@ -39,27 +39,10 @@ jobs:
       - name: Build Project
         run: mvn clean compile
 
-      - name: Debug Secrets
-        run: |
-          echo "DB_URL exists? ${DB_URL:+YES}"
-          echo "DB_USERNAME exists? ${DB_USERNAME:+YES}"
-          echo "REDIS_URL exists? ${REDIS_URL:+YES}"
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
-
       - name: Debug Profile
         run: echo $SPRING_PROFILES_ACTIVE
 
       - name: Run Tests
-        env:
-          SPRING_PROFILES_ACTIVE: test
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
         run: mvn test
 
       - name: Package Application
