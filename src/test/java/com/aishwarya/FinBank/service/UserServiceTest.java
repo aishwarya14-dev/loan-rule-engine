@@ -84,9 +84,4 @@ public class UserServiceTest {
         assertThrows(UserCreationException.class, () -> userService.saveUser(user));
 
     }
-
-    @Test
-    public void testLoginUser() {
-        // Implement test for user login
-    }
 }

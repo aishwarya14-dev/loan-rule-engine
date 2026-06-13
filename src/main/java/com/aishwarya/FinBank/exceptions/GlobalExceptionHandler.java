@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -58,7 +59,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(LoanEvaluationException.class)
-    public ResponseEntity<?> handleDslParsingException(LoanEvaluationException ex) {
+    public ResponseEntity<?> handleLoanEvaluationException(LoanEvaluationException ex) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Service Unavailable");
     }
 
@@ -68,7 +69,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateUserException.class)
-    public ResponseEntity<?> handleUserCreationException(DuplicateUserException ex) {
+    public ResponseEntity<?> handleDuplicateUserException(DuplicateUserException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username OR Mobile number already exists");
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentialsException(
+            BadCredentialsException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Invalid username or password");
     }
 }

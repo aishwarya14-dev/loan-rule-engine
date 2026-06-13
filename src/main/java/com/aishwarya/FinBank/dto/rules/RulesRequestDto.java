@@ -13,8 +13,4 @@ public class RulesRequestDto {
     private String dslRule;
     @NotNull
     private Long loanTypeId;
-
-    public String getRuleText() {
-        return dslRule;
-    }
 }

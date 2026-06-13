@@ -1,7 +1,6 @@
 package com.aishwarya.FinBank.controller;
 
 import com.aishwarya.FinBank.dto.response.UserResponseDto;
-import com.aishwarya.FinBank.exceptions.UserCreationException;
 import com.aishwarya.FinBank.model.User;
 import com.aishwarya.FinBank.service.UserDetailsServiceImpl;
 import com.aishwarya.FinBank.service.UserService;
@@ -40,14 +39,10 @@ public class PublicController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user){
-        try{
+    public ResponseEntity<String> login( @RequestBody User user){
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
-            userDetailsService.loadUserByUsername(user.getUsername());
             String jwt = jwtUtil.generateToken(user.getUsername());
             return new ResponseEntity<>(jwt, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
     }
-}
+

@@ -46,10 +46,11 @@ spring:
     redis:
       url: ${REDIS_URL}
       repositories:
-        enabled: false
+        enabled: true
 
   flyway:
     fail-on-unsupported-database: false
+    enabled : true
 
   security:
     jwt:

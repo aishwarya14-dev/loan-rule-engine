@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://ep-floral-flower-aog3dqhi.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner
+    password: npg_iZ0dV7vUrocm
     #    driver-class-name: org.postgresql.Driver
 
     hikari:
@@ -18,16 +18,17 @@ spring:
 
   data:
     redis:
-      url: ${REDIS_URL}
+      url: redis://default:DEv4SNSQzChdJhPid4kG9J8MGqQy27m3@redis-19330.c264.ap-south-1-1.ec2.cloud.redislabs.com:19330
       repositories:
         enabled: false
 
   flyway:
     fail-on-unsupported-database: false
+    enabled: false
 
   security:
     jwt:
-      secret: ${JWT_SECRET}
+      secret: mySuperSecretKey123456789
       expiration: 3600000
 
 

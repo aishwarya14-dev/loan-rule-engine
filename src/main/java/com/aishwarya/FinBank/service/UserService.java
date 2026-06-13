@@ -36,7 +36,7 @@ public class UserService {
              userRepository.save(user);
              return new UserResponseDto(user.getUsername(), user.getMobileNumber());
         } catch (Exception e){
-            logger.error("error occured for {} ", user.getUsername(),e);
+            logger.error("error occurred for {} ", user.getUsername(),e);
             throw new UserCreationException(
                     "Failed to create user", e);
         }

@@ -5,19 +5,20 @@ import com.aishwarya.FinBank.model.User;
 import com.aishwarya.FinBank.service.UserDetailsServiceImpl;
 import com.aishwarya.FinBank.service.UserService;
 import com.aishwarya.FinBank.utility.JwtUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -95,8 +96,45 @@ public class PublicControllerTest {
     }
 
     @Test
-    public void testLoginUser() {
-        // Implement test for user login
+    void shouldReturnJwtWhenCredentialsAreValid() throws Exception{
+        User user = User.builder()
+                .username("semblance@gmail.com")
+                .password("password123")
+                .role("USER")
+                .mobileNumber("9876543210")
+                .build();
+        when(jwtUtil.generateToken(user.getUsername())).thenReturn("0febrwFEMCdaftqz3u/im5JKJOAmKGo8Fbyr/r3WA0Q=");
+        String request = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/public/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        ).andExpect(status().isOk());
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(jwtUtil).generateToken("semblance@gmail.com");
+    }
+
+    @Test
+    public void testLoginUserShouldThrowExceptionWhenIncorrectUsername() {
+        User user = User.builder()
+                .username("abcxyz")
+                .password("password123")
+                .role("USER")
+                .mobileNumber("9876543210")
+                .build();
+
+        when(authenticationManager.authenticate(any())).thenThrow(new RuntimeException());
+    }
+
+    @Test
+    public void testLoginUserShouldThrowExceptionWhenIncorrectPassword() {
+        User user = User.builder()
+                .username("semblance@gmail.com")
+                .password("xxxxx")
+                .role("USER")
+                .mobileNumber("9876543210")
+                .build();
+
+        when(authenticationManager.authenticate(any())).thenThrow(new RuntimeException());
     }
 
 
