@@ -10,7 +10,7 @@ logging:
     org.springframework.data.redis: DEBUG
     io.lettuce.core: DEBUG
   file:
-    name: logs/finbank-rule-engine.log                  # write to file
+    name: logs/loan-rule-engine.log                  # write to file
     pattern:
       console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
       file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
@@ -18,7 +18,7 @@ logging:
       rollingpolicy:
         max-file-size: 10MB                               # rotate after 10MB
         max-history: 30                                   # keep 30 days of logs
-        file-name-pattern: logs/finbank-rule-engine-%d{yyyy-MM-dd}.%i.log
+        file-name-pattern: logs/loan-rule-engine-%d{yyyy-MM-dd}.%i.log
 
 spring:
   datasource:
@@ -60,7 +60,7 @@ spring:
 
 server:
   servlet:
-    context-path: /loan-processing
+    context-path: /loan-rule-engine
     session:
       timeout: 30m
       cookie:
