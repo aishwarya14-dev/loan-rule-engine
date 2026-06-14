@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.aishwarya</groupId>
-	<artifactId>FinBank</artifactId>
+	<artifactId>loan-rule-engine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 <!--	<type>FinBank – Smart Credit Risk Engine</type>-->
-	<description>Rule engine for fintech</description>
+	<description>Rule engine for Loan Application Approval</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -199,6 +199,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>loan-rule-engine</finalName>
 	</build>
 
 </project>

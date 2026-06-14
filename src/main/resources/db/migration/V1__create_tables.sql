@@ -38,8 +38,9 @@ CREATE TABLE users (
 CREATE TABLE dsl_rule (
     id BIGSERIAL PRIMARY KEY,
     dsl_rule TEXT,
-    version INT,
     loan_type_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_dsl_rule_loan_type
         FOREIGN KEY (loan_type_id)
@@ -84,7 +85,18 @@ CREATE TABLE loan_application (
     CONSTRAINT fk_employment_type FOREIGN KEY (employment_type_id) REFERENCES employment_type(id)
 );
 
+CREATE TABLE rule_result (
+    id BIGSERIAL PRIMARY KEY,
+    passed BOOLEAN,
+    message TEXT,
+    expected_value TEXT,
+    description TEXT,
+    loan_application_id BIGINT,
 
+    CONSTRAINT fk_rule_result_application
+    FOREIGN KEY (loan_application_id)
+    REFERENCES loan_application(id)
+);
 
 
 
