@@ -12,14 +12,12 @@ import java.util.stream.Collectors;
 public class CompositeRuleEvaluation implements RuleEvaluation {
     private Logic logic;
     private List<RuleEvaluation> ruleEvaluations;
-    private LoanFieldAccessorRegistry fieldAccessorRegistry;
     private RuleMessageGenerator messageGenerator;
 
 
-    public CompositeRuleEvaluation(List<RuleEvaluation> ruleEvaluations, Logic logic, LoanFieldAccessorRegistry fieldAccessorRegistry, RuleMessageGenerator messageGenerator) {
+    public CompositeRuleEvaluation(List<RuleEvaluation> ruleEvaluations, Logic logic, RuleMessageGenerator messageGenerator) {
         this.ruleEvaluations = ruleEvaluations;
         this.logic = logic;
-        this.fieldAccessorRegistry = fieldAccessorRegistry;
         this.messageGenerator = messageGenerator;
     }
 

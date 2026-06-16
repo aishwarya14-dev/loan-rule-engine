@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DslRulesParser {
     public Rule parseDslRule(String dslRule) {
+        if(dslRule == null)
+            throw new DslParsingException("DSL rule cannot be null");
+
         try
         {
             CharStream charStream = CharStreams.fromString(dslRule);
@@ -21,14 +24,14 @@ public class DslRulesParser {
             CommonTokenStream tokensStream = new CommonTokenStream(lexer);
             LoanRulesParser parser = new LoanRulesParser(tokensStream);
             LoanRulesParser.StatementContext tree = parser.statement();
+            System.out.println(tree == null);
+            if (parser.getNumberOfSyntaxErrors() > 0) {
+                throw new DslParsingException("DSL rule is not valid");
+            }
             LoanRulesVisitor visitor = new LoanRulesVisitor();
 
             return visitor.visitStatement(tree);
 
-        } catch (NullPointerException e){
-            throw new DslParsingException("DSL rule cannot be null" + e.getMessage());
-        } catch (RecognitionException e){
-            throw new DslParsingException("DSL rule is not valid: " + e.getMessage());
         } catch (ClassCastException e){
             throw new DslParsingException("Internal error while building rule from: " + dslRule);
         } catch (IllegalArgumentException e) {

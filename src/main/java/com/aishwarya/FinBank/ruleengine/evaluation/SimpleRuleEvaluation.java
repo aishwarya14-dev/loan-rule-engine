@@ -27,8 +27,9 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
 
     @Override
     public RuleResult evaluate(LoanApplication application) {
-        Function<LoanApplication,Object> function = registry.getAccessor(field);
-        Object actualValue = function.apply(application);
+        Function<LoanApplication,Object> actualValGetterFunction = registry.getActualValGetterFunction(field);
+        //get the actual value of the field from the application
+        Object actualValue = actualValGetterFunction.apply(application);
 
         boolean result = ComparisonEvaluator.evaluate(actualValue, expectedValue,operator);
         String message = messageGenerator.generateMessage(field, operator + "",  expectedValue,actualValue, result);

@@ -39,14 +39,14 @@ public class CompositeRuleEvaluationFactory {
                     buildCompositeRuleEvaluationObject(andExpr.getLeft()),
                     buildCompositeRuleEvaluationObject(andExpr.getRight())
             );
-            return new CompositeRuleEvaluation(evaluations, Logic.AND, registry,ruleMessageGenerator);
+            return new CompositeRuleEvaluation(evaluations, Logic.AND,ruleMessageGenerator);
 
         } else if (expression instanceof OrExpression orExpr) {
             List<RuleEvaluation> evaluations = List.of(
                     buildCompositeRuleEvaluationObject(orExpr.getLeft()),
                     buildCompositeRuleEvaluationObject(orExpr.getRight())
             );
-            return new CompositeRuleEvaluation(evaluations, Logic.OR, registry,ruleMessageGenerator);
+            return new CompositeRuleEvaluation(evaluations, Logic.OR, ruleMessageGenerator);
         }
 
         throw new IllegalArgumentException("Unknown expression type: " + expression.getClass());
