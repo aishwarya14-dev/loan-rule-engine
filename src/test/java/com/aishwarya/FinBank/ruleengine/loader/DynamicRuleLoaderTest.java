@@ -42,7 +42,6 @@ public class DynamicRuleLoaderTest {
     private Rule rule2;
 
 
-
     private LoanType loanType(String name){
        LoanType loanType = new LoanType();
        loanType.setId(1L);
@@ -90,51 +89,48 @@ public class DynamicRuleLoaderTest {
         assertThat(rules).hasSize(0);
     }
 
-//    //when one rule fails to parse
-//    @Test
-//    public void shouldSkipFailedRuleAndContinueLoadingRest(){
-//        DslRule validDslRule   = dslRule("IF creditScore > 700 THEN approve");
-//        DslRule invalidDslRule = dslRule("IF ??? THEN approve");
-//        Rule validRule = mock(Rule.class);
-//
-//        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of(validDslRule,invalidDslRule));
-//        when(dslRulesParser.parseDslRule("IF creditScore > 700 THEN approve")).thenReturn(validRule);
-//        when(dslRulesParser.parseDslRule("IF ??? THEN approve")).thenThrow(new RuntimeException("Parse failed"));
-//
-//        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
-//
-//        assertThat(result).hasSize(1);
-//        assertThat(result).containsExactly(validRule);
-//    }
+    //when one rule fails to parse
+    @Test
+    public void shouldSkipFailedRuleAndContinueLoadingRest(){
+        DslRule validDslRule   = dslRule("IF creditScore > 700 THEN approve");
+        DslRule invalidDslRule = dslRule("IF ??? THEN approve");
+        Rule validRule = mock(Rule.class);
 
-//    //when fail to parse all the rules
-//    @Test
-//    void shouldReturnEmptyListWhenAllRulesFailToParse(){
-//        DslRule badRule1 = dslRule("IF ??? THEN approve");
-//        DslRule badRule2 = dslRule("IF @@@ THEN reject");
-//
-//        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of(badRule1,badRule2));
-//
-//        when(dslRulesParser.parseDslRule(any()))
-//                .thenThrow(new RuntimeException("Parse failed"));
-//
-//        // when
-//        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
-//
-//        // then
-//        assertThat(result).isEmpty();
-//    }
+        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of(validDslRule,invalidDslRule));
+        when(dslRulesParser.parseDslRule("IF creditScore > 700 THEN approve")).thenReturn(validRule);
+        when(dslRulesParser.parseDslRule("IF ??? THEN approve")).thenThrow(new RuntimeException("Parse failed"));
 
-//    //when repo throws exception
-//    @Test
-//    void shouldReturnEmptyListWhenRepositoryThrows(){
-//        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN"))
-//                .thenThrow(new RuntimeException("DB connection failed"));
-//
-//        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
-//
-//        assertThat(result).isEmpty();
-//
-//    }
+        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
+
+        assertThat(result).hasSize(1);
+        assertThat(result).containsExactly(validRule);
+    }
+
+    //when fail to parse all the rules
+    @Test
+    void shouldReturnEmptyListWhenAllRulesFailToParse(){
+        DslRule badRule1 = dslRule("IF ??? THEN approve");
+        DslRule badRule2 = dslRule("IF @@@ THEN reject");
+
+        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of(badRule1,badRule2));
+
+        when(dslRulesParser.parseDslRule(any()))
+                .thenThrow(new RuntimeException("Parse failed"));
+
+        // when
+        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    //when repo throws exception
+    @Test
+    void shouldReturnEmptyListWhenRepositoryThrows(){
+        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of());
+        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
+        assertThat(result).isEmpty();
+
+    }
 
 }

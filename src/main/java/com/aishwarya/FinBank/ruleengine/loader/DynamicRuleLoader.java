@@ -42,15 +42,13 @@ public class DynamicRuleLoader implements RuleLoader {
                 }
                 catch (DslParsingException e) {
                     log.error("Failed to parse DSL rule: {}", dslRule.getDslRule(), e);
-                    throw new DslParsingException("" + e);
                 } catch (Exception e){
-                    throw new DslParsingException("exception occurred while parsing");
+                    log.error("Unexpected error while parsing DSL rule: {}", dslRule.getDslRule(), e);
                 }
             }
         }
         catch (DataAccessException e) {
             log.error("Failed to fetch rules for loan type: {}", loanType.getLoanType(), e);
-            throw new LoanEvaluationException("loan evaluation temporarily unavailable");
         }
         return rules;
     }
