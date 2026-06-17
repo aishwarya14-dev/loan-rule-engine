@@ -1,7 +1,7 @@
 package com.aishwarya.Finbank.filter;
 
 
-import com.aishwarya.FinBank.utility.JwtUtil;
+import com.aishwarya.Finbank.utility.JwtUtil;
 import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
