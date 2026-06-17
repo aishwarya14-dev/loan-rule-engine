@@ -1,6 +1,26 @@
-version: '3.8'
 
 services:
+
+  app:
+    build: .
+    container_name: loan-rule-engine
+
+    env_file:
+      - .env
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      REDIS_URL: ${REDIS_URL}
+
+      JWT_SECRET: ${JWT_SECRET}
 
   prometheus:
     image: prom/prometheus:latest
@@ -22,8 +42,14 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
 
+networks:
+  monitoring:
+    driver: bridge
+
 volumes:
   grafana-data:
+  prometheus-data:

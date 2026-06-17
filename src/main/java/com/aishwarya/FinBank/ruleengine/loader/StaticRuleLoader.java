@@ -1,26 +1,31 @@
 package com.aishwarya.FinBank.ruleengine.loader;
 
-import com.aishwarya.FinBank.ruleengine.dto.RuleDto;
-import com.aishwarya.FinBank.ruleengine.dto.mappers.RuleMapper;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
+import com.aishwarya.FinBank.dto.rules.staticrules.RuleDto;
+import com.aishwarya.FinBank.mapper.RuleMapper;
+import com.aishwarya.FinBank.model.LoanType;
+import com.aishwarya.FinBank.model.Rule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
 
-@Component("staticRuleLoader")
+@Slf4j
+@Component
+@AllArgsConstructor
+@Qualifier("staticRuleLoader")
 public class StaticRuleLoader implements RuleLoader{
-    @Autowired
+
     private ObjectMapper objectMapper;
 
-    @Autowired
     private RuleMapper ruleMapper;
 
     @Override
-    public List<Rule> loadRules() {
+    public List<Rule> loadRules(LoanType loanType) {
        try {
            List<RuleDto> ruleDtoList = objectMapper.readValue(
                    getClass().getClassLoader().getResourceAsStream("static-rules.json"),
@@ -35,6 +40,5 @@ public class StaticRuleLoader implements RuleLoader{
        } catch (Exception e) {
            throw new RuntimeException("Unexpected error while loading rules: " + e.getMessage(), e);
        }
-
     }
 }

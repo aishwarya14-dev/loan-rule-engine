@@ -4,31 +4,32 @@ import com.aishwarya.FinBank.dto.loanApplication.LoanApplicationRequestDto;
 import com.aishwarya.FinBank.mapper.LoanApplicationMapper;
 import com.aishwarya.FinBank.model.LoanApplication;
 import com.aishwarya.FinBank.repository.LoanRepository;
-import com.aishwarya.FinBank.ruleengine.service.RuleEngineService;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class LoanService {
-    @Autowired
-    private LoanRepository loanRepository;
-    @Autowired
-    RuleEngineService ruleEngineService;
-    @Autowired
-    private LoanApplicationMapper mapper;
 
+    private LoanRepository loanRepository;
+
+    private RuleEngineService ruleEngineService;
+
+    private LoanApplicationMapper loanApplicationMapper;
 
     public void acceptLoanApplication(LoanApplicationRequestDto application) {
-        LoanApplication loanApplication =  createLoanApplication(application);
-        ruleEngineService.evaluateLoanApplication(loanApplication, "STATIC");
+        // create loan object
+        LoanApplication loanApplication =  createLoanApplicationObject(application);
+
+        // send for evaluation
+        ruleEngineService.evaluateLoanApplication(loanApplication);
         System.out.println("Loan application accepted for: " + application.getApplicantName());
     }
 
-    public LoanApplication createLoanApplication(LoanApplicationRequestDto dto) {
-        // Convert DTO → Entity
-        LoanApplication entity = mapper.toEntity(dto);
+    public LoanApplication createLoanApplicationObject(LoanApplicationRequestDto dto) {
+        // Convert DTO to Entity
+        LoanApplication entity = loanApplicationMapper.toEntity(dto);
         return loanRepository.save(entity);
     }
 }

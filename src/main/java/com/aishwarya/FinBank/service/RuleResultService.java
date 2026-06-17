@@ -1,11 +1,9 @@
 package com.aishwarya.FinBank.service;
 
-import com.aishwarya.FinBank.ruleengine.model.RuleResult;
-import com.aishwarya.FinBank.ruleengine.repository.RuleResultRepo;
+import com.aishwarya.FinBank.model.RuleResult;
+import com.aishwarya.FinBank.repository.RuleResultRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class RuleResultService {

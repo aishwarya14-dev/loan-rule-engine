@@ -2,6 +2,7 @@ package com.aishwarya.FinBank.model;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "loan_application")
 @NoArgsConstructor
+@Getter
 public class LoanApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,67 +89,11 @@ public class LoanApplication {
         this.applicationDate = LocalDateTime.now();
     }
 
-
-        public Integer getId() {
-            return id;
-        }
-
-        public User getUser() {
-            return user;
-        }
-        public LoanType getLoanType() {
-            return loanType;
-        }
-
-        public String getApplicantName() {
-            return applicantName;
-        }
-
-        public String getApplicantEmail() {
-            return applicantEmail;
-        }
-
-        public String getApplicantContact() {
-            return applicantContact;
-        }
-
-        public Integer getCreditScore() {
-            return creditScore;
-        }
-
         public void updateCreditScore(Integer creditScore) {
             if (creditScore < 300 || creditScore > 900) {
                 throw new IllegalArgumentException("Invalid credit score");
             }
             this.creditScore = creditScore;
-        }
-
-        public ApplicationStatus getStatus() {
-            return status;
-        }
-
-        public String getRemarks() {
-            return remarks;
-        }
-
-        public void updateRemarks(String remarks) {
-            this.remarks = remarks;
-        }
-
-        public LocalDateTime getApplicationDate() {
-            return applicationDate;
-        }
-
-        public LocalDateTime getApprovalDate() {
-            return approvalDate;
-        }
-
-        public BigDecimal getMonthlyIncome() {
-            return monthlyIncome;
-        }
-
-        public Integer getExistingLoans() {
-            return existingLoans;
         }
 
         public void updateExistingLoans(Integer existingLoans) {
@@ -157,23 +103,11 @@ public class LoanApplication {
             this.existingLoans = existingLoans;
         }
 
-        public BigDecimal getLoanAmount() {
-            return loanAmount;
-        }
-
-        public Double getInterestRate() {
-            return interestRate;
-        }
-
         public void updateInterestRate(Double interestRate) {
            if (interestRate < 7.5 || interestRate > 30) {
             throw new IllegalArgumentException("Invalid interest rate");
           }
         this.interestRate = interestRate;
-        }
-
-        public Integer getLoanTenureMonths() {
-            return loanTenureMonths;
         }
 
         public void updateLoanTenureMonths(Integer tenureMonths) {
@@ -183,35 +117,12 @@ public class LoanApplication {
             this.loanTenureMonths = tenureMonths;
         }
 
-        public Integer getAge() {
-        return age;
-    }
-
-        public Integer getCompanyRating() {
-        return companyRating;
-    }
-
         public void updateCompanyRating(Integer companyRating) {
             if (companyRating != null && (companyRating < 1 || companyRating > 5)) {
                 throw new IllegalArgumentException("Invalid company rating");
             }
             this.companyRating = companyRating;
-    }
-
-        public Integer getEmploymentTenure() {
-          return employmentTenure;
-        }
-        public JobTitle getJobTitle() {
-        return jobTitle;
-    }
-
-        public Region getRegion() {
-        return region;
-    }
-
-        public EmploymentType getEmploymentType() {
-        return employmentType;
-    }
+         }
 
 
         public void approve() {

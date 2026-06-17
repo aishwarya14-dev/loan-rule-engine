@@ -2,14 +2,17 @@ package com.aishwarya.FinBank.ruleengine.parser;
 
 import com.aishwarya.FinBank.LoanRulesBaseVisitor;
 import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.ruleengine.model.Action;
-import com.aishwarya.FinBank.ruleengine.model.Rule;
-import com.aishwarya.FinBank.ruleengine.model.RuleType;
-import com.aishwarya.FinBank.ruleengine.model.condition.AndExpression;
-import com.aishwarya.FinBank.ruleengine.model.condition.Condition;
-import com.aishwarya.FinBank.ruleengine.model.condition.Expression;
-import com.aishwarya.FinBank.ruleengine.model.condition.OrExpression;
-import com.aishwarya.FinBank.ruleengine.model.value.RuleValue;
+import com.aishwarya.FinBank.model.Action;
+import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.FinBank.model.RuleType;
+import com.aishwarya.FinBank.model.expression.AndExpression;
+import com.aishwarya.FinBank.model.expression.Condition;
+import com.aishwarya.FinBank.model.expression.Expression;
+import com.aishwarya.FinBank.model.expression.OrExpression;
+import com.aishwarya.FinBank.model.value.DoubleValue;
+import com.aishwarya.FinBank.model.value.IntValue;
+import com.aishwarya.FinBank.model.value.RuleValue;
+import com.aishwarya.FinBank.model.value.StringValue;
 import com.aishwarya.FinBank.utility.Operator;
 
 
@@ -21,11 +24,6 @@ public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
         Action action = (Action) visit(ctx.action());
         RuleType type = (expression instanceof Condition) ? RuleType.SIMPLE : RuleType.COMPOSITE;
         return new Rule(expression, action, type);
-    }
-
-    @Override
-    public Rule visitValue(LoanRulesParser.ValueContext ctx) {
-        return null;
     }
 
     @Override
@@ -71,6 +69,24 @@ public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
             case "!=" -> Operator.NE;
             default   -> throw new IllegalArgumentException("Unknown operator: " + ctx.getText());
         };
+    }
+
+    @Override
+    public IntValue visitIntValue(LoanRulesParser.IntValueContext ctx){
+        int parsed = Integer.parseInt(ctx.NUMBER().getText());
+        return new IntValue(parsed);
+    }
+
+    @Override
+    public DoubleValue visitDecimalValue(LoanRulesParser.DecimalValueContext ctx){
+        double parsed = Double.parseDouble(ctx.DECIMAL().getText());
+        return new DoubleValue(parsed);
+    }
+
+    @Override
+    public StringValue visitStringValue(LoanRulesParser.StringValueContext ctx){
+        String raw = ctx.getText();
+        return new StringValue(raw);
     }
 
     @Override

@@ -8,12 +8,11 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class RulesRequestDto {
     @NotBlank(message = "Rule text cannot be blank")
     private String dslRule;
     @NotNull
-    private Integer loanTypeId;
+    private Long loanTypeId;
 
     public String getRuleText() {
         return dslRule;

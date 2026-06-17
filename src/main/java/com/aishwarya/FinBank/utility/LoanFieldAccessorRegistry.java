@@ -15,16 +15,31 @@ public class LoanFieldAccessorRegistry {
 
     public LoanFieldAccessorRegistry(){
         fieldAccessors.put("creditScore",LoanApplication :: getCreditScore);
-        fieldAccessors.put("loanAmount",LoanApplication :: getLoanAmount);
-        fieldAccessors.put("monthlyIncome",LoanApplication :: getMonthlyIncome);
         fieldAccessors.put("existingLoans",LoanApplication :: getExistingLoans);
         fieldAccessors.put("employmentTenure",LoanApplication :: getEmploymentTenure);
         fieldAccessors.put("companyRating",LoanApplication :: getCompanyRating);
-        fieldAccessors.put("region",LoanApplication :: getRegion);
-        fieldAccessors.put("employmentType",LoanApplication :: getEmploymentType);
+
+        fieldAccessors.put("loanAmount",
+                app -> app.getLoanAmount() != null
+                        ? app.getLoanAmount().doubleValue()
+                        : null);
+
+        fieldAccessors.put("monthlyIncome",
+                app -> app.getMonthlyIncome() != null
+                        ? app.getMonthlyIncome().doubleValue()
+                        : null);
+
+        fieldAccessors.put("region",
+                app -> app.getRegion() != null
+                        ? app.getRegion().getRegionName()
+                        : null);
+        fieldAccessors.put("employmentType",
+                app -> app.getEmploymentType() != null
+                        ? app.getEmploymentType().getEmploymentType()
+                        : null);
     }
 
-    public Function<LoanApplication, Object> getAccessor(String fieldName) {
+    public Function<LoanApplication, Object> getActualValGetterFunction(String fieldName) {
         Function<LoanApplication, Object> accessor = fieldAccessors.get(fieldName);
         if (accessor == null) {
             throw new IllegalArgumentException(

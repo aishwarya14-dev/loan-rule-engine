@@ -30,7 +30,9 @@ operator
     ;
 
 value
-    : NUMBER
+    : NUMBER          # intValue
+    | DECIMAL         # decimalValue
+    | STRING_LITERAL  # stringValue
     ;
 
 action
@@ -55,4 +57,6 @@ OR      : 'OR';
 
 IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
 NUMBER     : [0-9]+ ;
+DECIMAL    : [0-9]+ '.' [0-9]+ ;
+STRING_LITERAL : '\'' [a-zA-Z0-9_]+ '\'' ;
 WS         : [ \t\r\n]+ -> skip ;
