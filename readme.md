@@ -1,6 +1,6 @@
 You define the rules of your custom DSL in an ANTLR grammar file, and ANTLR creates the parser to understand it.
 
-# FinBank Loan Rule Engine
+# Loan Rule Engine
 
 A domain-specific language (DSL) based rule parsing and evaluation engine for automated loan approval decisions. Business users define rules in plain English-like syntax, which are parsed at runtime using ANTLR4, modeled as an Abstract Syntax Tree using the Composite Pattern, and evaluated against loan applications using the Strategy Pattern.
 
@@ -25,7 +25,7 @@ A domain-specific language (DSL) based rule parsing and evaluation engine for au
 
 ## Overview
 
-FinBank Rule Engine allows business users to define loan approval rules using a human-readable DSL without touching any Java code. Rules are stored as plain strings in the database, fetched at evaluation time, parsed by ANTLR4 into an AST, and evaluated against a loan application to produce an `APPROVE`, `REJECT`, or `REVIEW` decision.
+Loan Rule Engine allows business users to define loan approval rules using a human-readable DSL without touching any Java code. Rules are stored as plain strings in the database, fetched at evaluation time, parsed by ANTLR4 into an AST, and evaluated against a loan application to produce an `APPROVE`, `REJECT`, or `REVIEW` decision.
 
 ```
 IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve
