@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank;
+package com.aishwarya.Finbank;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
