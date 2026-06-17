@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Table(name = "dsl_rule")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DslRule {

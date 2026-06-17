@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-@Entity
+@Entity(name = "loan_type")
 @NoArgsConstructor
 @Getter
 @Setter

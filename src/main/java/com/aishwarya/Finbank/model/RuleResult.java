@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.aishwarya.Finbank.model.LoanApplication;
 
-@Entity
+@Entity(name = "rule_result")
 @Getter
 @Setter
 @NoArgsConstructor

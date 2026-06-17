@@ -3,7 +3,7 @@ package com.aishwarya.Finbank.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+@Entity(name = "employment_type")
 @Getter
 @Setter
 @AllArgsConstructor
