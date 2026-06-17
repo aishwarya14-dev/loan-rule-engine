@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.utility;
+package com.aishwarya.Finbank.utility;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
