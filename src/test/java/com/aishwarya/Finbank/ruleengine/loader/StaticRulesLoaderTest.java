@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.loader;
+package com.aishwarya.Finbank.ruleengine.loader;
 
 import com.aishwarya.Finbank.dto.rules.staticrules.RuleDto;
 import com.aishwarya.Finbank.mapper.RuleMapper;

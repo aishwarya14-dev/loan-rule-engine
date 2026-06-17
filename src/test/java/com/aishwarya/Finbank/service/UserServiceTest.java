@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.service;
+package com.aishwarya.Finbank.service;
 import com.aishwarya.Finbank.dto.response.UserResponseDto;
 import com.aishwarya.Finbank.exceptions.DuplicateUserException;
 import com.aishwarya.Finbank.exceptions.UserCreationException;

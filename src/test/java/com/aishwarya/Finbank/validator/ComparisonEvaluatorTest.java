@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.validator;
+package com.aishwarya.Finbank.validator;
 
 public class ComparisonEvaluatorTest {
 }

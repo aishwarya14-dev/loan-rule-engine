@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.controller;
+package com.aishwarya.Finbank.controller;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

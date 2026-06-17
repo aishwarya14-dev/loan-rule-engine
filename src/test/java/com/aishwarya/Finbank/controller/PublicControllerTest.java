@@ -1,5 +1,5 @@
 package com.aishwarya.Finbank.controller;
-import com.aishwarya.FinBank.utility.JwtUtil;
+import com.aishwarya.Finbank.utility.JwtUtil;
 import com.aishwarya.Finbank.controller.PublicController;
 import com.aishwarya.Finbank.dto.response.UserResponseDto;
 import com.aishwarya.Finbank.model.User;

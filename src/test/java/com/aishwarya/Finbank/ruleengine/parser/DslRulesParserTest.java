@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.parser;
+package com.aishwarya.Finbank.ruleengine.parser;
 
 import com.aishwarya.Finbank.exceptions.DslParsingException;
 import com.aishwarya.Finbank.model.Rule;

@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.evaluator;
+package com.aishwarya.Finbank.ruleengine.evaluator;
 
 import com.aishwarya.Finbank.ruleengine.evaluator.DynamicRulesEvaluator;
 import com.aishwarya.Finbank.ruleengine.factory.CompositeRuleEvaluationFactory;

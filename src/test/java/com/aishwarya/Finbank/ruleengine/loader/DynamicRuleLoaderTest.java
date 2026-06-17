@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.ruleengine.loader;
+package com.aishwarya.Finbank.ruleengine.loader;
 
 import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.model.LoanType;
