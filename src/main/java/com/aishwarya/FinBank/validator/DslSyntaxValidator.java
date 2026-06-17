@@ -1,8 +1,8 @@
-package com.aishwarya.FinBank.ruleValidator;
+package com.aishwarya.Finbank.validator;
 
-import com.aishwarya.FinBank.LoanRulesLexer;
-import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.exceptions.DslValidationException;
+import com.aishwarya.Finbank.LoanRulesLexer;
+import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.exceptions.DslValidationException;
 import org.antlr.v4.runtime.*;
 import org.springframework.stereotype.Component;
 
@@ -40,12 +40,12 @@ public class DslSyntaxValidator {
         LoanRulesParser parser = new LoanRulesParser(tokens);
 
         parser.removeErrorListeners();
-        parser.addErrorListener(new BaseErrorListener(){
+        parser.addErrorListener(new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer,
-                                     Object offendingSymbol,
-                                     int line, int charPositionInLine,
-                                     String msg, RecognitionException e){
+                                    Object offendingSymbol,
+                                    int line, int charPositionInLine,
+                                    String msg, RecognitionException e) {
                 errors.add("Lexer error at " + line + ":"
                         + charPositionInLine + " — " + msg);
             }

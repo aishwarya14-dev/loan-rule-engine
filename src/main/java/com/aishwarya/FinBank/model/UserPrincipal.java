@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.model;
+package com.aishwarya.Finbank.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,6 +10,7 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
     private User user;
+
     public UserPrincipal(User user) {
         this.user = user;
     }

@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.filter;
+package com.aishwarya.Finbank.filter;
 
-import com.aishwarya.FinBank.service.UserDetailsServiceImpl;
+
 import com.aishwarya.FinBank.utility.JwtUtil;
+import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtFilter  extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 

@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.service;
+package com.aishwarya.Finbank.service;
 
-import com.aishwarya.FinBank.model.User;
-import com.aishwarya.FinBank.repository.UserRepository;
+
+import com.aishwarya.Finbank.model.User;
+import com.aishwarya.Finbank.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,13 +18,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        if(user != null){
+        if (user != null) {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUsername())
                     .password(user.getPassword())
                     .build();
         }
-        throw new UsernameNotFoundException("user not found with username "+ username);
+        throw new UsernameNotFoundException("user not found with username " + username);
     }
 }
 

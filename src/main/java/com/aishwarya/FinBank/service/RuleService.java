@@ -1,14 +1,15 @@
-package com.aishwarya.FinBank.service;
-import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.dto.rules.RulesRequestDto;
-import com.aishwarya.FinBank.model.LoanType;
-import com.aishwarya.FinBank.repository.LoanTypeRepo;
-import com.aishwarya.FinBank.ruleValidator.DslDuplicateValidator;
-import com.aishwarya.FinBank.ruleValidator.DslSemanticValidator;
-import com.aishwarya.FinBank.ruleValidator.DslSyntaxValidator;
-import com.aishwarya.FinBank.model.DslRule;
-import com.aishwarya.FinBank.repository.RuleRepository;
-import com.aishwarya.FinBank.ruleengine.loader.DynamicRuleLoader;
+package com.aishwarya.Finbank.service;
+
+import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.dto.rules.RulesRequestDto;
+import com.aishwarya.Finbank.model.DslRule;
+import com.aishwarya.Finbank.model.LoanType;
+import com.aishwarya.Finbank.repository.LoanTypeRepo;
+import com.aishwarya.Finbank.repository.RuleRepository;
+import com.aishwarya.Finbank.ruleengine.loader.DynamicRuleLoader;
+import com.aishwarya.Finbank.validator.DslDuplicateValidator;
+import com.aishwarya.Finbank.validator.DslSemanticValidator;
+import com.aishwarya.Finbank.validator.DslSyntaxValidator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,13 +55,13 @@ public class RuleService {
         entity.setLoanType(loanType);
 
         // save rule to the db
-        DslRule savedRule =  dslRuleRepository.save(entity);
+        DslRule savedRule = dslRuleRepository.save(entity);
         // evict cache
         evictByLoanType(loanType);
         return savedRule;
     }
 
-    public void evictByLoanType(LoanType loanType){
+    public void evictByLoanType(LoanType loanType) {
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronization() {
                     @Override

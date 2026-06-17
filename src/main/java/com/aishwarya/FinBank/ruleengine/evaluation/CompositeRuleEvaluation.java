@@ -1,10 +1,11 @@
-package com.aishwarya.FinBank.ruleengine.evaluation;
+package com.aishwarya.Finbank.ruleengine.evaluation;
 
-import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.model.Logic;
-import com.aishwarya.FinBank.model.RuleMessageGenerator;
-import com.aishwarya.FinBank.model.RuleResult;
-import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.model.LoanApplication;
+
+import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.model.Logic;
+import com.aishwarya.Finbank.model.RuleMessageGenerator;
+import com.aishwarya.Finbank.model.RuleResult;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,14 +30,14 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
 
         boolean finalResult = switch (logic) {
             case AND -> results.stream().allMatch(RuleResult::isPassed);
-            case OR  -> results.stream().anyMatch(RuleResult::isPassed);
+            case OR -> results.stream().anyMatch(RuleResult::isPassed);
         };
 
         String message = messageGenerator.generateMessage(
                 buildMessageSummary(results), finalResult
         );
 
-        return new RuleResult(finalResult, message, String.valueOf(collectExpectedValues(results)),application);
+        return new RuleResult(finalResult, message, String.valueOf(collectExpectedValues(results)), application);
     }
 
     private String buildMessageSummary(List<RuleResult> results) {

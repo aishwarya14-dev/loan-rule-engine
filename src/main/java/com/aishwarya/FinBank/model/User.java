@@ -1,14 +1,12 @@
-package com.aishwarya.FinBank.model;
+package com.aishwarya.Finbank.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 @Data
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Builder
 @AllArgsConstructor
 @Getter

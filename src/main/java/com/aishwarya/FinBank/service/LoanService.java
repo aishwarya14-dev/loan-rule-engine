@@ -1,9 +1,9 @@
-package com.aishwarya.FinBank.service;
+package com.aishwarya.Finbank.service;
+import com.aishwarya.Finbank.model.LoanApplication;
 
-import com.aishwarya.FinBank.dto.loanApplication.LoanApplicationRequestDto;
-import com.aishwarya.FinBank.mapper.LoanApplicationMapper;
-import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.repository.LoanRepository;
+import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationRequestDto;
+import com.aishwarya.Finbank.mapper.LoanApplicationMapper;
+import com.aishwarya.Finbank.repository.LoanRepository;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class LoanService {
 
     public void acceptLoanApplication(LoanApplicationRequestDto application) {
         // create loan object
-        LoanApplication loanApplication =  createLoanApplicationObject(application);
+        LoanApplication loanApplication = createLoanApplicationObject(application);
 
         // send for evaluation
         ruleEngineService.evaluateLoanApplication(loanApplication);

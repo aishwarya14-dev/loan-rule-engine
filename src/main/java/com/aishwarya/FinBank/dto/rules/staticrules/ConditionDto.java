@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.dto.rules.staticrules;
+package com.aishwarya.Finbank.dto.rules.staticrules;
 
-import com.aishwarya.FinBank.model.value.RuleValue;
+
 import com.aishwarya.FinBank.utility.Operator;
+import com.aishwarya.Finbank.model.value.RuleValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

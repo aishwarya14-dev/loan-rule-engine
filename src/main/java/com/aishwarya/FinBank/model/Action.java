@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.model;
+package com.aishwarya.Finbank.model;
 
 public enum Action {
     APPROVE,

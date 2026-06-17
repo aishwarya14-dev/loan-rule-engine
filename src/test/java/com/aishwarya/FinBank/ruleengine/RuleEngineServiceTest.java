@@ -1,9 +1,8 @@
-package com.aishwarya.FinBank.service.ruleengine;
+package com.aishwarya.Finbank.ruleengine;
 
-import com.aishwarya.FinBank.ruleengine.evaluator.DynamicRulesEvaluator;
-import com.aishwarya.FinBank.ruleengine.evaluator.StaticRulesEvaluator;
-import com.aishwarya.FinBank.ruleengine.loader.RuleLoader;
-import com.aishwarya.FinBank.service.RuleEngineService;
+import com.aishwarya.Finbank.ruleengine.evaluator.StaticRulesEvaluator;
+import com.aishwarya.Finbank.ruleengine.evaluator.DynamicRulesEvaluator;
+import com.aishwarya.Finbank.service.RuleEngineService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

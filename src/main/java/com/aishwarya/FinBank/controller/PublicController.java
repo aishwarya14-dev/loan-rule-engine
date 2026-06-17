@@ -1,10 +1,11 @@
-package com.aishwarya.FinBank.controller;
+package com.aishwarya.Finbank.controller;
 
-import com.aishwarya.FinBank.dto.response.UserResponseDto;
-import com.aishwarya.FinBank.model.User;
-import com.aishwarya.FinBank.service.UserDetailsServiceImpl;
-import com.aishwarya.FinBank.service.UserService;
+
 import com.aishwarya.FinBank.utility.JwtUtil;
+import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.model.User;
+import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
+import com.aishwarya.Finbank.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,16 +34,16 @@ public class PublicController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody User user){
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody User user) {
         UserResponseDto userResponseDto = userService.saveUser(user);
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login( @RequestBody User user){
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
-            String jwt = jwtUtil.generateToken(user.getUsername());
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
-        }
+    public ResponseEntity<String> login(@RequestBody User user) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        String jwt = jwtUtil.generateToken(user.getUsername());
+        return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
+}
 

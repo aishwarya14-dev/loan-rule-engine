@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.ruleengine.evaluator;
+package com.aishwarya.Finbank.ruleengine.evaluator;
 
-import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.Finbank.model.LoanApplication;
+import com.aishwarya.Finbank.model.Rule;
+
 
 import java.util.List;
 

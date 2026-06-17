@@ -1,14 +1,14 @@
-package com.aishwarya.FinBank.validator;
+package com.aishwarya.Finbank.validator;
 
-import com.aishwarya.FinBank.LoanRulesLexer;
-import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.exceptions.DslValidationException;
-import com.aishwarya.FinBank.repository.EmploymentTypeRepo;
-import com.aishwarya.FinBank.repository.JobTitleRepo;
-import com.aishwarya.FinBank.repository.LoanTypeRepo;
-import com.aishwarya.FinBank.repository.RegionRepo;
-import com.aishwarya.FinBank.ruleValidator.DslSemanticValidator;
-import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.LoanRulesLexer;
+import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.exceptions.DslValidationException;
+import com.aishwarya.Finbank.repository.EmploymentTypeRepo;
+import com.aishwarya.Finbank.repository.JobTitleRepo;
+import com.aishwarya.Finbank.repository.LoanTypeRepo;
+import com.aishwarya.Finbank.repository.RegionRepo;
+import com.aishwarya.Finbank.validator.DslSemanticValidator;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.dto.loanApplication;
+package com.aishwarya.Finbank.dto.loanApplication;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -17,9 +17,11 @@ public class LoanApplicationRequestDto {
     private Integer loanTypeId;
     @NotBlank(message = "Name is required")
     private String applicantName;
-    @NotBlank(message = "Email is required") @Email
+    @NotBlank(message = "Email is required")
+    @Email
     private String applicantEmail;
-    @NotBlank(message = "Contact is required") @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
+    @NotBlank(message = "Contact is required")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
     private String applicantContact;
     @Min(300)
     @Max(900)
@@ -27,15 +29,22 @@ public class LoanApplicationRequestDto {
     private Integer creditScore;
     @Size(max = 500)
     private String remarks;
-    @DecimalMin("15000") @NotNull
+    @DecimalMin("15000")
+    @NotNull
     private BigDecimal monthlyIncome;
     @Max(3)
     private Integer existingLoans;
-    @DecimalMin("50000") @NotNull @Positive
+    @DecimalMin("50000")
+    @NotNull
+    @Positive
     private BigDecimal loanAmount;
-    @DecimalMin("7.5") @DecimalMax("30.0") @NotNull
+    @DecimalMin("7.5")
+    @DecimalMax("30.0")
+    @NotNull
     private Double interestRate;
-    @Positive @Min(15) @NotNull
+    @Positive
+    @Min(15)
+    @NotNull
     private Integer loanTenureMonths;
     @NotNull
     private Integer jobTitleId;
@@ -47,7 +56,8 @@ public class LoanApplicationRequestDto {
     @Min(18)
     private Integer age;
     private Integer companyRating;
-    @Positive @NotNull
+    @Positive
+    @NotNull
     @Min(0)
     private Integer employmentTenure;
 }

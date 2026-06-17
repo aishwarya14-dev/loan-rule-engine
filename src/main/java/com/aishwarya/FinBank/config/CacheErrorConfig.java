@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.config;
+package com.aishwarya.Finbank.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class CacheErrorConfig {
 
     @Bean
-    public CacheErrorHandler cacheErrorHandler(){
+    public CacheErrorHandler cacheErrorHandler() {
 
         return new CacheErrorHandler() {
 

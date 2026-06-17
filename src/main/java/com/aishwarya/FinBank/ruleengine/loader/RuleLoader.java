@@ -1,10 +1,11 @@
-package com.aishwarya.FinBank.ruleengine.loader;
+package com.aishwarya.Finbank.ruleengine.loader;
 
-import com.aishwarya.FinBank.model.LoanType;
-import com.aishwarya.FinBank.model.Rule;
+
+import com.aishwarya.Finbank.model.LoanType;
+import com.aishwarya.Finbank.model.Rule;
 
 import java.util.List;
 
 public interface RuleLoader {
-     List<Rule> loadRules(LoanType loanType);
+    List<Rule> loadRules(LoanType loanType);
 }

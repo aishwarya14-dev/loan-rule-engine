@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.exceptions;
+package com.aishwarya.Finbank.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

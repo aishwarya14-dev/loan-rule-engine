@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.ruleengine.evaluation;
+package com.aishwarya.Finbank.ruleengine.evaluation;
 
-import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.model.RuleResult;
+import com.aishwarya.Finbank.model.LoanApplication;
+import com.aishwarya.Finbank.model.RuleResult;
+
 
 public interface RuleEvaluation {
     RuleResult evaluate(LoanApplication application);

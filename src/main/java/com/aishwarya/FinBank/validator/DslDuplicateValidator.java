@@ -1,7 +1,6 @@
-package com.aishwarya.FinBank.ruleValidator;
-
-import com.aishwarya.FinBank.exceptions.DslValidationException;
-import com.aishwarya.FinBank.repository.RuleRepository;
+package com.aishwarya.Finbank.validator;
+import com.aishwarya.Finbank.exceptions.DslValidationException;
+import com.aishwarya.Finbank.repository.RuleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
-package com.aishwarya.FinBank.controller;
+package com.aishwarya.Finbank.controller;
+import com.aishwarya.Finbank.model.LoanApplication;
 
-import com.aishwarya.FinBank.dto.loanApplication.LoanApplicationRequestDto;
-import com.aishwarya.FinBank.model.LoanApplication;
-import com.aishwarya.FinBank.service.LoanService;
+import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationRequestDto;
+import com.aishwarya.Finbank.service.LoanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class LoanController {
     private LoanService service;
 
     @PostMapping("/loanApplication")
-    public void acceptLoanApplication( @RequestBody LoanApplicationRequestDto application){
-       service.acceptLoanApplication(application);
+    public void acceptLoanApplication(@RequestBody LoanApplicationRequestDto application) {
+        service.acceptLoanApplication(application);
     }
 }

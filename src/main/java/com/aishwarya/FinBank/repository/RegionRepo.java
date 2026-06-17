@@ -1,6 +1,6 @@
-package com.aishwarya.FinBank.repository;
+package com.aishwarya.Finbank.repository;
 
-import com.aishwarya.FinBank.model.Region;
+import com.aishwarya.Finbank.model.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RegionRepo extends JpaRepository<Region, Long> {

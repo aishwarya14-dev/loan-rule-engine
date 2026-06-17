@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.model;
+package com.aishwarya.Finbank.model;
 
 import org.springframework.stereotype.Component;
 

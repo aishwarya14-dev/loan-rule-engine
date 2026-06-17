@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.exceptions;
+package com.aishwarya.Finbank.exceptions;
 
 public class DuplicateUserException extends RuntimeException {
     public DuplicateUserException(String message) {

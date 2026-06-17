@@ -1,10 +1,10 @@
 package com.aishwarya.FinBank.controller;
-
-import com.aishwarya.FinBank.dto.response.UserResponseDto;
-import com.aishwarya.FinBank.model.User;
-import com.aishwarya.FinBank.service.UserDetailsServiceImpl;
-import com.aishwarya.FinBank.service.UserService;
 import com.aishwarya.FinBank.utility.JwtUtil;
+import com.aishwarya.Finbank.controller.PublicController;
+import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.model.User;
+import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
+import com.aishwarya.Finbank.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

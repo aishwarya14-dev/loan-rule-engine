@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.dto.loanApplication;
+package com.aishwarya.Finbank.dto.loanApplication;
 
 import lombok.*;
 

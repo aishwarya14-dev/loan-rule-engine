@@ -1,9 +1,9 @@
-package com.aishwarya.FinBank.ruleengine.loader;
+package com.aishwarya.Finbank.ruleengine.loader;
 
-import com.aishwarya.FinBank.dto.rules.staticrules.RuleDto;
-import com.aishwarya.FinBank.mapper.RuleMapper;
-import com.aishwarya.FinBank.model.LoanType;
-import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.Finbank.dto.rules.staticrules.RuleDto;
+import com.aishwarya.Finbank.mapper.RuleMapper;
+import com.aishwarya.Finbank.model.LoanType;
+import com.aishwarya.Finbank.model.Rule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 @Qualifier("staticRuleLoader")
-public class StaticRuleLoader implements RuleLoader{
+public class StaticRuleLoader implements RuleLoader {
 
     private ObjectMapper objectMapper;
 
@@ -26,19 +26,19 @@ public class StaticRuleLoader implements RuleLoader{
 
     @Override
     public List<Rule> loadRules(LoanType loanType) {
-       try {
-           List<RuleDto> ruleDtoList = objectMapper.readValue(
-                   getClass().getClassLoader().getResourceAsStream("static-rules.json"),
-                   new TypeReference<List<RuleDto>>() {}
-           );
-           List<Rule> rules = ruleDtoList.stream().map(ruleMapper::toRule).toList();
-           return rules;
-       }
-       catch (IOException e){
-           System.err.println("Error loading rules: " + e.getMessage());
-           throw new RuntimeException("Failed to load rules: " + e.getMessage(), e);
-       } catch (Exception e) {
-           throw new RuntimeException("Unexpected error while loading rules: " + e.getMessage(), e);
-       }
+        try {
+            List<RuleDto> ruleDtoList = objectMapper.readValue(
+                    getClass().getClassLoader().getResourceAsStream("static-rules.json"),
+                    new TypeReference<List<RuleDto>>() {
+                    }
+            );
+            List<Rule> rules = ruleDtoList.stream().map(ruleMapper::toRule).toList();
+            return rules;
+        } catch (IOException e) {
+            System.err.println("Error loading rules: " + e.getMessage());
+            throw new RuntimeException("Failed to load rules: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error while loading rules: " + e.getMessage(), e);
+        }
     }
 }

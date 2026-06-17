@@ -1,10 +1,10 @@
-package com.aishwarya.FinBank.ruleengine.action;
+package com.aishwarya.Finbank.ruleengine.action;
 
 
-import com.aishwarya.FinBank.model.LoanApplication;
+import com.aishwarya.Finbank.model.LoanApplication;
 
 import java.util.Map;
 
 public interface RuleAction {
-     public void applyAction(LoanApplication application);
+    public void applyAction(LoanApplication application);
 }

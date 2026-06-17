@@ -1,7 +1,6 @@
-package com.aishwarya.FinBank.ruleengine.action;
+package com.aishwarya.Finbank.ruleengine.action;
 
-import com.aishwarya.FinBank.model.ApplicationStatus;
-import com.aishwarya.FinBank.model.LoanApplication;
+import com.aishwarya.Finbank.model.LoanApplication;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

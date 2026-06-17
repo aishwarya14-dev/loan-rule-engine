@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.dto.response;
+package com.aishwarya.Finbank.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

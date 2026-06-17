@@ -1,8 +1,8 @@
-package com.aishwarya.FinBank.exceptions;
+package com.aishwarya.Finbank.exceptions;
 
-public class DslParsingException extends RuntimeException{
+public class DslParsingException extends RuntimeException {
 
-    public DslParsingException(String message){
+    public DslParsingException(String message) {
         super(message);
     }
 }

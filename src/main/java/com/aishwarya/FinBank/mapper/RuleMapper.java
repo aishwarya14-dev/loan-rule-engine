@@ -1,13 +1,14 @@
-package com.aishwarya.FinBank.mapper;
+package com.aishwarya.Finbank.mapper;
 
-import com.aishwarya.FinBank.dto.rules.staticrules.*;
-import com.aishwarya.FinBank.model.Rule;
-import com.aishwarya.FinBank.model.RuleType;
-import com.aishwarya.FinBank.model.expression.AndExpression;
-import com.aishwarya.FinBank.model.expression.Condition;
-import com.aishwarya.FinBank.model.expression.Expression;
-import com.aishwarya.FinBank.model.expression.OrExpression;
+
 import com.aishwarya.FinBank.utility.Operator;
+import com.aishwarya.Finbank.dto.rules.staticrules.*;
+import com.aishwarya.Finbank.model.Rule;
+import com.aishwarya.Finbank.model.RuleType;
+import com.aishwarya.Finbank.model.expression.AndExpression;
+import com.aishwarya.Finbank.model.expression.Condition;
+import com.aishwarya.Finbank.model.expression.Expression;
+import com.aishwarya.Finbank.model.expression.OrExpression;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +30,7 @@ public class RuleMapper {
             case AndExpressionDto a -> new AndExpression(
                     toExpression(a.getLeft()),
                     toExpression(a.getRight()));
-            case OrExpressionDto o  -> new OrExpression(
+            case OrExpressionDto o -> new OrExpression(
                     toExpression(o.getLeft()),
                     toExpression(o.getRight()));
             default -> throw new IllegalArgumentException(

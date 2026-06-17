@@ -1,5 +1,6 @@
-package com.aishwarya.FinBank.model;
-import com.aishwarya.FinBank.model.expression.Expression;
+package com.aishwarya.Finbank.model;
+
+import com.aishwarya.Finbank.model.expression.Expression;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

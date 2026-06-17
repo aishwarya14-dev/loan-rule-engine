@@ -13,7 +13,7 @@ public class RuleMetrics {
     private final Counter ruleCreatedTotal;
     private final Timer ruleEvaluationDuration;
 
-    public RuleMetrics(MeterRegistry meterRegistry){
+    public RuleMetrics(MeterRegistry meterRegistry) {
         this.ruleEvaluationTotal = Counter.builder("rule.evaluation.total")
                 .description("Total number of rule evaluations")
                 .register(meterRegistry);
@@ -36,10 +36,21 @@ public class RuleMetrics {
     }
 
 
-    public void incrementTotal()          { ruleEvaluationTotal.increment(); }
-    public void incrementPassed()         { ruleEvaluationPassed.increment(); }
-    public void incrementFailed()         { ruleEvaluationFailed.increment(); }
-    public void incrementRuleCreated()    { ruleCreatedTotal.increment(); }
+    public void incrementTotal() {
+        ruleEvaluationTotal.increment();
+    }
+
+    public void incrementPassed() {
+        ruleEvaluationPassed.increment();
+    }
+
+    public void incrementFailed() {
+        ruleEvaluationFailed.increment();
+    }
+
+    public void incrementRuleCreated() {
+        ruleCreatedTotal.increment();
+    }
 
     public void recordEvaluationTime(Runnable task) {
         ruleEvaluationDuration.record(task);

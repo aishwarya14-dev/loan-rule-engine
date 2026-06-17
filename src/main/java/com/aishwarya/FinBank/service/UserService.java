@@ -1,10 +1,9 @@
-package com.aishwarya.FinBank.service;
-
-import com.aishwarya.FinBank.dto.response.UserResponseDto;
-import com.aishwarya.FinBank.exceptions.DuplicateUserException;
-import com.aishwarya.FinBank.exceptions.UserCreationException;
-import com.aishwarya.FinBank.model.User;
-import com.aishwarya.FinBank.repository.UserRepository;
+package com.aishwarya.Finbank.service;
+import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.exceptions.DuplicateUserException;
+import com.aishwarya.Finbank.exceptions.UserCreationException;
+import com.aishwarya.Finbank.model.User;
+import com.aishwarya.Finbank.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class UserService {
 
     private final static Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public UserResponseDto saveUser(User user){
+    public UserResponseDto saveUser(User user) {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new DuplicateUserException(
                     "Username already exists");
@@ -31,12 +30,12 @@ public class UserService {
             throw new DuplicateUserException(
                     "Mobile number already exists");
         }
-        try{
+        try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-             userRepository.save(user);
-             return new UserResponseDto(user.getUsername(), user.getMobileNumber());
-        } catch (Exception e){
-            logger.error("error occurred for {} ", user.getUsername(),e);
+            userRepository.save(user);
+            return new UserResponseDto(user.getUsername(), user.getMobileNumber());
+        } catch (Exception e) {
+            logger.error("error occurred for {} ", user.getUsername(), e);
             throw new UserCreationException(
                     "Failed to create user", e);
         }

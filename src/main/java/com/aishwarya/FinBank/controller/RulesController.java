@@ -1,8 +1,8 @@
-package com.aishwarya.FinBank.controller;
+package com.aishwarya.Finbank.controller;
 
-import com.aishwarya.FinBank.dto.rules.RulesRequestDto;
-import com.aishwarya.FinBank.model.DslRule;
-import com.aishwarya.FinBank.service.RuleService;
+import com.aishwarya.Finbank.dto.rules.RulesRequestDto;
+import com.aishwarya.Finbank.model.DslRule;
+import com.aishwarya.Finbank.service.RuleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +22,6 @@ public class RulesController {
     @PostMapping("/dsl")
     public ResponseEntity<DslRule> acceptRules(@Valid @RequestBody RulesRequestDto rulesRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                        .body(ruleService.save(rulesRequestDto));
+                .body(ruleService.save(rulesRequestDto));
     }
 }

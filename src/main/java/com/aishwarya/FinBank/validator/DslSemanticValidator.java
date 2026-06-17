@@ -1,11 +1,12 @@
-package com.aishwarya.FinBank.ruleValidator;
-import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.exceptions.DslValidationException;
-import com.aishwarya.FinBank.repository.EmploymentTypeRepo;
-import com.aishwarya.FinBank.repository.JobTitleRepo;
-import com.aishwarya.FinBank.repository.LoanTypeRepo;
-import com.aishwarya.FinBank.repository.RegionRepo;
-import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
+package com.aishwarya.Finbank.validator;
+
+import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.exceptions.DslValidationException;
+import com.aishwarya.Finbank.repository.EmploymentTypeRepo;
+import com.aishwarya.Finbank.repository.JobTitleRepo;
+import com.aishwarya.Finbank.repository.LoanTypeRepo;
+import com.aishwarya.Finbank.repository.RegionRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,45 +32,45 @@ public class DslSemanticValidator {
         }
     }
 
-    private void validateExpression(LoanRulesParser.ExpressionContext ctx, List<String> errors){
-        if(ctx instanceof LoanRulesParser.AndExpressionContext andExpressionContext){
+    private void validateExpression(LoanRulesParser.ExpressionContext ctx, List<String> errors) {
+        if (ctx instanceof LoanRulesParser.AndExpressionContext andExpressionContext) {
             validateExpression(andExpressionContext.expression(0), errors);  // validate left
             validateExpression(andExpressionContext.expression(1), errors);
-        } else if(ctx instanceof LoanRulesParser.OrExpressionContext orExpressionContext){
+        } else if (ctx instanceof LoanRulesParser.OrExpressionContext orExpressionContext) {
             validateExpression(orExpressionContext.expression(0), errors);  // validate left
             validateExpression(orExpressionContext.expression(1), errors);
-        } else if(ctx instanceof LoanRulesParser.ParenExpressionContext parenExpressionContext){
-            validateExpression(parenExpressionContext.expression(),errors);
-        } else if(ctx instanceof LoanRulesParser.ConditionExpressionContext conditionExpressionContext){
-            validateCondition(conditionExpressionContext.condition(),errors);
-            }
+        } else if (ctx instanceof LoanRulesParser.ParenExpressionContext parenExpressionContext) {
+            validateExpression(parenExpressionContext.expression(), errors);
+        } else if (ctx instanceof LoanRulesParser.ConditionExpressionContext conditionExpressionContext) {
+            validateCondition(conditionExpressionContext.condition(), errors);
+        }
 
     }
 
-     private void validateCondition(LoanRulesParser.ConditionContext ctx,
-                               List<String> errors) {
-           String field    = ctx.IDENTIFIER().getText();
-           String operator = ctx.operator().getText();
-           String rawValue = ctx.value().getText().replace("'", "");
+    private void validateCondition(LoanRulesParser.ConditionContext ctx,
+                                   List<String> errors) {
+        String field = ctx.IDENTIFIER().getText();
+        String operator = ctx.operator().getText();
+        String rawValue = ctx.value().getText().replace("'", "");
 
-         // field must exist in registry
-         if (!registry.containsField(field)) {
-             errors.add("Unknown field '" + field + "'. " +
-                     "Valid fields: " + registry.getRegisteredFields());
-             return;
-         }
+        // field must exist in registry
+        if (!registry.containsField(field)) {
+            errors.add("Unknown field '" + field + "'. " +
+                    "Valid fields: " + registry.getRegisteredFields());
+            return;
+        }
 
-         // string fields cannot use numeric operators
-         if (isStringField(field) && isNumericOperator(operator)) {
-             errors.add("Field '" + field + "' is a String. " +
-                     "Only == and != are supported, got '" + operator + "'");
-         }
+        // string fields cannot use numeric operators
+        if (isStringField(field) && isNumericOperator(operator)) {
+            errors.add("Field '" + field + "' is a String. " +
+                    "Only == and != are supported, got '" + operator + "'");
+        }
 
-         // string values must exist in DB lookup tables
-         if (isStringField(field)) {
-             validateLookupValue(field, rawValue, errors);
-         }
-     }
+        // string values must exist in DB lookup tables
+        if (isStringField(field)) {
+            validateLookupValue(field, rawValue, errors);
+        }
+    }
 
     private void validateLookupValue(String field, String value,
                                      List<String> errors) {

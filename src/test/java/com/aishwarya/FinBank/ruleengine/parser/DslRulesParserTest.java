@@ -1,7 +1,8 @@
 package com.aishwarya.FinBank.ruleengine.parser;
 
-import com.aishwarya.FinBank.exceptions.DslParsingException;
-import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.Finbank.exceptions.DslParsingException;
+import com.aishwarya.Finbank.model.Rule;
+import com.aishwarya.Finbank.ruleengine.parser.DslRulesParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

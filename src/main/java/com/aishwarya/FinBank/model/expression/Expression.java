@@ -1,3 +1,4 @@
-package com.aishwarya.FinBank.model.expression;
+package com.aishwarya.Finbank.model.expression;
 
-public interface Expression {}
+public interface Expression {
+}

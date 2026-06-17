@@ -1,9 +1,12 @@
-package com.aishwarya.FinBank.model;
+package com.aishwarya.Finbank.model;
 
+import com.aishwarya.Finbank.model.LoanType;
+import com.aishwarya.Finbank.model.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -21,11 +24,11 @@ public class LoanApplication {
     @ManyToOne
     @JoinColumn(name = "loan_type_id", nullable = false)
     private LoanType loanType;
-    @Column(nullable = false,name = "applicant_name")
+    @Column(nullable = false, name = "applicant_name")
     private String applicantName;
-    @Column(nullable = false,name = "applicant_email")
+    @Column(nullable = false, name = "applicant_email")
     private String applicantEmail;
-    @Column(nullable = false,name = "applicant_contact")
+    @Column(nullable = false, name = "applicant_contact")
     private String applicantContact;
     @Column(nullable = false, name = "credit_score")
     private Integer creditScore;
@@ -35,9 +38,9 @@ public class LoanApplication {
     private String remarks;
     @Column(nullable = false, name = "application_date")
     private LocalDateTime applicationDate;
-    @Column(nullable = true,name = "approval_date")
+    @Column(nullable = true, name = "approval_date")
     private LocalDateTime approvalDate;
-    @Column(name = "monthly_income",nullable = false)
+    @Column(name = "monthly_income", nullable = false)
     private BigDecimal monthlyIncome;
     @Column(name = "existing_loans")
     private Integer existingLoans;
@@ -45,13 +48,13 @@ public class LoanApplication {
     private BigDecimal loanAmount;
     @Column(name = "interest_rate")
     private Double interestRate;
-    @Column(nullable = false , name = "loan_tenure_months")
+    @Column(nullable = false, name = "loan_tenure_months")
     private Integer loanTenureMonths;
     @Column(nullable = false)
     private Integer age;
     @Column(name = "company_rating")
     private Integer companyRating;
-    @Column(nullable = false , name = "employment_tenure")
+    @Column(nullable = false, name = "employment_tenure")
     private Integer employmentTenure;
     @ManyToOne
     @JoinColumn(name = "job_title_id")
@@ -89,56 +92,56 @@ public class LoanApplication {
         this.applicationDate = LocalDateTime.now();
     }
 
-        public void updateCreditScore(Integer creditScore) {
-            if (creditScore < 300 || creditScore > 900) {
-                throw new IllegalArgumentException("Invalid credit score");
-            }
-            this.creditScore = creditScore;
+    public void updateCreditScore(Integer creditScore) {
+        if (creditScore < 300 || creditScore > 900) {
+            throw new IllegalArgumentException("Invalid credit score");
         }
+        this.creditScore = creditScore;
+    }
 
-        public void updateExistingLoans(Integer existingLoans) {
-            if (existingLoans == null || existingLoans < 0) {
-                throw new IllegalArgumentException("Invalid existing loans");
-            }
-            this.existingLoans = existingLoans;
+    public void updateExistingLoans(Integer existingLoans) {
+        if (existingLoans == null || existingLoans < 0) {
+            throw new IllegalArgumentException("Invalid existing loans");
         }
+        this.existingLoans = existingLoans;
+    }
 
-        public void updateInterestRate(Double interestRate) {
-           if (interestRate < 7.5 || interestRate > 30) {
+    public void updateInterestRate(Double interestRate) {
+        if (interestRate < 7.5 || interestRate > 30) {
             throw new IllegalArgumentException("Invalid interest rate");
-          }
+        }
         this.interestRate = interestRate;
+    }
+
+    public void updateLoanTenureMonths(Integer tenureMonths) {
+        if (tenureMonths == null || tenureMonths < 15) {
+            throw new IllegalArgumentException("Invalid tenure");
         }
+        this.loanTenureMonths = tenureMonths;
+    }
 
-        public void updateLoanTenureMonths(Integer tenureMonths) {
-            if (tenureMonths == null || tenureMonths < 15) {
-                throw new IllegalArgumentException("Invalid tenure");
-            }
-            this.loanTenureMonths = tenureMonths;
+    public void updateCompanyRating(Integer companyRating) {
+        if (companyRating != null && (companyRating < 1 || companyRating > 5)) {
+            throw new IllegalArgumentException("Invalid company rating");
         }
-
-        public void updateCompanyRating(Integer companyRating) {
-            if (companyRating != null && (companyRating < 1 || companyRating > 5)) {
-                throw new IllegalArgumentException("Invalid company rating");
-            }
-            this.companyRating = companyRating;
-         }
+        this.companyRating = companyRating;
+    }
 
 
-        public void approve() {
-          if (this.status != ApplicationStatus.PENDING) {
-               throw new IllegalStateException("Only pending applications can be approved");
-          }
-          this.status = ApplicationStatus.APPROVED;
-          this.approvalDate = LocalDateTime.now();
+    public void approve() {
+        if (this.status != ApplicationStatus.PENDING) {
+            throw new IllegalStateException("Only pending applications can be approved");
         }
+        this.status = ApplicationStatus.APPROVED;
+        this.approvalDate = LocalDateTime.now();
+    }
 
-        public void reject(String remarks) {
-           if (this.status != ApplicationStatus.PENDING) {
-               throw new IllegalStateException("Only pending applications can be rejected");
-           }
-           this.status = ApplicationStatus.REJECTED;
-           this.remarks = remarks;
-       }
+    public void reject(String remarks) {
+        if (this.status != ApplicationStatus.PENDING) {
+            throw new IllegalStateException("Only pending applications can be rejected");
+        }
+        this.status = ApplicationStatus.REJECTED;
+        this.remarks = remarks;
+    }
 
 }

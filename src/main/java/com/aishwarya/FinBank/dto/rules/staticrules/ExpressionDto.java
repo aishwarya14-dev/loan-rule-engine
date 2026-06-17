@@ -1,4 +1,5 @@
-package com.aishwarya.FinBank.dto.rules.staticrules;
+package com.aishwarya.Finbank.dto.rules.staticrules;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -9,8 +10,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "expressionType"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ConditionDto.class,name = "CONDITION"),
+        @JsonSubTypes.Type(value = ConditionDto.class, name = "CONDITION"),
         @JsonSubTypes.Type(value = AndExpressionDto.class, name = "AND"),
-        @JsonSubTypes.Type(value = OrExpressionDto.class,  name = "OR")
+        @JsonSubTypes.Type(value = OrExpressionDto.class, name = "OR")
 })
-public interface ExpressionDto {}
+public interface ExpressionDto {
+}

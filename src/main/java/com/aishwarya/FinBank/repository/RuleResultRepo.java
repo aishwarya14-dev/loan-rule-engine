@@ -1,6 +1,7 @@
-package com.aishwarya.FinBank.repository;
+package com.aishwarya.Finbank.repository;
 
-import com.aishwarya.FinBank.model.RuleResult;
+
+import com.aishwarya.Finbank.model.RuleResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RuleResultRepo extends JpaRepository<RuleResult, Long> {

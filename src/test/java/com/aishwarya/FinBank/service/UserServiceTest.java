@@ -1,11 +1,10 @@
 package com.aishwarya.FinBank.service;
-
-
-import com.aishwarya.FinBank.dto.response.UserResponseDto;
-import com.aishwarya.FinBank.exceptions.DuplicateUserException;
-import com.aishwarya.FinBank.exceptions.UserCreationException;
-import com.aishwarya.FinBank.model.User;
-import com.aishwarya.FinBank.repository.UserRepository;
+import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.exceptions.DuplicateUserException;
+import com.aishwarya.Finbank.exceptions.UserCreationException;
+import com.aishwarya.Finbank.model.User;
+import com.aishwarya.Finbank.repository.UserRepository;
+import com.aishwarya.Finbank.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

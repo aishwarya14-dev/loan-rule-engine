@@ -1,4 +1,5 @@
-package com.aishwarya.FinBank.model.expression;
+package com.aishwarya.Finbank.model.expression;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AndExpression implements  Expression , Serializable {
+public class AndExpression implements Expression, Serializable {
     private Expression left;
     private Expression right;
 

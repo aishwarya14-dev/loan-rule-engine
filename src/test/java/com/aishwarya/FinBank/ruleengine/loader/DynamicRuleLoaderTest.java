@@ -1,11 +1,11 @@
 package com.aishwarya.FinBank.ruleengine.loader;
 
-import com.aishwarya.FinBank.model.DslRule;
-import com.aishwarya.FinBank.model.LoanType;
-import com.aishwarya.FinBank.model.Rule;
-import com.aishwarya.FinBank.repository.RuleRepository;
-import com.aishwarya.FinBank.ruleengine.loader.DynamicRuleLoader;
-import com.aishwarya.FinBank.ruleengine.parser.DslRulesParser;
+import com.aishwarya.Finbank.model.DslRule;
+import com.aishwarya.Finbank.model.LoanType;
+import com.aishwarya.Finbank.model.Rule;
+import com.aishwarya.Finbank.repository.RuleRepository;
+import com.aishwarya.Finbank.ruleengine.loader.DynamicRuleLoader;
+import com.aishwarya.Finbank.ruleengine.parser.DslRulesParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

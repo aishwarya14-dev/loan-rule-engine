@@ -1,6 +1,8 @@
-package com.aishwarya.FinBank.builder;
-import com.aishwarya.FinBank.model.*;
+package com.aishwarya.Finbank.builder;
 
+import com.aishwarya.Finbank.*;
+import com.aishwarya.Finbank.model.*;
+import com.aishwarya.Finbank.model.LoanApplication;
 import java.math.BigDecimal;
 
 

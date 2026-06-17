@@ -1,9 +1,9 @@
-package com.aishwarya.FinBank.ruleengine.parser;
+package com.aishwarya.Finbank.ruleengine.parser;
 
-import com.aishwarya.FinBank.LoanRulesLexer;
-import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.exceptions.DslParsingException;
-import com.aishwarya.FinBank.model.Rule;
+import com.aishwarya.Finbank.LoanRulesLexer;
+import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.exceptions.DslParsingException;
+import com.aishwarya.Finbank.model.Rule;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -14,11 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class DslRulesParser {
     public Rule parseDslRule(String dslRule) {
-        if(dslRule == null)
+        if (dslRule == null)
             throw new DslParsingException("DSL rule cannot be null");
 
-        try
-        {
+        try {
             CharStream charStream = CharStreams.fromString(dslRule);
             LoanRulesLexer lexer = new LoanRulesLexer(charStream);
             CommonTokenStream tokensStream = new CommonTokenStream(lexer);
@@ -32,7 +31,7 @@ public class DslRulesParser {
 
             return visitor.visitStatement(tree);
 
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new DslParsingException("Internal error while building rule from: " + dslRule);
         } catch (IllegalArgumentException e) {
             throw new DslParsingException(e.getMessage());

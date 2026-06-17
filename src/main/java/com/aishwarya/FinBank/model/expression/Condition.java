@@ -1,6 +1,8 @@
-package com.aishwarya.FinBank.model.expression;
-import com.aishwarya.FinBank.model.value.RuleValue;
+package com.aishwarya.Finbank.model.expression;
+
+
 import com.aishwarya.FinBank.utility.Operator;
+import com.aishwarya.Finbank.model.value.RuleValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Condition implements Expression , Serializable {
+public class Condition implements Expression, Serializable {
     private String field;
     private Operator operator;
     private RuleValue value;

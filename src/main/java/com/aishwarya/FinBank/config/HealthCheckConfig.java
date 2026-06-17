@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.config;
+package com.aishwarya.Finbank.config;
 
 
 import io.jsonwebtoken.Jwts;
@@ -18,7 +18,7 @@ public class HealthCheckConfig {
     private String dbUrl;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         System.out.println("REDIS URL = " + redisUrl);
         System.out.println("DATABASE URL = " + System.getenv("DATABASE_URL = ") + dbUrl);
         System.out.println("JWT = " + System.getenv("JWT_SECRET"));

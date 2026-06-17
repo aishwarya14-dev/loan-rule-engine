@@ -14,7 +14,7 @@ public enum Operator {
     private String symbol;
 
 
-    Operator(String symbol){
+    Operator(String symbol) {
         this.symbol = symbol;
     }
 
@@ -24,9 +24,9 @@ public enum Operator {
     }
 
     @JsonCreator
-    public static Operator fromSymbol(String symbol){
-        for(Operator op : Operator.values()){
-            if(op.symbol.equals(symbol)){
+    public static Operator fromSymbol(String symbol) {
+        for (Operator op : Operator.values()) {
+            if (op.symbol.equals(symbol)) {
                 return op;
             }
         }

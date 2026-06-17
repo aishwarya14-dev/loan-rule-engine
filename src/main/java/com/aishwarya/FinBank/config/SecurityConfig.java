@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.config;
+package com.aishwarya.Finbank.config;
 
-import com.aishwarya.FinBank.filter.JwtFilter;
-import com.aishwarya.FinBank.service.UserDetailsServiceImpl;
+
+import com.aishwarya.Finbank.filter.JwtFilter;
+import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/loan/**").authenticated().
-                        requestMatchers("/public/**","/actuator/**").permitAll()
+                                requestMatchers("/public/**", "/actuator/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(session ->

@@ -1,19 +1,20 @@
-package com.aishwarya.FinBank.ruleengine.factory;
+package com.aishwarya.Finbank.ruleengine.factory;
 
 
-import com.aishwarya.FinBank.model.Logic;
-import com.aishwarya.FinBank.model.RuleMessageGenerator;
-import com.aishwarya.FinBank.model.expression.AndExpression;
-import com.aishwarya.FinBank.model.expression.Condition;
-import com.aishwarya.FinBank.model.expression.Expression;
-import com.aishwarya.FinBank.model.expression.OrExpression;
-import com.aishwarya.FinBank.ruleengine.evaluation.CompositeRuleEvaluation;
-import com.aishwarya.FinBank.ruleengine.evaluation.RuleEvaluation;
-import com.aishwarya.FinBank.ruleengine.evaluation.SimpleRuleEvaluation;
-import com.aishwarya.FinBank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
+import com.aishwarya.Finbank.model.Logic;
+import com.aishwarya.Finbank.model.RuleMessageGenerator;
+import com.aishwarya.Finbank.model.expression.AndExpression;
+import com.aishwarya.Finbank.model.expression.Condition;
+import com.aishwarya.Finbank.model.expression.Expression;
+import com.aishwarya.Finbank.model.expression.OrExpression;
+import com.aishwarya.Finbank.ruleengine.evaluation.CompositeRuleEvaluation;
+import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluation;
+import com.aishwarya.Finbank.ruleengine.evaluation.SimpleRuleEvaluation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
@@ -30,7 +31,7 @@ public class CompositeRuleEvaluationFactory {
                     condition.getField(),
                     condition.getOperator(),
                     condition.getValue(),
-                     registry,
+                    registry,
                     ruleMessageGenerator
             );
 
@@ -39,7 +40,7 @@ public class CompositeRuleEvaluationFactory {
                     buildCompositeRuleEvaluationObject(andExpr.getLeft()),
                     buildCompositeRuleEvaluationObject(andExpr.getRight())
             );
-            return new CompositeRuleEvaluation(evaluations, Logic.AND,ruleMessageGenerator);
+            return new CompositeRuleEvaluation(evaluations, Logic.AND, ruleMessageGenerator);
 
         } else if (expression instanceof OrExpression orExpr) {
             List<RuleEvaluation> evaluations = List.of(

@@ -1,8 +1,8 @@
-package com.aishwarya.FinBank.validator;
+package com.aishwarya.Finbank.validator;
 
-import com.aishwarya.FinBank.LoanRulesParser;
-import com.aishwarya.FinBank.exceptions.DslValidationException;
-import com.aishwarya.FinBank.ruleValidator.DslSyntaxValidator;
+import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.exceptions.DslValidationException;
+import com.aishwarya.Finbank.validator.DslSyntaxValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

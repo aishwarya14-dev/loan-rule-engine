@@ -1,7 +1,8 @@
-package com.aishwarya.FinBank.model;
+package com.aishwarya.Finbank.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.aishwarya.Finbank.model.LoanApplication;
 
 @Entity
 @Getter
@@ -21,7 +22,7 @@ public class RuleResult {
     private LoanApplication loanApplication;
 
     @Builder
-    public RuleResult(boolean passed, String message,String expectedValue,LoanApplication loanApplication) {
+    public RuleResult(boolean passed, String message, String expectedValue, LoanApplication loanApplication) {
         this.passed = passed;
         this.message = message;
         this.expectedValue = expectedValue;
