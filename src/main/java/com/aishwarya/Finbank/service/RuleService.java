@@ -1,7 +1,7 @@
 package com.aishwarya.Finbank.service;
 
 import com.aishwarya.Finbank.LoanRulesParser;
-import com.aishwarya.Finbank.dto.rules.RulesRequestDto;
+import com.aishwarya.Finbank.dto.rules.dynamicrules.RulesRequestDto;
 import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.repository.LoanTypeRepo;

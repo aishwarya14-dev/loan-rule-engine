@@ -1,6 +1,9 @@
 [
   {
     "type": "SIMPLE",
+    "factor": "Credit Score",
+    "evidenceWeight": 0.80,
+    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "CONDITION",
@@ -11,6 +14,9 @@
   },
   {
     "type": "COMPOSITE",
+    "factor": "Financial Stability",
+    "evidenceWeight": 0.75,
+    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "AND",
@@ -30,6 +36,9 @@
   },
   {
     "type": "COMPOSITE",
+    "factor": "Employment Stability",
+    "evidenceWeight": 0.60,
+    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "OR",
@@ -49,6 +58,8 @@
   },
   {
     "type": "COMPOSITE",
+    "severity": "HARD_REJECT",
+    "factor": "Debt Profile",
     "action": "REJECT",
     "expression": {
       "expressionType": "AND",
@@ -56,7 +67,7 @@
         "expressionType": "CONDITION",
         "field": "creditScore",
         "operator": "<",
-        "value": 600
+        "value": 450
       },
       "right": {
         "expressionType": "CONDITION",
@@ -68,7 +79,10 @@
   },
   {
     "type": "COMPOSITE",
-    "action": "REJECT",
+    "factor": "DEBT_PROFILE",
+    "evidenceWeight": 0.30,
+    "severity": "NORMAL",
+    "action": "REVIEW",
     "expression": {
       "expressionType": "OR",
       "left": {
@@ -81,22 +95,27 @@
         "expressionType": "CONDITION",
         "field": "existingLoans",
         "operator": ">",
-        "value": 5
+        "value": 1
       }
     }
   },
   {
     "type": "SIMPLE",
+    "factor": "Employment Stability",
+    "severity": "REVIEW_REQUIRED",
     "action": "REVIEW",
     "expression": {
       "expressionType": "CONDITION",
       "field": "companyRating",
-      "operator": ">=",
+      "operator": "<=",
       "value": 4
     }
   },
   {
     "type": "COMPOSITE",
+    "factor": "REGIONAL_RISK",
+    "evidenceWeight": 0.50,
+    "severity": "REVIEW_REQUIRED",
     "action": "REVIEW",
     "expression": {
       "expressionType": "AND",
@@ -116,6 +135,9 @@
   },
   {
     "type": "COMPOSITE",
+    "factor": "STRONG_APPLICANT_PROFILE",
+    "evidenceWeight": 1.00,
+    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "AND",

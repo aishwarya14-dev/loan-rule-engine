@@ -2,9 +2,9 @@ package com.aishwarya.Finbank.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import com.aishwarya.Finbank.model.LoanApplication;
 
-@Entity(name = "rule_result")
+@Entity
+@Table(name = "rule_result")
 @Getter
 @Setter
 @NoArgsConstructor

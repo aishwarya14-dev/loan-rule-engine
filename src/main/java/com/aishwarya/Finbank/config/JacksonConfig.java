@@ -2,7 +2,7 @@ package com.aishwarya.Finbank.config;
 
 
 import com.aishwarya.Finbank.model.value.RuleValue;
-import com.aishwarya.Finbank.model.value.RuleValueDeserializer;
+import com.aishwarya.Finbank.utility.RuleValueDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

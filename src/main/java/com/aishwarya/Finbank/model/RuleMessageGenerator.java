@@ -10,10 +10,10 @@ public class RuleMessageGenerator {
                                   boolean passed) {
         String rule = field + " " + operator + " " + expectedValue;
         if (passed) {
-            return String.format("Rule '%s' passed ✅", rule);
+            return String.format("Rule '%s' passed ", rule);
         } else {
             return String.format(
-                    "Rule '%s' failed ❌ (Expected: %s %s %s, Actual: %s)",
+                    "Rule '%s' failed (Expected: %s %s %s, Actual: %s) ",
                     rule, field, operator, expectedValue, actualValue
             );
         }
@@ -22,9 +22,9 @@ public class RuleMessageGenerator {
     // Overload for composite rules (AND/OR summary)
     public String generateMessage(String compositeSummary, boolean passed) {
         if (passed) {
-            return String.format("Composite rule '%s' passed ✅", compositeSummary);
+            return String.format("Composite rule '%s' passed ", compositeSummary);
         } else {
-            return String.format("Composite rule '%s' failed ❌", compositeSummary);
+            return String.format("Composite rule '%s' failed ", compositeSummary);
         }
     }
 }
