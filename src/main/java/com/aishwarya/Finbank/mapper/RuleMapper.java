@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RuleMapper {
-    public Rule toRule(RuleDto ruleDto) {
+    public Rule toRule(StaticRuleDto ruleDto) {
         Expression expression = toExpression(ruleDto.getExpression());
         RuleType type = (expression instanceof Condition)
                 ? RuleType.SIMPLE

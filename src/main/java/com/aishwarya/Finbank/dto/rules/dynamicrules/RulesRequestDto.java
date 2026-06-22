@@ -1,4 +1,4 @@
-package com.aishwarya.Finbank.dto.rules;
+package com.aishwarya.Finbank.dto.rules.dynamicrules;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

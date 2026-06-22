@@ -30,7 +30,6 @@ public class DslSyntaxValidator {
         if (!errors.isEmpty()) {
             throw new DslValidationException(errors);
         }
-
         return getLoanRulesParser(lexer);
 
     }
@@ -50,13 +49,10 @@ public class DslSyntaxValidator {
                         + charPositionInLine + " — " + msg);
             }
         });
-
         LoanRulesParser.StatementContext tree = parser.statement();
-
         if (!errors.isEmpty()) {
             throw new DslValidationException(errors);
         }
-
         return tree;
     }
 

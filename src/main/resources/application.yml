@@ -21,6 +21,8 @@ logging:
         file-name-pattern: logs/loan-rule-engine-%d{yyyy-MM-dd}.%i.log
 
 spring:
+  profile:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -59,6 +61,7 @@ spring:
 
 
 server:
+  port: 8000
   servlet:
     context-path: /loan-rule-engine
     session:

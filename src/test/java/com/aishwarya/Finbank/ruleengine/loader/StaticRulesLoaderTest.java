@@ -1,10 +1,9 @@
 package com.aishwarya.Finbank.ruleengine.loader;
 
-import com.aishwarya.Finbank.dto.rules.staticrules.RuleDto;
+import com.aishwarya.Finbank.dto.rules.staticrules.StaticRuleDto;
 import com.aishwarya.Finbank.mapper.RuleMapper;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.ruleengine.loader.StaticRuleLoader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ public class StaticRulesLoaderTest {
 
     @Test
     void shouldLoadRulesSuccessfully() throws Exception {
-        RuleDto dto = new RuleDto();
+        StaticRuleDto dto = new StaticRuleDto();
         Rule rule = mock(Rule.class);
 
         when(objectMapper.readValue(

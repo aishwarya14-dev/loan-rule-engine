@@ -3,12 +3,12 @@ package com.aishwarya.Finbank.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "job_title")
+@Entity
+@Table(name = "job_title")
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
 public class JobTitle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

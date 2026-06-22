@@ -22,7 +22,7 @@ public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
         Expression expression = (Expression) visit(ctx.expression());
         Action action = (Action) visit(ctx.action());
         RuleType type = (expression instanceof Condition) ? RuleType.SIMPLE : RuleType.COMPOSITE;
-        return new Rule(expression, action, type);
+        return new Rule(expression, action,type);
     }
 
     @Override

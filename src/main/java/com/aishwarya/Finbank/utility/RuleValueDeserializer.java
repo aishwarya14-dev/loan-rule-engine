@@ -1,5 +1,9 @@
-package com.aishwarya.Finbank.model.value;
+package com.aishwarya.Finbank.utility;
 
+import com.aishwarya.Finbank.model.value.DoubleValue;
+import com.aishwarya.Finbank.model.value.IntValue;
+import com.aishwarya.Finbank.model.value.RuleValue;
+import com.aishwarya.Finbank.model.value.StringValue;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,5 +28,4 @@ public class RuleValueDeserializer extends StdDeserializer<RuleValue> {
                 "Unsupported value type in JSON: " + jsonNode.getNodeType()
         );
     }
-
 }

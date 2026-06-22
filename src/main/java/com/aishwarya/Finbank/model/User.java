@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
-@Entity
+@Entity(name = "users")
 @Table(name = "users")
 @Builder
 @AllArgsConstructor

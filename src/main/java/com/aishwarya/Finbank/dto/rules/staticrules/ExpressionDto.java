@@ -14,5 +14,4 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = AndExpressionDto.class, name = "AND"),
         @JsonSubTypes.Type(value = OrExpressionDto.class, name = "OR")
 })
-public interface ExpressionDto {
-}
+public interface ExpressionDto {}

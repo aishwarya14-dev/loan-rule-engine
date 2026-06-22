@@ -1,4 +1,4 @@
-package com.aishwarya.FinBank.metrics;
+package com.aishwarya.Finbank.metrics;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;

@@ -5,12 +5,12 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-@Entity(name = "loan_type")
+@Entity
+@Table(name = "loan_type")
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
 public class LoanType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

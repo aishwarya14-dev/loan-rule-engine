@@ -1,6 +1,6 @@
 package com.aishwarya.Finbank.controller;
 
-import com.aishwarya.Finbank.dto.rules.RulesRequestDto;
+import com.aishwarya.Finbank.dto.rules.dynamicrules.RulesRequestDto;
 import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.service.RuleService;
 import jakarta.validation.Valid;
