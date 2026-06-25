@@ -1,6 +1,6 @@
 package com.aishwarya.Finbank.ruleengine.loader;
 
-import com.aishwarya.Finbank.dto.rules.staticrules.StaticRuleDto;
+import com.aishwarya.Finbank.dto.rules.staticrules.StaticRule;
 import com.aishwarya.Finbank.mapper.RuleMapper;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.model.Rule;
@@ -27,12 +27,12 @@ public class StaticRuleLoader implements RuleLoader {
     @Override
     public List<Rule> loadRules(LoanType loanType) {
         try {
-            List<StaticRuleDto> ruleDtoList = objectMapper.readValue(
+            List<StaticRule> staticRuleList = objectMapper.readValue(
                     getClass().getClassLoader().getResourceAsStream("static-rules.json"),
-                    new TypeReference<List<StaticRuleDto>>() {
+                    new TypeReference<List<StaticRule>>() {
                     }
             );
-            List<Rule> rules = ruleDtoList.stream().map(ruleMapper::toRule).toList();
+            List<Rule> rules = staticRuleList.stream().map(ruleMapper::toRule).toList();
             return rules;
         } catch (IOException e) {
             System.err.println("Error loading rules: " + e.getMessage());

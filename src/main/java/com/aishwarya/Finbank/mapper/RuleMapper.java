@@ -13,12 +13,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RuleMapper {
-    public Rule toRule(StaticRuleDto ruleDto) {
+    public Rule toRule(StaticRule ruleDto) {
         Expression expression = toExpression(ruleDto.getExpression());
         RuleType type = (expression instanceof Condition)
                 ? RuleType.SIMPLE
                 : RuleType.COMPOSITE;
-        return new Rule(expression, ruleDto.getAction(), type);
+        Rule rule = new Rule(expression, ruleDto.getAction(), type);
+        rule.setEvidenceWeight(ruleDto.getEvidenceWeight());
+        return rule;
     }
 
     private Expression toExpression(ExpressionDto expressionDto) {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class RuleEngineService {
 
     private final RulesEvaluator rulesEvaluator;
