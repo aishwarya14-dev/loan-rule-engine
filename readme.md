@@ -1,337 +1,579 @@
-You define the rules of your custom DSL in an ANTLR grammar file, and ANTLR creates the parser to understand it.
-
 # Loan Rule Engine
 
-A domain-specific language (DSL) based rule parsing and evaluation engine for automated loan approval decisions. Business users define rules in plain English-like syntax, which are parsed at runtime using ANTLR4, modeled as an Abstract Syntax Tree using the Composite Pattern, and evaluated against loan applications using the Strategy Pattern.
+A configurable **Loan Underwriting Decision Engine** that enables business users to define loan approval policies using a custom Domain-Specific Language (DSL). Rules are authored in a human-readable format, validated, parsed at runtime using **ANTLR4**, transformed into an **Abstract Syntax Tree (AST)**, and evaluated against loan applications using the **Composite** and **Strategy** design patterns.
+
+Unlike traditional rule engines that rely solely on rule priorities, this engine implements a **factor-based conflict resolution strategy**. Rules are grouped into business factors such as Credit Score, Income, Employment, and Debt, each with configurable importance. Matched rules contribute evidence towards factor scores, which are normalized to produce an explainable final decision while supporting severity-based overrides for non-negotiable business rules.
 
 ---
 
-## Table of Contents
+# Table of Contents
 
-- [Overview](#overview)
-- [How It Works](#how-it-works)
-- [DSL Syntax](#dsl-syntax)
-- [Project Structure](#project-structure)
-- [Design Patterns and Why](#design-patterns-and-why)
-- [Rule Sources](#rule-sources)
-- [Validation Pipeline](#validation-pipeline)
-- [Duplicate and Idempotency Handling](#duplicate-and-idempotency-handling)
-- [Monitoring](#monitoring)
-- [Getting Started](#getting-started)
-- [API Reference](#api-reference)
-- [Tech Stack](#tech-stack)
-
----
-
-## Overview
-
-Loan Rule Engine allows business users to define loan approval rules using a human-readable DSL without touching any Java code. Rules are stored as plain strings in the database, fetched at evaluation time, parsed by ANTLR4 into an AST, and evaluated against a loan application to produce an `APPROVE`, `REJECT`, or `REVIEW` decision.
-
-```
-IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve
-IF creditScore < 600 AND existingLoans > 3 THEN reject
-IF employmentType == 'SALARIED' OR employmentTenure > 5 THEN review
-```
+* Overview
+* Key Features
+* System Architecture
+* Rule Authoring using DSL
+* Rule Evaluation Pipeline
+* Conflict Resolution & Decision Strategy
+* Domain Model
+* DSL Grammar
+* Validation Pipeline
+* Rule Sources
+* Design Patterns
+* Duplicate & Idempotency Handling
+* Monitoring
+* Getting Started
+* API Reference
+* Tech Stack
+* Future Enhancements
 
 ---
 
-## How It Works
+# Overview
+
+Loan Rule Engine provides a configurable platform for automating loan underwriting decisions.
+
+Business users define eligibility policies using a custom DSL without modifying application code. Rules are validated, stored as DSL strings, parsed using ANTLR4 at runtime, and evaluated against incoming loan applications.
+
+The engine separates **rule authoring**, **rule evaluation**, and **decision making**, enabling different loan products to have independent underwriting policies while reusing the same evaluation infrastructure.
+
+Unlike traditional rule engines where conflicting APPROVE and REJECT rules compete based on priority, this engine evaluates business evidence using configurable business factors and produces transparent, explainable decisions.
+
+---
+
+# Key Features
+
+* Custom DSL for business rule authoring
+* Runtime parsing using ANTLR4
+* Recursive AST evaluation using Composite Pattern
+* Strategy-based evaluation engine
+* Configurable Loan Types
+* Configurable Business Factors
+* Factor Importance based scoring
+* Rule Strength based contribution
+* Derived Factors for composite business logic
+* Factor-based conflict resolution
+* Severity-based rule overrides
+* Multi-layer rule validation
+* Duplicate rule detection
+* Metrics using Micrometer, Prometheus and Grafana
+* Clean domain model independent of parsing framework
+
+
+
+---
+
+# System Architecture
 
 ```
-Rule Creation (DSL path)
-─────────────────────────────────────────────────────────────
-Business user submits DSL string via API
-        │
-        ▼
-Multi-layer Validation
-├── Syntax validation      (ANTLR lexer and parser error listeners)
-├── Semantic validation    (field names, operator compatibility, DB lookup values)
-└── Duplicate check        (normalized rule already exists)
-        │
-        ▼
-Saved as raw DSL string in DB
+                     Rule Creation
 
+Business User
+      │
+      ▼
+Custom DSL
+      │
+      ▼
+Validation Pipeline
+      │
+      ▼
+Store DSL String
+      │
+      ▼
+────────────────────────────────────────────
 
+                 Loan Evaluation
+
+Loan Application
+      │
+      ▼
+Load Rules
+      │
+      ▼
+ANTLR4 Parser
+      │
+      ▼
+Abstract Syntax Tree
+      │
+      ▼
 Rule Evaluation
-─────────────────────────────────────────────────────────────
-Loan application submitted
-        │
-        ▼
-Fetch all DSL strings from DB
-        │
-        ▼
-ANTLR4 parses each DSL string into AST (Expression tree)
-        │
-        ▼
-RuleEvaluation (Strategy Pattern)
-├── SimpleRuleEvaluation     single Condition leaf
-└── CompositeRuleEvaluation  recursive AND/OR tree
-        │
-        ▼
-RuleResult per rule (passed/failed + message)
-        │
-        ▼
-Final decision  APPROVE / REJECT / REVIEW
+      │
+      ▼
+Matched Rule Results
+      │
+      ▼
+Business Factor Aggregation
+      │
+      ▼
+Conflict Resolution
+      │
+      ▼
+Normalized Score
+      │
+      ▼
+Severity Overrides
+      │
+      ▼
+APPROVE / REVIEW / REJECT
 ```
 
 ---
 
-## DSL Syntax
+# Rule Authoring using DSL
 
-### Grammar
-
-```
-statement  :  IF expression THEN action
-expression :  expression OR expression
-           |  expression AND expression
-           |  ( expression )
-           |  condition
-condition  :  FIELD operator VALUE
-operator   :  > | >= | < | <= | == | !=
-action     :  approve | reject | review
-```
-
-### Operator Precedence (NOT YET SUPPORTED)
-
-AND has higher precedence than OR, matching standard boolean logic. Parentheses can be used for explicit grouping.
+Business users define rules in a human-readable syntax.
 
 ```
-IF creditScore > 700 OR income >= 50000 AND existingLoans < 3 THEN approve
-
-evaluates as:
-
-IF creditScore > 700 OR (income >= 50000 AND existingLoans < 3) THEN approve
-```
-
-### Supported Fields
-
-| Field | Type | Example |
-|---|---|---|
-| `creditScore` | Integer | `creditScore > 700` |
-| `loanAmount` | Integer | `loanAmount <= 500000` |
-| `monthlyIncome` | Integer | `monthlyIncome >= 50000` |
-| `existingLoans` | Integer | `existingLoans < 3` |
-| `employmentTenure` | Integer | `employmentTenure > 2` |
-| `companyRating` | Integer | `companyRating >= 4` |
-| `region` | String | `region == 'NORTH'` |
-| `employmentType` | String | `employmentType == 'SALARIED'` |
-
-### Value Types
-
-| Type | Example |
-|---|---|
-| Integer | `700`, `50000` |
-| Decimal | `4.5`, `2.0` |
-| String | `'NORTH'`, `'SALARIED'` |
-
-### Constraints
-
-- String fields only support `==` and `!=`
-- Numeric fields support all six operators
-- String values must be wrapped in single quotes
-- String values are validated against DB lookup tables at parse time
-
-### Example Rules
-
-```
-IF creditScore > 750 THEN approve
-
 IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve
-
-IF employmentType == 'SALARIED' OR employmentTenure > 5 THEN review
 
 IF creditScore < 600 AND existingLoans > 3 THEN reject
 
-IF (creditScore > 700 AND monthlyIncome >= 50000) AND (employmentType == 'SALARIED' OR employmentTenure > 3) THEN approve
+IF employmentType == 'SALARIED' OR employmentTenure > 5 THEN review
+```
+
+The grammar is defined once using ANTLR.
+
+ANTLR generates the lexer and parser automatically.
+
+The application uses a Visitor implementation to convert the generated parse tree into domain objects independent of ANTLR.
+
+---
+
+# Rule Evaluation Pipeline
+
+```
+Loan Application
+       │
+       ▼
+Fetch DSL Rules
+       │
+       ▼
+ANTLR Parser
+       │
+       ▼
+Expression Tree (AST)
+       │
+       ▼
+RuleEvaluation Strategy
+       │
+       ▼
+RuleResult
+       │
+       ▼
+Business Factor Aggregation
+       │
+       ▼
+Normalized Score
+       │
+       ▼
+Final Decision
 ```
 
 ---
 
-## Design Patterns
+# Conflict Resolution & Decision Strategy
 
-### Composite Pattern — Expression Tree
+Traditional rule engines resolve conflicts using rule priorities. As the number of rules grows, priority management becomes difficult and decisions become harder to explain.
 
-Represents arbitrarily nested AND/OR conditions as a recursive tree. Evaluating any depth of nesting is a simple recursive traversal with no special casing needed for depth or complexity.
+This project instead adopts a Factor-Based Scoring Model combined with Severity-Based Overrides**.
 
-```
-AndExpression
-├── Condition (creditScore > 700)           leaf
-└── OrExpression                            branch
-    ├── Condition (monthlyIncome >= 50000)  leaf
-    └── Condition (existingLoans < 3)       leaf
-```
+## Business Factors
 
-Adding a new expression type such as `NotExpression` requires only a new class. No existing evaluators, validators, or the core rule model need to change.
+Rules are grouped into configurable business factors.
 
-### Visitor Pattern — Parse Tree to AST
+Example
 
-Separates ANTLR parse tree traversal from domain object construction. `Rule`, `Condition`, `AndExpression`, and `OrExpression` have zero dependency on ANTLR types. The visitor is the only class that knows about ANTLR.
+| Factor              | Importance |
+| ------------------- | ---------- |
+| Credit Score        | Critical   |
+| Income              | High       |
+| Employment          | Medium     |
+| Debt                | Critical   |
+| Property Value      | High       |
+| Financial Stability | Critical   |
 
-```
-visitor.visitStatement()     →   Rule
-visitor.visitAndExpression() →   AndExpression
-visitor.visitCondition()     →   Condition
-```
-
-### Strategy Pattern — Rule Evaluation
-
-Each evaluator is independently testable and interchangeable. Adding a new evaluation strategy does not touch existing code.
-
-```
-RuleEvaluation (interface)
-├── SimpleRuleEvaluation     →   single Condition
-└── CompositeRuleEvaluation  →   AND/OR tree of RuleEvaluation instances
-```
-
-### Open/Closed Principle
-
-The system is open for extension and closed for modification throughout:
-
-- New expression type — add a class, add a visitor override
-- New field — register one entry in `FieldAccessorRegistry`
-- New action — add one enum value
-- Nothing existing changes in any of these cases
+Each loan type can define its own factor configuration.
 
 ---
 
-## Rule Sources
+## Rule Strength
 
-The engine loads rules from two sources and merges them at evaluation time.
-
-### Source 1 — DSL Strings from DB (Primary)
-
-Business users create rules via the API. Rules are validated, stored as raw DSL strings, fetched at evaluation time, and parsed by ANTLR into a `Rule` domain object.
+Each rule contributes evidence towards its factor ranging between 0.0 to 1.0.
 
 ```
-POST /api/rules
-{ "ruleText": "IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve" }
-        │
-        ▼
-Validation pipeline
-        │
-        ▼
-Saved as raw string in rules table
-        │
-        ▼  (at evaluation time)
-ANTLR4 parse → LoanRulesVisitor → Rule
+VERY_STRONG = 1
+
+STRONG = 0.75
+
+MEDIUM = 0.50
+
+WEAK = 0.25
 ```
 
-### Source 2 — Static JSON File (Secondary)
+Matched rules contribute only within their assigned factor.
 
-An optional `static-rules.json` file for seeding baseline rules. Jackson deserializes into `RuleDto`, which is mapped to `Rule` via `RuleMapper`. All Jackson annotations live in the DTO layer only — the domain model stays completely clean.
+If multiple rules match inside the same factor, only the strongest matched rule contributes towards the factor score.
 
-```
-static-rules.json
-        │
-        ▼
-ObjectMapper → RuleDto   (Jackson annotations here only)
-        │
-        ▼
-RuleMapper.toDomain() → Rule   (clean domain object)
-```
-
-Both sources produce the same `Rule` domain object. Everything downstream — evaluation, metrics, result generation — is unaware of which source a rule came from.
+This prevents duplicate scoring.
 
 ---
 
-## Validation Pipeline
+## Composite Rules
 
-Every DSL string passes through three layers before being saved.
+Composite rules spanning multiple business dimensions are modeled as derived business factors.
 
-```
-POST /api/rules
-        │
-        ▼
-@NotBlank                       null or empty input rejected
-        │
-        ▼
-DslSyntaxValidator              ANTLR lexer and parser error listeners
-        │
-        ▼
-DslSemanticValidator            unknown fields, wrong operator types,
-                                invalid lookup values checked against DB
-        │
-        ▼
-DslDuplicateValidator           normalized rule already exists in DB
-        │
-        ▼
-Save to DB ✅
-```
-
-## Duplicate and Idempotency Handling
-
-Three layers protect against duplicate loan applications.
-
-### Layer 1 — Idempotency Key
-
-Handles network timeouts where a client retries a request that already succeeded. The client generates a UUID and sends it as a header. If the key is seen again, the original cached response is returned with no second DB write.
+Example
 
 ```
-POST /api/loan-applications
-Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+creditScore > 700
+AND
+monthlyIncome >= 50000
+AND
+employmentType == 'SALARIED'
 ```
 
-### Layer 2 — Active Application Check
+belongs to
 
-Business rule enforced in the service layer. An applicant cannot have two PENDING applications for the same loan type simultaneously.
-
-```java
-existsByApplicantIdAndLoanTypeIdAndStatus(applicantId, loanTypeId, PENDING)
+```
+FINANCIAL_STABILITY
 ```
 
-### Layer 3 — DB Unique Constraint
+rather than contributing independently to Credit Score, Income and Employment.
 
-Safety net for race conditions. Two simultaneous requests can both pass the application-level check before either saves. The DB constraint ensures only one succeeds and the other throws a `DataIntegrityViolationException`, handled globally.
+This avoids double counting and improves explainability.
 
-```java
-@UniqueConstraint(columnNames = {"applicant_id", "loan_type_id", "status"})
+---
+
+## Rule Severity
+
+Severity determines whether a rule participates in scoring or overrides the scoring process.
+
+```
+HARD_REJECT
+
+NORMAL
+```
+
+Examples of Hard Reject rules include:
+
+* Blacklisted customer
+* Fraud detected
+* Sanctioned customer
+* Invalid documentation
+
+If any Hard Reject rule matches, evaluation terminates immediately.
+
+Review Required rules override automatic approval but still allow scoring to complete.
+
+---
+
+## Final Decision
+
+After factor scores are aggregated, the overall score is normalized.
+
+```
+Score ≥ 0.80
+
+APPROVE
+```
+
+```
+Score 0.50–0.75
+
+REVIEW
+```
+
+```
+Score < 0.50
+
+REJECT
+```
+
+Severity overrides are then applied before returning the final decision.
+
+---
+
+# Domain Model
+
+```
+LoanType
+      │
+      ▼
+LoanTypeFactorConfig
+      │
+      ▼
+Factor
+      │
+      ▼
+Rule
+```
+
+## LoanType
+
+Represents a configurable loan product.
+
+Examples
+
+* Personal Loan
+* Home Loan
+* Education Loan
+
+---
+
+## Factor
+
+Represents a business dimension used for underwriting.
+
+Examples
+
+* Credit Score
+* Income
+* Employment
+* Debt
+* Property Value
+* LTV Ratio
+* Financial Stability
+
+---
+
+## LoanTypeFactorConfig
+
+Associates a factor with a loan type and defines its business importance.
+
+Different loan types may assign different importance levels to the same factor.
+
+---
+
+## Rule
+
+Each rule belongs to one business factor.
+
+Rules define:
+
+* DSL Expression
+* Action
+* Rule Strength
+* Rule Severity
+
+---
+
+# DSL Grammar
+
+```
+statement
+
+    : IF expression THEN action
+
+expression
+
+    : expression OR expression
+    | expression AND expression
+    | '(' expression ')'
+    | condition
+
+condition
+
+    : FIELD operator VALUE
+
+operator
+
+    : > | >= | < | <= | == | !=
+
+action
+
+    : approve
+    | reject
+    | review
 ```
 
 ---
 
-## Monitoring
+# Validation Pipeline
 
-### Setup
+Every rule passes through three validation stages.
+
+```
+Rule Submission
+        │
+        ▼
+Syntax Validation
+        │
+        ▼
+Semantic Validation
+        │
+        ▼
+Duplicate Detection
+        │
+        ▼
+Persist Rule
+```
+
+Validation includes
+
+* Lexer errors
+* Parser errors
+* Unknown fields
+* Invalid operators
+* Invalid lookup values
+* Duplicate normalized rules
+
+---
+
+# Rule Sources
+
+The engine supports multiple rule sources.
+
+## DSL Rules
+
+Business-authored DSL rules stored in PostgreSQL as a primary source of rules loan application is evaluated against.
+
+## Static JSON Rules
+
+Optional baseline rules loaded using Jackson acting as a fallback.
+
+Both sources produce the same domain model before evaluation.
+
+---
+
+# Design Patterns
+
+## Composite Pattern
+
+Represents arbitrarily nested AND/OR expressions as recursive trees.
+
+---
+
+## Visitor Pattern
+
+Separates ANTLR parse tree traversal from domain model construction.
+
+---
+
+## Strategy Pattern
+
+Provides interchangeable rule evaluation strategies.
+
+---
+
+## Registry Pattern
+
+FieldAccessorRegistry decouples DSL field names from LoanApplication object access.
+
+---
+
+## Open/Closed Principle
+
+The engine can be extended with new
+
+* expression types
+* fields
+* actions
+* factors
+
+without modifying existing evaluation logic.
+
+---
+
+# Duplicate & Idempotency Handling
+
+Three layers prevent duplicate processing.
+
+1. Idempotency Key
+
+Protects against client retries.
+
+2. Active Application Validation
+
+Prevents multiple pending applications for the same applicant and loan type.
+
+3. Database Constraints
+
+Guarantees consistency under concurrent requests.
+
+---
+
+# Monitoring
+
+Application metrics are exported using Micrometer.
+
+Supported dashboards include
+
+* Rule evaluations
+* Rule evaluation duration
+* Rules created
+* Passed vs failed evaluations
+
+Prometheus collects metrics while Grafana visualizes them.
+
+---
+
+# Getting Started
+
+Prerequisites
+
+* Java 17
+* Maven
+* PostgreSQL
+* Docker
+* Docker Compose
+
+Run
 
 ```bash
+mvn clean install
+
 docker-compose up -d
+
+mvn spring-boot:run
 ```
 
-| Service | URL | Credentials |
-|---|---|---|
-| Spring Boot Actuator | `http://localhost:8080/actuator/prometheus` | — |
-| Prometheus | `http://localhost:9090` | — |
-| Grafana | `http://localhost:3000` | admin / admin |
+---
 
-### Custom Metrics
+# API Reference
 
-| Metric | Description |
-|---|---|
-| `rule.evaluation.total` | Total number of rule evaluations |
-| `rule.evaluation.passed` | Rules that passed |
-| `rule.evaluation.failed` | Rules that failed |
-| `rule.evaluation.duration` | Time taken to evaluate rules |
-| `rule.created.total` | Rules created via DSL |
+Typical endpoints include
+
+```
+POST /rule-engine/loan/loan-applications
+
+POST /rule-engine/
+
+POST /rule-engine/rules/dsl
+
+POST /rule-engine/user/register
+
+POST /rule-engine/user/login
+```
+
+---
+
+# Tech Stack
+
+| Technology      | Purpose                         |
+|-----------------| ------------------------------- |
+| Java 21         | Core language                   |
+| Spring Boot 3   | Backend framework               |
+| Spring Data JPA | Persistence                     |
+| PostgreSQL      | Database                        |
+| ANTLR4          | DSL parsing                     |
+| Jackson         | Static rule deserialization     |
+| Micrometer      | Metrics                         |
+| Prometheus      | Metrics collection              |
+| Grafana         | Monitoring dashboards           |
+| Redis           | Caching and idempotency support |
+| Docker Compose  | Local infrastructure            |
+| Maven           | Build tool                      |
+
+---
+
+# Future Enhancements
+
+* Rule versioning
+* Role based access control
+* Rule execution audit trail
 
 
-### Prerequisites
+---
 
-- Java 17 or above
-- Maven 3.8 or above
-- PostgreSQL
-- Docker and Docker Compose for Prometheus and Grafana
+## Why This Project?
 
-## Tech Stack
-
-| Technology | Purpose |
-|---|---|
-| Java 17 | Core language |
-| Spring Boot 3 | Application framework |
-| ANTLR4 | DSL grammar definition and AST parsing |
-| Jackson | JSON deserialization for static rules only |
-| Micrometer | Metrics abstraction layer |
-| Prometheus | Metrics scraping and storage |
-| Grafana | Metrics visualization |
-| PostgreSQL | Rule and application persistence |
-| Maven | Build tool |
-| Docker Compose | Local monitoring stack |
+The objective of this project is to demonstrate how a production-grade decision engine can be built using clean architecture and extensible design principles. It combines parsing, validation, domain modeling, configurable business rules, conflict resolution, observability, and explainable decision making into a reusable underwriting platform. Rather than implementing a simple rule evaluator, the project focuses on solving real-world challenges such as rule maintainability, business configurability, conflict resolution, and scalability that are commonly encountered in enterprise lending systems.
