@@ -11,10 +11,10 @@ public class ComparisonEvaluator {
 
     public static boolean evaluate(Object actualValue, RuleValue expectedValue, Operator operator) {
         return switch (expectedValue) {
-            case IntValue iv -> evaluateNumeric(((Number) actualValue).intValue(), iv.value(), operator.getSymbol());
-            case StringValue sv -> evaluateString(String.valueOf(actualValue), sv.value(), operator.getSymbol());
-            case DoubleValue dv ->
-                    evaluateNumeric(((Number) actualValue).doubleValue(), dv.value(), operator.getSymbol());
+            case IntValue intValue -> evaluateNumeric(((Number) actualValue).intValue(), intValue.value(), operator.getSymbol());
+            case StringValue stringValue -> evaluateString(String.valueOf(actualValue), stringValue.value(), operator.getSymbol());
+            case DoubleValue doubleValue ->
+                    evaluateNumeric(((Number) actualValue).doubleValue(), doubleValue.value(), operator.getSymbol());
             default ->
                     throw new IllegalArgumentException("Unsupported RuleValue type: " + expectedValue.getClass().getName());
         };

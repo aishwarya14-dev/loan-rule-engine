@@ -4,6 +4,8 @@ import com.aishwarya.Finbank.exceptions.InvalidRuleConfigurationException;
 import com.aishwarya.Finbank.exceptions.RuleEvaluationException;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Condition;
+import com.aishwarya.Finbank.repository.LoanTypeFactorConfigRepo;
+import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.Finbank.utility.ComparisonEvaluator;
 
@@ -14,11 +16,13 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
     private LoanFieldAccessorRegistry registry;
     private RuleMessageGenerator messageGenerator;
     private Rule rule;
+    private LoanTypeFactorConfigService loanTypeFactorConfigService;
 
-    public SimpleRuleEvaluation(Rule rule, LoanFieldAccessorRegistry registry, RuleMessageGenerator messageGenerator) {
+    public SimpleRuleEvaluation(Rule rule, LoanFieldAccessorRegistry registry, RuleMessageGenerator messageGenerator, LoanTypeFactorConfigService loanTypeFactorConfigService) {
         this.rule = rule;
         this.registry = registry;
         this.messageGenerator = messageGenerator;
+        this.loanTypeFactorConfigService = loanTypeFactorConfigService;
     }
 
     @Override
@@ -36,13 +40,12 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
         Object actualValue = getActualValue(actualValGetterFunction,application,condition.getField());
 
         boolean evaluationResult = compareActualVsExpectedValue(actualValue,condition);
-        double score = 0.0;
-        if(evaluationResult)
-          score = calculateScore();
+        double score = calculateScore(evaluationResult);
 
         String message = messageGenerator.generateMessage(condition.getField(), condition.getOperator() + "", condition.getValue(), actualValue, evaluationResult);
         RuleResult result = new RuleResult(evaluationResult, message, Double.valueOf(score), application);
-        result.setLoanTypeFactorConfig(rule.getLoanTypeFactorConfig());
+        LoanTypeFactorConfig loanTypeFactorConfig = loanTypeFactorConfigService.getLoanTypeFactorConfig(application.getLoanType().getId(),rule.getFactorId());
+        result.setLoanTypeFactorConfig(loanTypeFactorConfig);
         return result;
     }
 
@@ -83,11 +86,12 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
         return evaluationResult;
     }
 
-    private double calculateScore(){
+    private double calculateScore(boolean result){
         double score = 0.0;
-        if(rule.getAction() == Action.REJECT){
+        if(result && rule.getAction() == Action.REJECT){
             score = rule.getEvidenceWeight() * -1;
-        }else if( rule.getAction() == Action.APPROVE){
+        } else if((result && rule.getAction() == Action.APPROVE) ||
+                  !result && rule.getAction() == Action.REJECT){
             score = rule.getEvidenceWeight();
         }
         return score;

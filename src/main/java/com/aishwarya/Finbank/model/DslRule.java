@@ -45,5 +45,5 @@ public class DslRule {
     private Double evidenceWeight;
     @Enumerated(EnumType.STRING)
     @Column(name = "severity", nullable = false)
-    private RuleSeverity severity = RuleSeverity.NORMAL;
+    private RuleSeverity ruleSeverity = RuleSeverity.NORMAL;
 }

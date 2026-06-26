@@ -9,6 +9,14 @@ logging:
     org.hibernate.type.descriptor.sql: TRACE
     org.springframework.data.redis: DEBUG
     io.lettuce.core: DEBUG
+    org:
+      springframework:
+        web:
+          servlet:
+            mvc:
+              method:
+                annotation:
+                  RequestMappingHandlerMapping: TRACE
   file:
     name: logs/loan-rule-engine.log                  # write to file
     pattern:
@@ -23,6 +31,8 @@ logging:
 spring:
   profile:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -76,7 +86,7 @@ management:
     web:
       base-path: /actuator          # explicitly set base path
       exposure:
-        include: health, info, prometheus, metrics
+        include: health, info, prometheus, metrics, mappings
   endpoint:
     health:
       show-details: always

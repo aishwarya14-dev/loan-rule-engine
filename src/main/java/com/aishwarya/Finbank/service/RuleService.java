@@ -2,14 +2,18 @@ package com.aishwarya.Finbank.service;
 
 import com.aishwarya.Finbank.LoanRulesParser;
 import com.aishwarya.Finbank.dto.rules.dynamicrules.RulesRequestDto;
+import com.aishwarya.Finbank.enums.RuleSeverity;
 import com.aishwarya.Finbank.model.DslRule;
+import com.aishwarya.Finbank.model.Factor;
 import com.aishwarya.Finbank.model.LoanType;
+import com.aishwarya.Finbank.repository.FactorRepo;
 import com.aishwarya.Finbank.repository.LoanTypeRepo;
 import com.aishwarya.Finbank.repository.RuleRepository;
 import com.aishwarya.Finbank.ruleengine.loader.DynamicRuleLoader;
 import com.aishwarya.Finbank.validator.DslDuplicateValidator;
 import com.aishwarya.Finbank.validator.DslSemanticValidator;
 import com.aishwarya.Finbank.validator.DslSyntaxValidator;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,7 @@ public class RuleService {
     private final RuleRepository dslRuleRepository;
     private final DynamicRuleLoader dynamicRuleLoader;
     private final LoanTypeRepo loanTypeRepo;
+    private final FactorRepo factorRepo;
 
     @Transactional
     public DslRule save(RulesRequestDto dto) {
@@ -45,8 +50,13 @@ public class RuleService {
         // create entity
         DslRule entity = new DslRule();
         entity.setDslRule(dslText.trim().replaceAll("\\s+", " "));
-        entity.setCreatedAt(LocalDateTime.now());
-        entity.setUpdatedAt(LocalDateTime.now());
+        Factor factor = getFactorById(dto.getFactorId());
+        entity.setEvidenceWeight(dto.getEvidenceWeight());
+        entity.setFactor(factor);
+        if(dto.getRuleSeverity() != null)
+            entity.setRuleSeverity(dto.getRuleSeverity());
+        else
+            entity.setRuleSeverity(RuleSeverity.NORMAL);
 
         LoanType loanType = loanTypeRepo.findById(dto.getLoanTypeId())
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -61,7 +71,7 @@ public class RuleService {
         return savedRule;
     }
 
-    public void evictByLoanType(LoanType loanType) {
+    private void evictByLoanType(LoanType loanType) {
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronization() {
                     @Override
@@ -75,5 +85,10 @@ public class RuleService {
                     }
                 }
         );
+    }
+
+    private Factor getFactorById(Integer id){
+        return factorRepo.findById(id.longValue())
+                .orElseThrow(() -> new EntityNotFoundException("Factor not found with id: " + id));
     }
 }

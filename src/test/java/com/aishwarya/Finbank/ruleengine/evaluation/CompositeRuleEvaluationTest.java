@@ -1,6 +1,7 @@
 package com.aishwarya.Finbank.ruleengine.evaluation;
 
 import com.aishwarya.Finbank.model.*;
+import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,9 @@ public class CompositeRuleEvaluationTest {
 
     @Mock
     private RuleEvaluation ruleEvaluation2;
+
+    @Mock
+    private LoanTypeFactorConfigService loanTypeFactorConfigService;
 
     @Mock
     private Rule rule;
@@ -65,7 +69,9 @@ public class CompositeRuleEvaluationTest {
                         List.of(ruleEvaluation1, ruleEvaluation2),
                         Logic.AND,
                         ruleMessageGenerator,
-                        rule);
+                        rule,
+                        loanTypeFactorConfigService
+                        );
 
         RuleResult result = evaluation.evaluate(application);
 

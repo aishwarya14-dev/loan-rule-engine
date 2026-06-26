@@ -65,6 +65,7 @@ public class LoanApplication {
     @ManyToOne
     @JoinColumn(name = "employment_type_id")
     private EmploymentType employmentType;
+//    private Double debtToIncomeRatio;
 
     @Builder
     public LoanApplication(User user, LoanType loanType, String applicantName, String applicantEmail, String applicantContact, Integer creditScore, String remarks, BigDecimal monthlyIncome, Integer existingLoans, BigDecimal loanAmount, Double interestRate, Integer loanTenureMonths, Integer age, Integer companyRating, Integer employmentTenure, JobTitle jobTitle, Region region, EmploymentType employmentType) {

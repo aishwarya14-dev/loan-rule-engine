@@ -18,11 +18,6 @@ public class RuleEngineService {
 
     private final RuleLoader ruleLoader;
 
-    public RuleEngineService(RuleLoader ruleLoader, RulesEvaluator rulesEvaluator) {
-        this.ruleLoader = ruleLoader;
-        this.rulesEvaluator = rulesEvaluator;
-    }
-
     public void evaluateLoanApplication(LoanApplication application) {
         List<Rule> rules = ruleLoader.loadRules(application.getLoanType());
         rulesEvaluator.evaluateRules(application, rules);

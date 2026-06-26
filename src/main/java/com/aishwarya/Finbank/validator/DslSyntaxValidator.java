@@ -11,11 +11,12 @@ import java.util.List;
 
 @Component
 public class DslSyntaxValidator {
-    List<String> errors = new ArrayList<>();
 
     public LoanRulesParser.StatementContext validate(String dslRule) {
+        List<String> errors = new ArrayList<>();
         CharStream chars = CharStreams.fromString(dslRule);
         LoanRulesLexer lexer = new LoanRulesLexer(chars);
+
         lexer.removeErrorListeners();
         lexer.addErrorListener(new BaseErrorListener() {
             @Override
@@ -35,6 +36,7 @@ public class DslSyntaxValidator {
     }
 
     private LoanRulesParser.StatementContext getLoanRulesParser(LoanRulesLexer lexer) {
+        List<String> errors = new ArrayList<>();
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         LoanRulesParser parser = new LoanRulesParser(tokens);
 

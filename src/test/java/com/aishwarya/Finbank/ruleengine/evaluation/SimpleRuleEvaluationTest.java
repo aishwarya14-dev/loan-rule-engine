@@ -6,6 +6,7 @@ import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.value.DoubleValue;
 import com.aishwarya.Finbank.model.value.RuleValue;
+import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,9 @@ public class SimpleRuleEvaluationTest {
    @Mock
    private RuleMessageGenerator ruleMessageGenerator;
 
+   @Mock
+   private LoanTypeFactorConfigService loanTypeFactorConfigService;
+
    @Test
    void shouldEvaluateApproveRuleSuccessfully() {
       Rule rule = mock(Rule.class);
@@ -52,7 +56,7 @@ public class SimpleRuleEvaluationTest {
               .thenReturn("Passed");
 
       SimpleRuleEvaluation evaluation =
-              new SimpleRuleEvaluation(rule, loanFieldAccessorRegistry, ruleMessageGenerator);
+              new SimpleRuleEvaluation(rule, loanFieldAccessorRegistry, ruleMessageGenerator,loanTypeFactorConfigService);
 
       RuleResult result = evaluation.evaluate(application);
 
