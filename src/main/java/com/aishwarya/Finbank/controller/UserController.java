@@ -4,9 +4,9 @@ package com.aishwarya.Finbank.controller;
 import com.aishwarya.Finbank.utility.JwtUtil;
 import com.aishwarya.Finbank.dto.response.UserResponseDto;
 import com.aishwarya.Finbank.model.User;
-import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
 import com.aishwarya.Finbank.service.UserService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/public")
-public class PublicController {
-    @Autowired
+@RequestMapping("/user")
+@AllArgsConstructor
+public class UserController {
+
     private UserService userService;
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")

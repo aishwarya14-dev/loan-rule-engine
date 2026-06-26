@@ -7,5 +7,5 @@ import com.aishwarya.Finbank.model.Rule;
 import java.util.List;
 
 public interface RulesEvaluator {
-    public boolean evaluateRules(LoanApplication application, List<Rule> rules);
+    public void evaluateRules(LoanApplication application, List<Rule> rules);
 }

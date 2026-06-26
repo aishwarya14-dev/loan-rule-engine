@@ -1,6 +1,6 @@
 package com.aishwarya.Finbank.ruleengine.loader;
 
-import com.aishwarya.Finbank.dto.rules.staticrules.StaticRuleDto;
+import com.aishwarya.Finbank.dto.rules.staticrules.StaticRule;
 import com.aishwarya.Finbank.mapper.RuleMapper;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.model.Rule;
@@ -42,7 +42,7 @@ public class StaticRulesLoaderTest {
 
     @Test
     void shouldLoadRulesSuccessfully() throws Exception {
-        StaticRuleDto dto = new StaticRuleDto();
+        StaticRule dto = new StaticRule();
         Rule rule = mock(Rule.class);
 
         when(objectMapper.readValue(

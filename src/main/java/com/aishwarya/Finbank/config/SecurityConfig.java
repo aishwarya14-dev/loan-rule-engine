@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/loan/**").authenticated().
-                                requestMatchers("/public/**", "/actuator/**").permitAll()
+                                requestMatchers("/user/**", "/actuator/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(session ->

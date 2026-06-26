@@ -2,22 +2,20 @@ package com.aishwarya.Finbank.model;
 
 import com.aishwarya.Finbank.enums.RuleSeverity;
 import com.aishwarya.Finbank.model.expression.Expression;
-import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class Rule {
     private Expression expression;
     private Action action;
     private RuleType type;
     private Double evidenceWeight;
-    private LoanTypeFactorConfig loanTypeCategoryConfig;
-    @Enumerated(EnumType.STRING)
+    private Integer importanceLevel;
+    private Long factorId;
+    private Long loanTypeId;
     private RuleSeverity severity = RuleSeverity.NORMAL;
 
     public Rule(Expression expression, Action action, RuleType type) {

@@ -14,18 +14,21 @@ public class RuleResult {
     private Long id;
     private boolean passed;
     private String message;
-    @Column(name = "expected_value", columnDefinition = "TEXT")
-    private String expectedValue;
+    @Column(name = "rule_evaluation_score")
+    private Double ruleEvaluationScore;
     private String description;
     @ManyToOne
     @JoinColumn(name = "loan_application_id")
     private LoanApplication loanApplication;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_type_factor_config_id")
+    private LoanTypeFactorConfig loanTypeFactorConfig;
 
     @Builder
-    public RuleResult(boolean passed, String message, String expectedValue, LoanApplication loanApplication) {
+    public RuleResult(boolean passed, String message, Double ruleEvaluationScore, LoanApplication loanApplication) {
         this.passed = passed;
         this.message = message;
-        this.expectedValue = expectedValue;
+        this.ruleEvaluationScore = ruleEvaluationScore;
         this.loanApplication = loanApplication;
     }
 }

@@ -1,28 +1,25 @@
 package com.aishwarya.Finbank.ruleengine.evaluator;
-
-
-import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
-import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.model.RuleResult;
-import com.aishwarya.Finbank.model.RuleType;
-import com.aishwarya.Finbank.model.expression.Condition;
+import com.aishwarya.Finbank.exceptions.RuleEvaluationException;
+import com.aishwarya.Finbank.model.*;
+import com.aishwarya.Finbank.model.expression.Expression;
+import com.aishwarya.Finbank.service.FactorEvaluationResultService;
+import com.aishwarya.Finbank.service.LoanApplicationResultService;
 import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluation;
-import com.aishwarya.Finbank.ruleengine.evaluator.RulesEvaluator;
 import com.aishwarya.Finbank.ruleengine.factory.CompositeRuleEvaluationFactory;
 import com.aishwarya.Finbank.ruleengine.factory.SimpleRuleEvaluationFactory;
 import com.aishwarya.Finbank.service.RuleResultService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import com.aishwarya.Finbank.model.LoanApplication;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Component
 @AllArgsConstructor
-@Qualifier("dynamicRulesEvaluator")
+@Qualifier("staticRulesEvaluator")
 public class StaticRulesEvaluator implements RulesEvaluator {
 
     private SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
@@ -31,26 +28,39 @@ public class StaticRulesEvaluator implements RulesEvaluator {
 
     private RuleResultService ruleResultService;
 
+    private LoanApplicationResultService loanApplicationResultService;
+
+    private FactorEvaluationResultService factorEvaluationResultService;
+
 
     @Override
-    public boolean evaluateRules(LoanApplication application, List<Rule> rules) {
+    public void evaluateRules(LoanApplication application, List<Rule> rules) {
+        List<RuleResult> ruleResultList = new ArrayList<>();
         for (Rule rule : rules) {
-            if (rule.getType() == null || rule.getType() == RuleType.SIMPLE) {
-                Condition condition = (Condition) rule.getExpression();
-                evaluateExpression(application, condition);
-            } else if (rule.getType() == RuleType.COMPOSITE) {
-                RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(rule.getExpression());
-                RuleResult result = compositeRuleEvaluationObject.evaluate(application);
-                ruleResultService.saveRuleResult(result);
+            RuleResult ruleResult = null;
+            try{
+                if (rule.getType() == null || rule.getType() == RuleType.SIMPLE) {
+                    ruleResult = evaluateExpression(application, rule);
+                } else if (rule.getType() == RuleType.COMPOSITE) {
+                    Expression expression = rule.getExpression();
+                    RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(expression,rule);
+                    ruleResult = compositeRuleEvaluationObject.evaluate(application);
+                }
+                if (ruleResult != null) {
+                    ruleResultService.saveRuleResult(ruleResult);
+                    ruleResultList.add(ruleResult);
+                }
+            }
+            catch (RuleEvaluationException e){
+                log.error("Failed to evaluate rule : {} for application id: {} - {}",
+                        rule.getExpression(), application.getId(), e.getMessage(), e);
             }
         }
-        return false;
+        loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,false);
     }
 
-    public void evaluateExpression(LoanApplication application, Condition condition) {
-        RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(condition.getField(), condition.getOperator(), condition.getValue());
-        RuleResult result = simpleRuleEvaluationObject.evaluate(application);
-        ruleResultService.saveRuleResult(result);
+    public RuleResult evaluateExpression(LoanApplication application, Rule rule) {
+        RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule);
+        return simpleRuleEvaluationObject.evaluate(application);
     }
-
 }

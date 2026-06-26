@@ -1,9 +1,7 @@
 [
   {
     "type": "SIMPLE",
-    "factor": "Credit Score",
     "evidenceWeight": 0.80,
-    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "CONDITION",
@@ -14,9 +12,7 @@
   },
   {
     "type": "COMPOSITE",
-    "factor": "Financial Stability",
     "evidenceWeight": 0.75,
-    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "AND",
@@ -36,9 +32,7 @@
   },
   {
     "type": "COMPOSITE",
-    "factor": "Employment Stability",
     "evidenceWeight": 0.60,
-    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "OR",
@@ -58,8 +52,7 @@
   },
   {
     "type": "COMPOSITE",
-    "severity": "HARD_REJECT",
-    "factor": "Debt Profile",
+    "evidenceWeight": 0.80,
     "action": "REJECT",
     "expression": {
       "expressionType": "AND",
@@ -79,9 +72,7 @@
   },
   {
     "type": "COMPOSITE",
-    "factor": "DEBT_PROFILE",
     "evidenceWeight": 0.30,
-    "severity": "NORMAL",
     "action": "REVIEW",
     "expression": {
       "expressionType": "OR",
@@ -101,8 +92,7 @@
   },
   {
     "type": "SIMPLE",
-    "factor": "Employment Stability",
-    "severity": "REVIEW_REQUIRED",
+    "evidenceWeight": 0.60,
     "action": "REVIEW",
     "expression": {
       "expressionType": "CONDITION",
@@ -113,9 +103,7 @@
   },
   {
     "type": "COMPOSITE",
-    "factor": "REGIONAL_RISK",
     "evidenceWeight": 0.50,
-    "severity": "REVIEW_REQUIRED",
     "action": "REVIEW",
     "expression": {
       "expressionType": "AND",
@@ -135,9 +123,7 @@
   },
   {
     "type": "COMPOSITE",
-    "factor": "STRONG_APPLICANT_PROFILE",
     "evidenceWeight": 1.00,
-    "severity": "NORMAL",
     "action": "APPROVE",
     "expression": {
       "expressionType": "AND",

@@ -18,6 +18,8 @@ public class LoanFieldAccessorRegistry {
         fieldAccessors.put("existingLoans", LoanApplication::getExistingLoans);
         fieldAccessors.put("employmentTenure", LoanApplication::getEmploymentTenure);
         fieldAccessors.put("companyRating", LoanApplication::getCompanyRating);
+        fieldAccessors.put("age", LoanApplication::getAge);
+        fieldAccessors.put("jobTitle", LoanApplication :: getJobTitle);
 
         fieldAccessors.put("loanAmount",
                 app -> app.getLoanAmount() != null

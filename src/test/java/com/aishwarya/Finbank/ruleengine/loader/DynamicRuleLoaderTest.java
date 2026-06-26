@@ -20,8 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DynamicRuleLoaderTest {
@@ -101,6 +100,9 @@ public class DynamicRuleLoaderTest {
         when(dslRulesParser.parseDslRule("IF ??? THEN approve")).thenThrow(new RuntimeException("Parse failed"));
 
         List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
+
+        verify(dslRulesParser).parseDslRule("IF creditScore > 700 THEN approve");
+        verify(dslRulesParser).parseDslRule("IF ??? THEN approve");
 
         assertThat(result).hasSize(1);
         assertThat(result).containsExactly(validRule);
