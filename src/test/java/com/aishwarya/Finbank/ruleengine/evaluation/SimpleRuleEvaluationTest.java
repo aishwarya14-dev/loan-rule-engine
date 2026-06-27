@@ -44,6 +44,7 @@ public class SimpleRuleEvaluationTest {
       condition.setField("salary");
       condition.setOperator(Operator.GT);
       condition.setValue(new DoubleValue(50000));
+      LoanTypeFactorConfig loanTypeFactorConfig = mock(LoanTypeFactorConfig.class);
 
       when(rule.getExpression()).thenReturn(condition);
       when(rule.getAction()).thenReturn(Action.APPROVE);
@@ -54,6 +55,13 @@ public class SimpleRuleEvaluationTest {
       when(ruleMessageGenerator.generateMessage(
               any(), any(), any(), any(), anyBoolean()))
               .thenReturn("Passed");
+
+      LoanType loanType = mock(LoanType.class);
+      when(application.getLoanType()).thenReturn(loanType);
+      when(loanType.getId()).thenReturn(1L);
+      when(rule.getFactorId()).thenReturn(2L);
+
+      when(loanTypeFactorConfigService.getLoanTypeFactorConfig(any(),any())).thenReturn(loanTypeFactorConfig);
 
       SimpleRuleEvaluation evaluation =
               new SimpleRuleEvaluation(rule, loanFieldAccessorRegistry, ruleMessageGenerator,loanTypeFactorConfigService);
