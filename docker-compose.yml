@@ -2,6 +2,7 @@
 services:
 
   app:
+    image: loan-rule-engine
     build: .
     container_name: loan-rule-engine
 

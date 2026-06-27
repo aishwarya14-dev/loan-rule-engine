@@ -58,6 +58,7 @@ spring:
 
 
 server:
+  port: 8000
   servlet:
     context-path: /loan-rule-engine
     session:
@@ -72,7 +73,7 @@ management:
     web:
       base-path: /actuator          # explicitly set base path
       exposure:
-        include: health, info, prometheus, metrics
+        include: health, info, prometheus, metrics, mappings
   endpoint:
     health:
       show-details: always

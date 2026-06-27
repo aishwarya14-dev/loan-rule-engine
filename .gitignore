@@ -20,4 +20,5 @@ target/
 *.ipr
 *.log
 .env
+.DS_Store
 

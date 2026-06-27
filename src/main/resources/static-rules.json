@@ -1,6 +1,7 @@
 [
   {
     "type": "SIMPLE",
+    "evidenceWeight": 0.80,
     "action": "APPROVE",
     "expression": {
       "expressionType": "CONDITION",
@@ -11,6 +12,7 @@
   },
   {
     "type": "COMPOSITE",
+    "evidenceWeight": 0.75,
     "action": "APPROVE",
     "expression": {
       "expressionType": "AND",
@@ -30,6 +32,7 @@
   },
   {
     "type": "COMPOSITE",
+    "evidenceWeight": 0.60,
     "action": "APPROVE",
     "expression": {
       "expressionType": "OR",
@@ -49,6 +52,7 @@
   },
   {
     "type": "COMPOSITE",
+    "evidenceWeight": 0.80,
     "action": "REJECT",
     "expression": {
       "expressionType": "AND",
@@ -56,7 +60,7 @@
         "expressionType": "CONDITION",
         "field": "creditScore",
         "operator": "<",
-        "value": 600
+        "value": 450
       },
       "right": {
         "expressionType": "CONDITION",
@@ -68,7 +72,8 @@
   },
   {
     "type": "COMPOSITE",
-    "action": "REJECT",
+    "evidenceWeight": 0.30,
+    "action": "REVIEW",
     "expression": {
       "expressionType": "OR",
       "left": {
@@ -81,22 +86,24 @@
         "expressionType": "CONDITION",
         "field": "existingLoans",
         "operator": ">",
-        "value": 5
+        "value": 1
       }
     }
   },
   {
     "type": "SIMPLE",
+    "evidenceWeight": 0.60,
     "action": "REVIEW",
     "expression": {
       "expressionType": "CONDITION",
       "field": "companyRating",
-      "operator": ">=",
+      "operator": "<=",
       "value": 4
     }
   },
   {
     "type": "COMPOSITE",
+    "evidenceWeight": 0.50,
     "action": "REVIEW",
     "expression": {
       "expressionType": "AND",
@@ -116,6 +123,7 @@
   },
   {
     "type": "COMPOSITE",
+    "evidenceWeight": 1.00,
     "action": "APPROVE",
     "expression": {
       "expressionType": "AND",
