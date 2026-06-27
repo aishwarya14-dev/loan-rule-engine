@@ -57,7 +57,7 @@ public class UserControllerTest {
         when(userService.saveUser(any(User.class)))
                 .thenReturn(response);
 
-        mockMvc.perform(post("/public/register")
+        mockMvc.perform(post("/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
@@ -73,7 +73,7 @@ public class UserControllerTest {
                 .mobileNumber("9876543210")
                 .build();
 
-        mockMvc.perform(post("/public/register")
+        mockMvc.perform(post("/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isBadRequest());
@@ -87,7 +87,7 @@ public class UserControllerTest {
                 .role("USER")
                 .build();
 
-        mockMvc.perform(post("/public/register")
+        mockMvc.perform(post("/user/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isBadRequest());
@@ -103,7 +103,7 @@ public class UserControllerTest {
                 .build();
         when(jwtUtil.generateToken(user.getUsername())).thenReturn("0febrwFEMCdaftqz3u/im5JKJOAmKGo8Fbyr/r3WA0Q=");
         String request = objectMapper.writeValueAsString(user);
-        mockMvc.perform(post("/public/login")
+        mockMvc.perform(post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isOk());

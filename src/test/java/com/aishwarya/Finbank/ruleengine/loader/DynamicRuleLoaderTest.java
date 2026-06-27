@@ -1,11 +1,11 @@
 package com.aishwarya.Finbank.ruleengine.loader;
 
-import com.aishwarya.Finbank.model.DslRule;
-import com.aishwarya.Finbank.model.LoanType;
-import com.aishwarya.Finbank.model.Rule;
+import com.aishwarya.Finbank.exceptions.DslParsingException;
+import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.RuleRepository;
 import com.aishwarya.Finbank.ruleengine.loader.DynamicRuleLoader;
 import com.aishwarya.Finbank.ruleengine.parser.DslRulesParser;
+import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +31,9 @@ public class DynamicRuleLoaderTest {
     @Mock
     private DslRulesParser dslRulesParser;
 
+    @Mock
+    private LoanTypeFactorConfigService loanTypeFactorConfigService;
+
     @InjectMocks
     private DynamicRuleLoader dynamicRuleLoader;
 
@@ -39,6 +42,7 @@ public class DynamicRuleLoaderTest {
     private DslRule dslRule2;
     private Rule rule1;
     private Rule rule2;
+    private LoanTypeFactorConfig loanTypeFactorConfig;
 
 
     private LoanType loanType(String name){
@@ -62,20 +66,63 @@ public class DynamicRuleLoaderTest {
 
         rule1 = mock(Rule.class);
         rule2 = mock(Rule.class);
+
+        loanTypeFactorConfig = mock(LoanTypeFactorConfig.class);
     }
 
     //happy path
     @Test
-    public void shouldPassForLoadRules(){
+    void shouldLoadAndEnrichRulesSuccessfully() {
+        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN"))
+                .thenReturn(List.of(dslRule1, dslRule2));
 
-        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of(dslRule1,dslRule2));
-        when(dslRulesParser.parseDslRule("IF creditScore > 700 THEN approve")).thenReturn(rule1);
-        when(dslRulesParser.parseDslRule("IF monthlyIncome >= 50000 THEN approve")).thenReturn(rule2);
+        when(dslRulesParser.parseDslRule(dslRule1.getDslRule()))
+                .thenReturn(rule1);
+        when(dslRulesParser.parseDslRule(dslRule2.getDslRule()))
+                .thenReturn(rule2);
 
+        // Real LoanType
+        LoanType loanType = new LoanType();
+        loanType.setId(1L);
+        loanType.setLoanType("HOME_LOAN");
+
+        // Real Factor
+        Factor factor = new Factor();
+        factor.setId(10L);
+
+        // Attach to DSL rules
+        dslRule1.setLoanType(loanType);
+        dslRule2.setLoanType(loanType);
+
+        dslRule1.setFactor(factor);
+        dslRule2.setFactor(factor);
+
+        // Real ImportanceLevel
+        ImportanceLevel importanceLevel = new ImportanceLevel();
+        importanceLevel.setWeight(5);
+
+        // Real LoanTypeFactorConfig
+        LoanTypeFactorConfig config = new LoanTypeFactorConfig();
+        config.setLoanType(loanType);
+        config.setFactor(factor);
+        config.setImportanceLevel(importanceLevel);
+
+        when(loanTypeFactorConfigService.getLoanTypeFactorConfig(1L, 10L))
+                .thenReturn(config);
+
+        // Act
         List<Rule> rules = dynamicRuleLoader.loadRules(homeLoanType);
 
+        // Assert
         assertThat(rules).hasSize(2);
         assertThat(rules).containsExactly(rule1, rule2);
+
+        verify(ruleRepository).findByLoanTypeLoanType("HOME_LOAN");
+        verify(dslRulesParser).parseDslRule(dslRule1.getDslRule());
+        verify(dslRulesParser).parseDslRule(dslRule2.getDslRule());
+
+        verify(loanTypeFactorConfigService, times(2))
+                .getLoanTypeFactorConfig(1L, 10L);
     }
 
     @Test
@@ -90,22 +137,48 @@ public class DynamicRuleLoaderTest {
 
     //when one rule fails to parse
     @Test
-    public void shouldSkipFailedRuleAndContinueLoadingRest(){
-        DslRule validDslRule   = dslRule("IF creditScore > 700 THEN approve");
-        DslRule invalidDslRule = dslRule("IF ??? THEN approve");
-        Rule validRule = mock(Rule.class);
+    void shouldSkipFailedRuleAndContinueLoadingRest() {
+        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN"))
+                .thenReturn(List.of(dslRule1, dslRule2));
 
-        when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN")).thenReturn(List.of(validDslRule,invalidDslRule));
-        when(dslRulesParser.parseDslRule("IF creditScore > 700 THEN approve")).thenReturn(validRule);
-        when(dslRulesParser.parseDslRule("IF ??? THEN approve")).thenThrow(new RuntimeException("Parse failed"));
+        when(dslRulesParser.parseDslRule(dslRule1.getDslRule()))
+                .thenThrow(new DslParsingException("Invalid DSL"));
 
-        List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);
+        when(dslRulesParser.parseDslRule(dslRule2.getDslRule()))
+                .thenReturn(rule2);
 
-        verify(dslRulesParser).parseDslRule("IF creditScore > 700 THEN approve");
-        verify(dslRulesParser).parseDslRule("IF ??? THEN approve");
+        LoanType loanType = new LoanType();
+        loanType.setId(1L);
+        loanType.setLoanType("HOME_LOAN");
 
-        assertThat(result).hasSize(1);
-        assertThat(result).containsExactly(validRule);
+        Factor factor = new Factor();
+        factor.setId(10L);
+
+        dslRule2.setLoanType(loanType);
+        dslRule2.setFactor(factor);
+
+        ImportanceLevel importanceLevel = new ImportanceLevel();
+        importanceLevel.setWeight(5);
+
+        LoanTypeFactorConfig config = new LoanTypeFactorConfig();
+        config.setLoanType(loanType);
+        config.setFactor(factor);
+        config.setImportanceLevel(importanceLevel);
+
+        when(loanTypeFactorConfigService.getLoanTypeFactorConfig(1L, 10L))
+                .thenReturn(config);
+
+        List<Rule> rules = dynamicRuleLoader.loadRules(homeLoanType);
+
+        assertThat(rules)
+                .hasSize(1)
+                .containsExactly(rule2);
+
+        verify(dslRulesParser).parseDslRule(dslRule1.getDslRule());
+        verify(dslRulesParser).parseDslRule(dslRule2.getDslRule());
+
+        verify(loanTypeFactorConfigService)
+                .getLoanTypeFactorConfig(1L, 10L);
     }
 
     //when fail to parse all the rules
