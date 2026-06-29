@@ -617,8 +617,6 @@ The application is deployed on AWS EC2.
 | Prometheus | `http://3.106.250.230:9090`                                        |
 | Grafana | `http://3.106.250.230:3000`                                        |
 
-> Replace `<EC2_PUBLIC_IP>` with your current public IP or domain name.
-
 ---
 
 ## Why This Project?
