@@ -2,50 +2,19 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'loan-processing-app'
-    metrics_path: '/loan-processing/actuator/prometheus'
+
+  - job_name: 'loan-rule-engine'
+    metrics_path: '/loan-rule-engine/actuator/prometheus'
+
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets:
+          - app:8080
+
         labels:
-          app: 'loan-processing'
+          app: 'loan-rule-engine'
 
   - job_name: 'prometheus'
+
     static_configs:
-      - targets: ['localhost:9090']
-
-
-#global:
-#  scrape_interval: 15s        # pull metrics every 15 seconds
-#  evaluation_interval: 15s    # evaluate alerting rules every 15 seconds
-#  scrape_timeout: 10s         # fail a scrape if it takes longer than this
-#
-## Alerting
-#alerting:
-#  alertmanagers:
-#    - static_configs:
-#        - targets: []           # add alertmanager host:port here when ready
-#
-## Scrape jobs
-#scrape_configs:
-#
-#  # Your Spring Boot loan-processing app
-#  - job_name: 'loan-processing-app'
-#    metrics_path: '/loan-processing/actuator/prometheus'   # context-path + actuator base-path + endpoint
-#    scheme: http                                           # change to https if your app runs with TLS
-#
-#    static_configs:
-#      - targets: ['host.docker.internal:8080']             # if Prometheus runs in Docker
-#      # - targets: ['localhost:8080']                      # if Prometheus runs as a bare process
-#        labels:
-#        app: 'loan-processing'
-#        env: 'local'                                       # change to dev / staging / prod
-#
-#    # How often to scrape this specific job (overrides global if set)
-#    scrape_interval: 15s
-#
-#  # Prometheus scraping itself (always useful to keep)
-#  - job_name: 'prometheus'
-#    metrics_path: '/metrics'
-#    static_configs:
-#      - targets: ['localhost:9090']
-
+      - targets:
+          - localhost:9090
