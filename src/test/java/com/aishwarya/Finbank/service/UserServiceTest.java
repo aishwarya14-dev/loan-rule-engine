@@ -1,5 +1,6 @@
 package com.aishwarya.Finbank.service;
 import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.enums.Role;
 import com.aishwarya.Finbank.exceptions.DuplicateUserException;
 import com.aishwarya.Finbank.exceptions.UserCreationException;
 import com.aishwarya.Finbank.model.User;
@@ -37,7 +38,7 @@ public class UserServiceTest {
          user = User.builder()
                 .username("semblance@gmail.com")
                 .password("password123")
-                .role("USER")
+                .role(Role.USER)
                 .mobileNumber("9876543210")
                 .build();
     }

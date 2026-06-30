@@ -42,4 +42,3 @@ public class UserController {
         return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 }
-
