@@ -3,6 +3,7 @@ package com.aishwarya.Finbank.controller;
 import com.aishwarya.Finbank.dto.rules.dynamicrules.RulesRequestDto;
 import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.service.RuleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/rules")
+@Tag(name = "Rules APIs" , description = "Supports Rule Creation")
 public class RulesController {
 
     @Autowired

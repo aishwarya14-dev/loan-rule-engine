@@ -5,6 +5,7 @@ import com.aishwarya.Finbank.utility.JwtUtil;
 import com.aishwarya.Finbank.dto.response.UserResponseDto;
 import com.aishwarya.Finbank.model.User;
 import com.aishwarya.Finbank.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
+@Tag(name = "user APIs" , description = "Register and Login user")
 public class UserController {
 
     private UserService userService;
