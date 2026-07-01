@@ -2,7 +2,8 @@ package com.aishwarya.Finbank.config;
 
 
 import com.aishwarya.Finbank.filter.JwtFilter;
-import com.aishwarya.Finbank.service.UserDetailsServiceImpl;
+import com.aishwarya.Finbank.service.CustomUserDetailsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
-    private UserDetailsServiceImpl customUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -32,7 +34,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/loan/**").authenticated().
-                                requestMatchers("/user/**", "/actuator/**").permitAll()
+                                requestMatchers("/user/**", "/actuator/**","/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html").permitAll()
+                                .requestMatchers("/rules/**").hasRole("ADMIN")
                                 .anyRequest().permitAll()
                 )
                 .sessionManagement(session ->
@@ -47,6 +52,7 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.
                 getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+        log.info("AuthenticationManager bean created successfully");
         return authenticationManagerBuilder.build();
     }
 

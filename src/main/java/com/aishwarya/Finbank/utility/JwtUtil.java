@@ -1,16 +1,22 @@
 package com.aishwarya.Finbank.utility;
 
+import com.aishwarya.Finbank.service.CustomUserDetails;
+import com.aishwarya.Finbank.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -20,6 +26,9 @@ public class JwtUtil {
 
     @Value("${spring.security.jwt.expiration}")
     private long expiration;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsServiceImpl;
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -48,13 +57,17 @@ public class JwtUtil {
     }
 
     public String generateToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
+        String roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+//        Map<String, Object> claims = new HashMap<>();
+        return createToken(roles, username);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(String roles, String subject) {
         return Jwts.builder()
-                .claims(claims)
+                .claims(Map.of("role", roles))
                 .subject(subject)
                 .header().empty().add("typ", "JWT")
                 .and()

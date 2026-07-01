@@ -5,8 +5,10 @@ import com.aishwarya.Finbank.utility.JwtUtil;
 import com.aishwarya.Finbank.dto.response.UserResponseDto;
 import com.aishwarya.Finbank.model.User;
 import com.aishwarya.Finbank.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
+@Tag(name = "user APIs" , description = "Register and Login user")
 public class UserController {
 
     private UserService userService;
@@ -31,15 +34,16 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> register(@Valid @RequestBody User user) {
+        log.info("POST /register - username={}, mobile={}", user.getUsername(), user.getMobileNumber());
         UserResponseDto userResponseDto = userService.saveUser(user);
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
+        log.info("POST /login - username={}",  user.getUsername());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         String jwt = jwtUtil.generateToken(user.getUsername());
         return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 }
-

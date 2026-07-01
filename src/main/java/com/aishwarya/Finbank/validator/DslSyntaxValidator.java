@@ -3,12 +3,14 @@ package com.aishwarya.Finbank.validator;
 import com.aishwarya.Finbank.LoanRulesLexer;
 import com.aishwarya.Finbank.LoanRulesParser;
 import com.aishwarya.Finbank.exceptions.DslValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class DslSyntaxValidator {
 
@@ -26,6 +28,7 @@ public class DslSyntaxValidator {
                                     String msg, RecognitionException e) {
                 errors.add("Lexer error at " + line + ":"
                         + charPositionInLine + " — " + msg);
+                log.error("Lexer error at {}:{} — {}", line, charPositionInLine, msg);
             }
         });
         if (!errors.isEmpty()) {
@@ -49,6 +52,7 @@ public class DslSyntaxValidator {
                                     String msg, RecognitionException e) {
                 errors.add("Lexer error at " + line + ":"
                         + charPositionInLine + " — " + msg);
+                log.error("Parser error at {}:{} — {}", line, charPositionInLine, msg);
             }
         });
         LoanRulesParser.StatementContext tree = parser.statement();
