@@ -491,6 +491,39 @@ Guarantees consistency under concurrent requests.
 
 ---
 
+## Deployment
+
+The application is deployed on **AWS EC2** using **Docker** and **GitHub Actions**.
+
+### Deployment Pipeline
+
+```
+Developer
+    │
+git push
+    │
+    ▼
+GitHub Actions
+    │
+    ├── Run Tests
+    ├── Build Docker Image
+    ├── Push Image to Docker Hub
+    └── Deploy to AWS EC2 via SSH
+             │
+             ├── git pull
+             ├── docker-compose pull
+             └── docker-compose up -d
+```
+
+### Services
+
+- Spring Boot Application
+- Docker
+- GitHub Actions CI/CD
+- Prometheus
+- Grafana
+- Neon PostgreSQL
+
 # Monitoring
 
 Application metrics are exported using Micrometer.
@@ -565,12 +598,24 @@ POST /rule-engine/user/login
 
 ---
 
-# Future Enhancements
+# Future Enhancements (Work in Progress)
 
 * Rule versioning
 * Role based access control
 * Rule execution audit trail
+* Swagger Integration
 
+
+## Live Demo
+
+The application is deployed on AWS EC2.
+
+| Service | URL                                                                  |
+|---------|----------------------------------------------------------------------|
+| API | `http://3.106.250.230:8080/loan-rule-engine`                         |
+| Health Check | `http://3.106.250.230:8080/loan-rule-engine/actuator/health`       |
+| Prometheus | `http://3.106.250.230:9090`                                        |
+| Grafana | `http://3.106.250.230:3000`                                        |
 
 ---
 

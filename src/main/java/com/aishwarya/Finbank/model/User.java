@@ -1,15 +1,17 @@
 package com.aishwarya.Finbank.model;
 
+import com.aishwarya.Finbank.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Data
+
 @Entity(name = "users")
 @Table(name = "users")
 @Builder
 @AllArgsConstructor
 @Getter
+@Setter
 @NoArgsConstructor
 public class User {
     @Id
@@ -20,8 +22,9 @@ public class User {
     private String username;
     @NotBlank(message = "Password is mandatory")
     private String password;
-    @NotBlank(message = "Role is mandatory")
-    private String role;
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @Column(unique = true, name = "mobile_number")
     @NotBlank(message = "Mobile number is mandatory")
     private String mobileNumber;

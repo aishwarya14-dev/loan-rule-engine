@@ -1,15 +1,13 @@
-name: Spring Boot CI
+name: Spring Boot CI-CD
 
 on:
   push:
     branches:
       - main
-      - version1
 
   pull_request:
     branches:
       - main
-      - version1
 
 jobs:
   build:

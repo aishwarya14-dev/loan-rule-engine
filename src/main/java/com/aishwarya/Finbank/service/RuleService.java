@@ -16,12 +16,12 @@ import com.aishwarya.Finbank.validator.DslSyntaxValidator;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import java.time.LocalDateTime;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class RuleService {
@@ -59,9 +59,12 @@ public class RuleService {
             entity.setRuleSeverity(RuleSeverity.NORMAL);
 
         LoanType loanType = loanTypeRepo.findById(dto.getLoanTypeId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "LoanType not found for id: " + dto.getLoanTypeId()
-                ));
+                .orElseThrow(() -> {
+                    log.error("LoanType not found for id: {}", dto.getLoanTypeId());
+                    return new IllegalArgumentException(
+                            "LoanType not found for id: " + dto.getLoanTypeId()
+                    );
+                });
         entity.setLoanType(loanType);
 
         // save rule to the db
@@ -80,7 +83,7 @@ public class RuleService {
                             dynamicRuleLoader.evictByLoanType(loanType);
 
                         } catch (Exception ex) {
-                            //add log
+                            log.error("Error evicting rules for loan type: {}", loanType.getId(), ex);
                         }
                     }
                 }
@@ -89,6 +92,9 @@ public class RuleService {
 
     private Factor getFactorById(Integer id){
         return factorRepo.findById(id.longValue())
-                .orElseThrow(() -> new EntityNotFoundException("Factor not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Factor not found for id: {}", id);
+                    return new EntityNotFoundException("Factor not found for id: " + id);
+                });
     }
 }
