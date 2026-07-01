@@ -34,6 +34,7 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
 
         Condition condition = (Condition) rule.getExpression();
 
+        //get the function to fetch the actual value of the field from the application
         Function<LoanApplication, Object> actualValGetterFunction = getActualValGetterFunction(condition.getField());
 
         //get the actual value of the field from the application

@@ -8,12 +8,14 @@ import com.aishwarya.Finbank.repository.JobTitleRepo;
 import com.aishwarya.Finbank.repository.LoanTypeRepo;
 import com.aishwarya.Finbank.repository.RegionRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class DslSemanticValidator {
@@ -57,6 +59,7 @@ public class DslSemanticValidator {
         if (!registry.containsField(field)) {
             errors.add("Unknown field '" + field + "'. " +
                     "Valid fields: " + registry.getRegisteredFields());
+            log.error("Unknown field '{}' in DSL rule", field);
             return;
         }
 
@@ -64,6 +67,7 @@ public class DslSemanticValidator {
         if (isStringField(field) && isNumericOperator(operator)) {
             errors.add("Field '" + field + "' is a String. " +
                     "Only == and != are supported, got '" + operator + "'");
+            log.error("Invalid operator '{}' for String field '{}'", operator, field);
         }
 
         // string values must exist in DB lookup tables
@@ -76,20 +80,29 @@ public class DslSemanticValidator {
                                      List<String> errors) {
         switch (field) {
             case "region" -> {
-                if (!regionRepository.existsByRegionName(value))
+                if (!regionRepository.existsByRegionName(value)){
                     errors.add("Invalid region '" + value);
+                    log.error("Invalid region '{}' in DSL rule", value);
+                }
             }
             case "employmentType" -> {
-                if (!employmentTypeRepository.existsByEmploymentType(value))
+                if (!employmentTypeRepository.existsByEmploymentType(value)){
                     errors.add("Invalid employmentType '" + value);
+                    log.error("Invalid employmentType '{}' in DSL rule", value);
+                }
+
             }
             case "jobTitle" -> {
-                if (!jobTitleRepository.existsByJobTitle(value))
+                if (!jobTitleRepository.existsByJobTitle(value)){
                     errors.add("Invalid jobTitle '" + value);
+                    log.error("Invalid jobTitle '{}' in DSL rule", value);
+                }
             }
             case "loanType" -> {
-                if (!loanTypeRepository.existsByLoanType(value))
+                if (!loanTypeRepository.existsByLoanType(value)){
                     errors.add("Invalid loanType '" + value);
+                    log.error("Invalid loanType '{}' in DSL rule", value);
+                }
             }
         }
     }

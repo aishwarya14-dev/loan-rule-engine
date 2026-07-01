@@ -4,12 +4,14 @@ import com.aishwarya.Finbank.enums.Decision;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.LoanApplicationResultRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class LoanApplicationResultService {
