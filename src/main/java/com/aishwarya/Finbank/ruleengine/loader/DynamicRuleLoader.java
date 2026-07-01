@@ -34,7 +34,7 @@ public class DynamicRuleLoader implements RuleLoader {
 
     private LoanTypeFactorConfigService loanTypeFactorConfigService;
 
-    // Cache per loan type name : key = "HOME_LOAN", "CAR_LOAN" etc
+    // Cache per loan type : key = "HOME_LOAN", "CAR_LOAN" etc
     @Cacheable(value = "rules", key = "#loanType.loanType")
     @Override
     public List<Rule> loadRules(LoanType loanType) {
@@ -53,7 +53,6 @@ public class DynamicRuleLoader implements RuleLoader {
                     parsedRule.setLoanTypeId(loanTypeFactorConfig.getLoanType().getId());
 
                     rules.add(parsedRule);
-//                    System.out.println(Hibernate.isInitialized(loanTypeFactorConfig.getFactor()));
                 } catch (DslParsingException e) {
                     log.error("Failed to parse DSL rule: {}", dslRule.getDslRule(), e);
                 } catch (Exception e) {
