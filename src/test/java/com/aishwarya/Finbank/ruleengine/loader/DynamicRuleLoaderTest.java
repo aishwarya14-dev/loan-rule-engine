@@ -1,6 +1,7 @@
 package com.aishwarya.Finbank.ruleengine.loader;
 
 import com.aishwarya.Finbank.exceptions.DslParsingException;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.RuleRepository;
 import com.aishwarya.Finbank.ruleengine.loader.DynamicRuleLoader;
@@ -30,6 +31,9 @@ public class DynamicRuleLoaderTest {
 
     @Mock
     private DslRulesParser dslRulesParser;
+
+    @Mock
+    private RuleEngineMetrics metrics;
 
     @Mock
     private LoanTypeFactorConfigService loanTypeFactorConfigService;

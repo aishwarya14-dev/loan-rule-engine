@@ -1,5 +1,6 @@
 package com.aishwarya.Finbank.ruleengine.evaluator;
 import com.aishwarya.Finbank.exceptions.RuleEvaluationException;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Expression;
 import com.aishwarya.Finbank.service.FactorEvaluationResultService;
@@ -22,15 +23,17 @@ import java.util.List;
 @Qualifier("staticRulesEvaluator")
 public class StaticRulesEvaluator implements RulesEvaluator {
 
-    private SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
+    private final SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
 
-    private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
+    private final CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
 
-    private RuleResultService ruleResultService;
+    private final RuleResultService ruleResultService;
 
-    private LoanApplicationResultService loanApplicationResultService;
+    private final LoanApplicationResultService loanApplicationResultService;
 
-    private FactorEvaluationResultService factorEvaluationResultService;
+    private final FactorEvaluationResultService factorEvaluationResultService;
+
+    private final RuleEngineMetrics metrics;
 
 
     @Override
@@ -54,6 +57,7 @@ public class StaticRulesEvaluator implements RulesEvaluator {
             catch (RuleEvaluationException e){
                 log.error("Failed to evaluate rule : {} for application id: {} - {}",
                         rule.getExpression(), application.getId(), e.getMessage(), e);
+                metrics.incrementEvaluationSkipped();
             }
         }
         loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,false);
@@ -61,6 +65,7 @@ public class StaticRulesEvaluator implements RulesEvaluator {
 
     public RuleResult evaluateExpression(LoanApplication application, Rule rule) {
         RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule);
+        metrics.incrementEvaluationTotal();
         return simpleRuleEvaluationObject.evaluate(application);
     }
 }

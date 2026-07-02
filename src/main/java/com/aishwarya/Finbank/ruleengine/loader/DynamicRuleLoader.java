@@ -1,5 +1,6 @@
 package com.aishwarya.Finbank.ruleengine.loader;
 import com.aishwarya.Finbank.exceptions.DslParsingException;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.model.LoanTypeFactorConfig;
@@ -28,11 +29,13 @@ import java.util.List;
 @AllArgsConstructor
 public class DynamicRuleLoader implements RuleLoader {
 
-    private RuleRepository repository;
+    private final RuleRepository repository;
 
-    private DslRulesParser parser;
+    private final DslRulesParser parser;
 
-    private LoanTypeFactorConfigService loanTypeFactorConfigService;
+    private final LoanTypeFactorConfigService loanTypeFactorConfigService;
+
+    private final RuleEngineMetrics metrics;
 
     // Cache per loan type : key = "HOME_LOAN", "CAR_LOAN" etc
     @Cacheable(value = "rules", key = "#loanType.loanType")
@@ -45,6 +48,7 @@ public class DynamicRuleLoader implements RuleLoader {
             for (DslRule dslRule : entities) {
                 try {
                     Rule parsedRule = parser.parseDslRule(dslRule.getDslRule());
+                    metrics.incrementDslParseSuccess();
                     parsedRule.setEvidenceWeight(dslRule.getEvidenceWeight());
                     parsedRule.setSeverity(dslRule.getRuleSeverity());
                     LoanTypeFactorConfig loanTypeFactorConfig = loanTypeFactorConfigService.getLoanTypeFactorConfig(dslRule.getLoanType().getId(),dslRule.getFactor().getId());
@@ -54,8 +58,10 @@ public class DynamicRuleLoader implements RuleLoader {
 
                     rules.add(parsedRule);
                 } catch (DslParsingException e) {
+                    metrics.incrementDslParseFailed();
                     log.error("Failed to parse DSL rule: {}", dslRule.getDslRule(), e);
                 } catch (Exception e) {
+                    metrics.incrementDslParseFailed();
                     log.error("Unexpected error while parsing DSL rule: {}", dslRule.getDslRule(), e);
                 }
             }

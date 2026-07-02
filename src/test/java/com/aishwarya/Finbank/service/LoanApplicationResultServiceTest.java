@@ -1,6 +1,7 @@
 package com.aishwarya.Finbank.service;
 
 import com.aishwarya.Finbank.enums.Decision;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.LoanApplicationResultRepo;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ class LoanApplicationResultServiceTest {
 
     @Mock
     private LoanApplicationResultRepo loanApplicationResultRepo;
+
+    @Mock
+    private RuleEngineMetrics metrics;
 
     @Test
     void shouldCalculateStaticScoreAndApproveLoan() {

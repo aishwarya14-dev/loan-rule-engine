@@ -1,5 +1,6 @@
 package com.aishwarya.Finbank.ruleengine.evaluator;
 
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.LoanApplication;
 import com.aishwarya.Finbank.model.Rule;
 import com.aishwarya.Finbank.model.RuleResult;
@@ -40,6 +41,9 @@ public class DynamicRulesEvaluatorTest {
 
     @Mock
     private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
+
+    @Mock
+    private RuleEngineMetrics metrics;
 
     @Test
     void testShouldEvaluateSimpleRulesSuccessfully() {
