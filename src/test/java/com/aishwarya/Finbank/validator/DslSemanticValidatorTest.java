@@ -2,6 +2,7 @@ package com.aishwarya.Finbank.validator;
 
 import com.aishwarya.Finbank.LoanRulesLexer;
 import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.Finbank.exceptions.DslValidationException;
 import com.aishwarya.Finbank.repository.EmploymentTypeRepo;
@@ -19,6 +20,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DslSemanticValidatorTest {
@@ -38,6 +41,9 @@ public class DslSemanticValidatorTest {
     @Mock
     private LoanTypeRepo loanTypeRepository;
 
+    @Mock
+    private RuleEngineMetrics metrics;
+
     @InjectMocks
     private DslSemanticValidator semanticValidator;
 
@@ -50,16 +56,19 @@ public class DslSemanticValidatorTest {
         return parser.statement();
     }
 
-//    @Test
-//    void shouldPassForValidSimpleRule(){
-//        Assertions.assertDoesNotThrow(() -> semanticValidator.validate(parseRule("IF creditScore > 700 THEN approve")));
-//    }
-//
-//
-//    @Test
-//    void shouldPassForValidCompositeRule(){
-//        Assertions.assertDoesNotThrow(() -> semanticValidator.validate(parseRule("IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve")));
-//    }
+    @Test
+    void shouldPassForValidSimpleRule(){
+        when(registry.containsField("creditScore")).thenReturn(true);
+        Assertions.assertDoesNotThrow(() -> semanticValidator.validate(parseRule("IF creditScore > 700 THEN approve")));
+    }
+
+
+    @Test
+    void shouldPassForValidCompositeRule(){
+        when(registry.containsField("creditScore")).thenReturn(true);
+        when(registry.containsField("monthlyIncome")).thenReturn(true);
+        Assertions.assertDoesNotThrow(() -> semanticValidator.validate(parseRule("IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve")));
+    }
 
     @Test
     void shouldFailForInvalidField(){

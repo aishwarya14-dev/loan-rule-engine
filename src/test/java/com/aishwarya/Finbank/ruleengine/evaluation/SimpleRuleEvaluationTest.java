@@ -2,6 +2,7 @@ package com.aishwarya.Finbank.ruleengine.evaluation;
 
 
 import com.aishwarya.FinBank.utility.Operator;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.value.DoubleValue;
@@ -36,6 +37,9 @@ public class SimpleRuleEvaluationTest {
    @Mock
    private LoanTypeFactorConfigService loanTypeFactorConfigService;
 
+   @Mock
+   private RuleEngineMetrics metrics;
+
    @Test
    void shouldEvaluateApproveRuleSuccessfully() {
       Rule rule = mock(Rule.class);
@@ -64,7 +68,7 @@ public class SimpleRuleEvaluationTest {
       when(loanTypeFactorConfigService.getLoanTypeFactorConfig(any(),any())).thenReturn(loanTypeFactorConfig);
 
       SimpleRuleEvaluation evaluation =
-              new SimpleRuleEvaluation(rule, loanFieldAccessorRegistry, ruleMessageGenerator,loanTypeFactorConfigService);
+              new SimpleRuleEvaluation(rule, loanFieldAccessorRegistry, ruleMessageGenerator,loanTypeFactorConfigService,metrics);
 
       RuleResult result = evaluation.evaluate(application);
 

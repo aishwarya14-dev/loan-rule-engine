@@ -1,6 +1,7 @@
 package com.aishwarya.Finbank.service;
 
 import com.aishwarya.Finbank.enums.Decision;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.LoanApplicationResultRepo;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 public class LoanApplicationResultService {
 
-    private LoanApplicationResultRepo loanApplicationResultRepo;
+    private final LoanApplicationResultRepo loanApplicationResultRepo;
+    private final RuleEngineMetrics metrics;
 
     public void calculateAndSaveLoanApplicationResult(List<RuleResult> ruleResultList, LoanApplication loanApplication,boolean isDynamic){
         double finalScore = 0.0;
@@ -39,7 +41,7 @@ public class LoanApplicationResultService {
         return finalScore;
     }
 
-    public Integer storeFactorMapping(List<RuleResult> ruleResultList,Map<Factor,Integer> factorMap){
+    private Integer storeFactorMapping(List<RuleResult> ruleResultList,Map<Factor,Integer> factorMap){
         Integer totalWeight = 0;
         for(RuleResult ruleResult: ruleResultList){
             LoanTypeFactorConfig loanTypeFactorConfig = ruleResult.getLoanTypeFactorConfig();
@@ -70,12 +72,15 @@ public class LoanApplicationResultService {
         loanApplicationResultRepo.save(loanApplicationResult);
     }
 
-    public Decision getDecision(double finalScore){
+    private Decision getDecision(double finalScore){
         if(finalScore >= 0.75){
+            metrics.incrementApproved();
             return Decision.APPROVE;
         } else if(finalScore < 0.40){
+            metrics.incrementRejected();
             return Decision.REJECT;
         }
+        metrics.incrementReview();
         return Decision.REVIEW;
     }
 }

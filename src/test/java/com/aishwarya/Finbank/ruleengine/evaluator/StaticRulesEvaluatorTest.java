@@ -1,6 +1,7 @@
 package com.aishwarya.Finbank.ruleengine.evaluator;
 import com.aishwarya.Finbank.exceptions.LoanEvaluationException;
 import com.aishwarya.Finbank.exceptions.RuleEvaluationException;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Expression;
 import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluation;
@@ -36,6 +37,9 @@ public class StaticRulesEvaluatorTest {
 
     @Mock
     private CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
+
+    @Mock
+    private RuleEngineMetrics metrics;
 
     @Test
     void testShouldEvaluateSimpleRulesSuccessfully() {

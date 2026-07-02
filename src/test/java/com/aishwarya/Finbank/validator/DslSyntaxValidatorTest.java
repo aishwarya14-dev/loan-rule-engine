@@ -2,10 +2,12 @@ package com.aishwarya.Finbank.validator;
 
 import com.aishwarya.Finbank.LoanRulesParser;
 import com.aishwarya.Finbank.exceptions.DslValidationException;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.validator.DslSyntaxValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,9 +17,12 @@ public class DslSyntaxValidatorTest {
 
     private DslSyntaxValidator dslSyntaxValidator;
 
+    @Mock
+    private RuleEngineMetrics metrics;
+
     @BeforeEach
     void setUp() {
-        dslSyntaxValidator = new DslSyntaxValidator();
+        dslSyntaxValidator = new DslSyntaxValidator(metrics);
     }
 
     // simple condition

@@ -1,4 +1,6 @@
 package com.aishwarya.Finbank.service;
+import com.aishwarya.Finbank.exceptions.LoanApplicationException;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.LoanApplication;
 
 import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationRequestDto;
@@ -14,11 +16,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class LoanService {
 
-    private LoanRepository loanRepository;
+    private final LoanRepository loanRepository;
 
-    private RuleEngineService ruleEngineService;
+    private final RuleEngineService ruleEngineService;
 
-    private LoanApplicationMapper loanApplicationMapper;
+    private final LoanApplicationMapper loanApplicationMapper;
+
+    private final RuleEngineMetrics metrics;
+
 
     public void acceptLoanApplication(LoanApplicationRequestDto application) {
         // create loan object
@@ -35,6 +40,14 @@ public class LoanService {
         log.info("Creating loan application object from DTO: applicantName={}, loanAmount={}", dto.getApplicantName(), dto.getLoanAmount());
         // Convert DTO to Entity
         LoanApplication entity = loanApplicationMapper.toEntity(dto);
-        return loanRepository.save(entity);
+        LoanApplication saved = loanRepository.save(entity);
+
+        if (saved.getId() == null) {
+            log.error("Save returned entity with null id for applicant: {}",
+                    dto.getApplicantName());
+            throw new LoanApplicationException("Failed to save loan application");
+        }
+        log.info("Loan application saved successfully with id: {}", saved.getId());
+        return saved;
     }
 }

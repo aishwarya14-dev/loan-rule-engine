@@ -1,6 +1,7 @@
 package com.aishwarya.Finbank.validator;
 
 import com.aishwarya.Finbank.LoanRulesParser;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.Finbank.exceptions.DslValidationException;
 import com.aishwarya.Finbank.repository.EmploymentTypeRepo;
@@ -24,6 +25,7 @@ public class DslSemanticValidator {
     private final EmploymentTypeRepo employmentTypeRepository;
     private final JobTitleRepo jobTitleRepository;
     private final LoanTypeRepo loanTypeRepository;
+    private final RuleEngineMetrics metrics;
 
     public void validate(LoanRulesParser.StatementContext tree) {
         List<String> errors = new ArrayList<>();
@@ -60,7 +62,7 @@ public class DslSemanticValidator {
             errors.add("Unknown field '" + field + "'. " +
                     "Valid fields: " + registry.getRegisteredFields());
             log.error("Unknown field '{}' in DSL rule", field);
-            return;
+            metrics.incrementSemanticFailed();
         }
 
         // string fields cannot use numeric operators
@@ -68,6 +70,7 @@ public class DslSemanticValidator {
             errors.add("Field '" + field + "' is a String. " +
                     "Only == and != are supported, got '" + operator + "'");
             log.error("Invalid operator '{}' for String field '{}'", operator, field);
+            metrics.incrementSemanticFailed();
         }
 
         // string values must exist in DB lookup tables
@@ -83,12 +86,14 @@ public class DslSemanticValidator {
                 if (!regionRepository.existsByRegionName(value)){
                     errors.add("Invalid region '" + value);
                     log.error("Invalid region '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
                 }
             }
             case "employmentType" -> {
                 if (!employmentTypeRepository.existsByEmploymentType(value)){
                     errors.add("Invalid employmentType '" + value);
                     log.error("Invalid employmentType '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
                 }
 
             }
@@ -96,12 +101,14 @@ public class DslSemanticValidator {
                 if (!jobTitleRepository.existsByJobTitle(value)){
                     errors.add("Invalid jobTitle '" + value);
                     log.error("Invalid jobTitle '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
                 }
             }
             case "loanType" -> {
                 if (!loanTypeRepository.existsByLoanType(value)){
                     errors.add("Invalid loanType '" + value);
                     log.error("Invalid loanType '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
                 }
             }
         }
