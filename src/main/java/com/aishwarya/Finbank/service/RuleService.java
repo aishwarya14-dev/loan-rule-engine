@@ -48,7 +48,7 @@ public class RuleService {
         semanticValidator.validate(tree);
 
         // duplicate — normalized string check
-        duplicateValidator.validate(dslText);
+        duplicateValidator.validate(dslText,dto.getLoanTypeId());
 
         // create entity
         DslRule entity = new DslRule();
@@ -58,8 +58,6 @@ public class RuleService {
         entity.setFactor(factor);
         if(dto.getRuleSeverity() != null)
             entity.setRuleSeverity(dto.getRuleSeverity());
-        else
-            entity.setRuleSeverity(RuleSeverity.NORMAL);
 
         LoanType loanType = loanTypeRepo.findById(dto.getLoanTypeId())
                 .orElseThrow(() -> {

@@ -60,4 +60,25 @@ public class LoanApplicationRequestDto {
     @NotNull
     @Min(0)
     private Integer employmentTenure;
+    private Integer propertyTypeId;
+    private Integer loanPurposeId;
+    private Integer industryId;
+    private Integer creditHistoryYears;
+    private BigDecimal totalOutstandingDebt;
+    private Double creditCardUtilization;
+    private Integer missedPaymentsLast12Months;
+    @NotNull
+    @NotBlank(message = "Please specify if the applicant has any bankruptcies")
+    private Integer bankruptcies;
+    @NotNull
+    @NotBlank
+    private BigDecimal annualIncome;
+    private BigDecimal otherMonthlyIncome;
+    @NotBlank
+    private Boolean incomeVerified;
+    private Boolean incomeTaxReturnAvailable;
+    private String employerName;
+    private Boolean probationCompleted;
+    private Boolean salaryAccountWithBank;
+
 }

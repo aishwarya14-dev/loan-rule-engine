@@ -1,11 +1,10 @@
 package com.aishwarya.Finbank.ruleengine.evaluator;
+import com.aishwarya.Finbank.enums.RuleSeverity;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
+import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Expression;
 import com.aishwarya.Finbank.service.FactorEvaluationResultService;
 import com.aishwarya.Finbank.service.LoanApplicationResultService;
-import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.model.RuleResult;
-import com.aishwarya.Finbank.model.RuleType;
 import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluation;
 import com.aishwarya.Finbank.ruleengine.factory.CompositeRuleEvaluationFactory;
 import com.aishwarya.Finbank.ruleengine.factory.SimpleRuleEvaluationFactory;
@@ -14,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import com.aishwarya.Finbank.model.LoanApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +49,24 @@ public class DynamicRulesEvaluator implements RulesEvaluator {
                     RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(expression,rule);
                     ruleResult = compositeRuleEvaluationObject.evaluate(application);
                 }
+
                 if(ruleResult != null){
                     ruleResultService.saveRuleResult(ruleResult);
                     ruleResultList.add(ruleResult);
                 }
+
+                // Log the evaluation result for each rule
+                logRuleEvaluation(rule, ruleResult, application);
+
+                // Check for hard rejection and break the loop if triggered
+                if (isHardRejectionApplicable(ruleResult, rule)) {
+                    ruleResult.setMessage("Hard rejection triggered due to rule: " + rule.getExpression());
+                    ruleResult.setHardReject(true);
+                    log.info("Hard rejection triggered for application id: {} due to rule: {}",
+                            application.getId(), rule.getExpression());
+                    break; // Stop evaluating further rules if hard rejection is triggered
+                }
+
             }
             catch (RuntimeException e){
                 log.error("Failed to evaluate rule : {} for application id: {} - {}",
@@ -69,5 +81,18 @@ public class DynamicRulesEvaluator implements RulesEvaluator {
         RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule);
         metrics.incrementEvaluationTotal();
         return simpleRuleEvaluationObject.evaluate(application);
+    }
+
+    private void logRuleEvaluation(Rule rule, RuleResult ruleResult, LoanApplication application) {
+        log.info("Rule evaluated: {} for application id: {}. Result: {}, Score: {}, Message: {}",
+                rule.getExpression(), application.getId(), ruleResult.isPassed(),
+                ruleResult.getRuleEvaluationScore(), ruleResult.getMessage());
+    }
+
+    private boolean isHardRejectionApplicable(RuleResult ruleResult, Rule rule) {
+        if (ruleResult.isPassed() && rule.getSeverity() == RuleSeverity.HARD_REJECT) {
+            return true;
+        }
+        return false;
     }
 }

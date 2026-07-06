@@ -18,7 +18,6 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
     private final LoanTypeFactorConfigService loanTypeFactorConfigService;
     private final RuleEngineMetrics metrics;
 
-
     public CompositeRuleEvaluation(List<RuleEvaluation> ruleEvaluations, Logic logic, RuleMessageGenerator messageGenerator,Rule rule,LoanTypeFactorConfigService loanTypeFactorConfigService,RuleEngineMetrics metrics) {
         this.ruleEvaluations = ruleEvaluations;
         this.logic = logic;

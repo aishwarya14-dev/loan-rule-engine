@@ -64,16 +64,13 @@ CREATE TABLE loan_application (
     credit_score INT,
     status VARCHAR(50),
     remarks TEXT,
-
     application_date TIMESTAMP,
     approval_date TIMESTAMP,
-
     monthly_income NUMERIC(12,2),
     existing_loans INT,
     loan_amount NUMERIC(19,2),
     interest_rate DOUBLE PRECISION,
     loan_tenure_months INT,
-
     age INT,
     company_rating INT,
     employment_tenure INT,

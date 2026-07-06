@@ -1,13 +1,12 @@
 package com.aishwarya.Finbank.model;
 
-import com.aishwarya.Finbank.model.LoanType;
-import com.aishwarya.Finbank.model.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -65,7 +64,93 @@ public class LoanApplication {
     @ManyToOne
     @JoinColumn(name = "employment_type_id")
     private EmploymentType employmentType;
-//    private Double debtToIncomeRatio;
+    // Additional Attributes
+    @ManyToOne
+    @JoinColumn(name = "property_type_id")
+    private PropertyType propertyType;
+    @ManyToOne
+    @JoinColumn(name = "industry_id")
+    private Industry industry;
+    @ManyToOne
+    @JoinColumn(name = "loan_purpose_id")
+    private LoanPurpose loanPurpose;
+    // Credit Profile
+    @Column(name = "credit_history_years")
+    private Integer creditHistoryYears;
+    @Column(name = "total_outstanding_debt")
+    private BigDecimal totalOutstandingDebt;
+    @Column(name = "credit_card_utilization")
+    private Double creditCardUtilization;
+    @Column(name = "missed_payments_last_12_months")
+    private Integer missedPaymentsLast12Months;
+    @Column(name = "bankruptcies")
+    private Integer bankruptcies;
+    // Income Profile
+    @Column(name = "annual_income")
+    private BigDecimal annualIncome;
+    @Column(name = "other_monthly_income")
+    private BigDecimal otherMonthlyIncome;
+    @Column(name = "income_verified")
+    private Boolean incomeVerified;
+    @Column(name = "income_tax_return_available")
+    private Boolean incomeTaxReturnAvailable;
+    // Employment
+    @Column(name = "employer_name")
+    private String employerName;
+    @Column(name = "probation_completed")
+    private Boolean probationCompleted;
+    @Column(name = "salary_account_with_bank")
+    private Boolean salaryAccountWithBank;
+    // Debt Profile
+    @Column(name = "monthly_emi")
+    private BigDecimal monthlyEmi;
+    @Column(name = "debt_to_income_ratio")
+    private Double debtToIncomeRatio;
+    @Column(name = "loan_defaults")
+    private Integer loanDefaults;
+    @Column(name = "guarantor_present")
+    private Boolean guarantorPresent;
+    // Property
+    @Column(name = "property_value")
+    private BigDecimal propertyValue;
+    @Column(name = "property_age")
+    private Integer propertyAge;
+    @Column(name = "property_verified")
+    private Boolean propertyVerified;
+    // Loan Details
+    @Column(name = "down_payment")
+    private BigDecimal downPayment;
+    @Column(name = "loan_to_value_ratio")
+    private Double loanToValueRatio;
+    // Banking Relationship
+    @Column(name = "existing_customer")
+    private Boolean existingCustomer;
+    @Column(name = "customer_since")
+    private LocalDate customerSince;
+    @Column(name = "average_account_balance")
+    private BigDecimal averageAccountBalance;
+    @Column(name = "has_fixed_deposit")
+    private Boolean hasFixedDeposit;
+    // Residence
+    @Column(name = "residence_years")
+    private Integer residenceYears;
+    @Column(name = "owns_house")
+    private Boolean ownsHouse;
+    // Compliance
+    @Column(name = "kyc_verified")
+    private Boolean kycVerified;
+    @Column(name = "pan_verified")
+    private Boolean panVerified;
+    @Column(name = "aadhaar_verified")
+    private Boolean aadhaarVerified;
+    @Column(name = "fraud_flag")
+    private Boolean fraudFlag;
+    @Column(name = "blacklisted")
+    private Boolean blacklisted;
+    // Decision
+    @OneToOne
+    @JoinColumn(name = "result_id")
+    private LoanApplicationResult result;
 
     @Builder
     public LoanApplication(User user, LoanType loanType, String applicantName, String applicantEmail, String applicantContact, Integer creditScore, String remarks, BigDecimal monthlyIncome, Integer existingLoans, BigDecimal loanAmount, Double interestRate, Integer loanTenureMonths, Integer age, Integer companyRating, Integer employmentTenure, JobTitle jobTitle, Region region, EmploymentType employmentType) {
@@ -91,6 +176,18 @@ public class LoanApplication {
 
         this.status = ApplicationStatus.PENDING;
         this.applicationDate = LocalDateTime.now();
+
+        this.incomeVerified = incomeVerified != null ? incomeVerified : false;
+        this.propertyVerified = propertyVerified != null ? propertyVerified : false;
+        this.kycVerified = kycVerified != null ? kycVerified : false;
+        this.panVerified = panVerified != null ? panVerified : false;
+        this.aadhaarVerified = aadhaarVerified != null ? aadhaarVerified : false;
+        this.fraudFlag = fraudFlag != null ? fraudFlag : false;
+        this.blacklisted = blacklisted != null ? blacklisted : false;
+        this.existingCustomer = existingCustomer != null ? existingCustomer : false;
+        this.hasFixedDeposit = hasFixedDeposit != null ? hasFixedDeposit : false;
+        this.guarantorPresent = guarantorPresent != null ? guarantorPresent : false;
+        this.probationCompleted = probationCompleted != null ? probationCompleted : true;
     }
 
     public void updateCreditScore(Integer creditScore) {

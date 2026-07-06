@@ -23,11 +23,11 @@ public class LoanApplicationResultService {
     public void calculateAndSaveLoanApplicationResult(List<RuleResult> ruleResultList, LoanApplication loanApplication,boolean isDynamic){
         double finalScore = 0.0;
         Map<Factor,Integer> factorMap = new ConcurrentHashMap<Factor,Integer>();
-        if(!isDynamic){
+        if(!isDynamic)
             finalScore = calculateFinalScoreForStaticRuleSet(ruleResultList);
-        }
         else{
-            Integer totalWeight = storeFactorMapping(ruleResultList,factorMap);
+            // For dynamic ruleset, we need to calculate the final score based on the factor weights
+            Integer totalWeight = storeFactorMappingAndGetTotalWeight(ruleResultList,factorMap);
             finalScore = calculateFinalScoreForDynamicRuleset(ruleResultList,totalWeight,factorMap);
         }
         saveLoanApplicationResult(loanApplication,finalScore);
@@ -35,21 +35,22 @@ public class LoanApplicationResultService {
 
     private double calculateFinalScoreForStaticRuleSet(List<RuleResult> ruleResultList){
         double finalScore = 0.0;
-        for(RuleResult ruleResult : ruleResultList){
+        for(RuleResult ruleResult : ruleResultList)
             finalScore += ruleResult.getRuleEvaluationScore();
-        }
         return finalScore;
     }
 
-    private Integer storeFactorMapping(List<RuleResult> ruleResultList,Map<Factor,Integer> factorMap){
+    private Integer storeFactorMappingAndGetTotalWeight(List<RuleResult> ruleResultList, Map<Factor,Integer> factorMap){
         Integer totalWeight = 0;
         for(RuleResult ruleResult: ruleResultList){
+            // Get the loan type factor config associated with the rule result
             LoanTypeFactorConfig loanTypeFactorConfig = ruleResult.getLoanTypeFactorConfig();
-            Integer weight = loanTypeFactorConfig.getImportanceLevel().getWeight();
-            totalWeight += weight;
+            // Get the weight of the factor from the loan type factor config and add it to the total weight
+            Integer factorWeight = loanTypeFactorConfig.getImportanceLevel().getWeight();
+            totalWeight += factorWeight;
             Factor factor = loanTypeFactorConfig.getFactor();
-            Integer currentWeight = factorMap.getOrDefault(factor,0);
-            factorMap.put(factor, currentWeight+weight);
+            // Update the factor map with the new weight for the factor
+            factorMap.put(factor, factorMap.getOrDefault(factor,0) + factorWeight);
         }
         return totalWeight;
     }
@@ -57,7 +58,12 @@ public class LoanApplicationResultService {
     private double calculateFinalScoreForDynamicRuleset(List<RuleResult> ruleResultList, Integer totalWeight, Map<Factor,Integer> factorMap){
         double finalScore = 0.0;
         for(RuleResult ruleResult : ruleResultList){
+            if (ruleResult.isHardReject()){
+                return 0.0; // If any rule result is a hard reject, the final score is 0
+            }
+            // Get the factor associated with the rule result
             Factor factor = ruleResult.getLoanTypeFactorConfig().getFactor();
+            // Calculate the weighted score for the rule result based on its factor's weight
             finalScore +=  ruleResult.getRuleEvaluationScore() * ((double) factorMap.get(factor) / totalWeight);
         }
         return finalScore;
@@ -69,6 +75,7 @@ public class LoanApplicationResultService {
         loanApplicationResult.setFinalScore(finalScore);
         loanApplicationResult.setDecision(getDecision(finalScore));
 
+        // Save the loan application result to the database
         loanApplicationResultRepo.save(loanApplicationResult);
     }
 
