@@ -1,5 +1,6 @@
 package com.aishwarya.Finbank.ruleengine.evaluator;
 import com.aishwarya.Finbank.enums.RuleSeverity;
+import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Expression;

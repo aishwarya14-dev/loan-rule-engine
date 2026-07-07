@@ -1,2 +1,0 @@
-ALTER TABLE rule_result
-ADD COLUMN is_hard_reject BOOLEAN NOT NULL DEFAULT FALSE;

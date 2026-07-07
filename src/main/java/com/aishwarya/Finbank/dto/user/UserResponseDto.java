@@ -1,4 +1,4 @@
-package com.aishwarya.Finbank.dto.response;
+package com.aishwarya.Finbank.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserResponseDto {
-    private String username;
-    private String mobileNumber;
+    private String email;
+    private String phone;
 }

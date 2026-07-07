@@ -3,63 +3,20 @@ CREATE TABLE property_type (
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
-INSERT INTO property_type (name) VALUES
-('RESIDENTIAL'),
-('APARTMENT'),
-('VILLA'),
-('PLOT'),
-('COMMERCIAL'),
-('INDUSTRIAL'),
-('AGRICULTURAL_LAND');
-
 CREATE TABLE industry (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
-
-INSERT INTO industry (name) VALUES
-('INFORMATION_TECHNOLOGY'),
-('BANKING_AND_FINANCE'),
-('GOVERNMENT'),
-('HEALTHCARE'),
-('EDUCATION'),
-('MANUFACTURING'),
-('AUTOMOBILE'),
-('TELECOMMUNICATION'),
-('RETAIL'),
-('HOSPITALITY'),
-('CONSTRUCTION'),
-('REAL_ESTATE'),
-('TRANSPORTATION'),
-('LOGISTICS'),
-('AGRICULTURE'),
-('FREELANCE'),
-('STARTUP');
 
 CREATE TABLE loan_purpose (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
-INSERT INTO loan_purpose (name) VALUES
-('HOME_PURCHASE'),
-('HOME_CONSTRUCTION'),
-('HOME_RENOVATION'),
-('VEHICLE_PURCHASE'),
-('EDUCATION'),
-('BUSINESS_EXPANSION'),
-('WORKING_CAPITAL'),
-('MEDICAL_EMERGENCY'),
-('PERSONAL_EXPENSE'),
-('DEBT_CONSOLIDATION'),
-('VACATION'),
-('WEDDING');
-
-
 
 ALTER TABLE loan_application
 
--- New Foreign Keys
+ -- for foreign key references
 ADD COLUMN property_type_id BIGINT,
 ADD COLUMN industry_id BIGINT,
 ADD COLUMN loan_purpose_id BIGINT,
@@ -68,7 +25,7 @@ ADD COLUMN result_id BIGINT,
 -- Credit Profile
 ADD COLUMN credit_history_years INT,
 ADD COLUMN total_outstanding_debt NUMERIC(15,2),
-ADD COLUMN credit_card_utilization NUMERIC(5,2),
+ADD COLUMN credit_card_utilization DOUBLE PRECISION,
 ADD COLUMN missed_payments_last_12_months INT DEFAULT 0,
 ADD COLUMN bankruptcies INT DEFAULT 0,
 
@@ -85,7 +42,7 @@ ADD COLUMN salary_account_with_bank BOOLEAN DEFAULT FALSE,
 
 -- Debt Profile
 ADD COLUMN monthly_emi NUMERIC(15,2),
-ADD COLUMN debt_to_income_ratio NUMERIC(5,2),
+ADD COLUMN debt_to_income_ratio DOUBLE PRECISION,
 ADD COLUMN loan_defaults INT DEFAULT 0,
 ADD COLUMN guarantor_present BOOLEAN DEFAULT FALSE,
 
@@ -96,7 +53,7 @@ ADD COLUMN property_verified BOOLEAN DEFAULT FALSE,
 
 -- Loan Details
 ADD COLUMN down_payment NUMERIC(15,2),
-ADD COLUMN loan_to_value_ratio NUMERIC(5,2),
+ADD COLUMN loan_to_value_ratio  DOUBLE PRECISION,
 
 -- Banking Relationship
 ADD COLUMN existing_customer BOOLEAN DEFAULT FALSE,
@@ -145,7 +102,7 @@ CREATE TABLE co_applicant (
 
     name VARCHAR(255),
     email VARCHAR(255),
-    contact VARCHAR(20),
+    phone VARCHAR(20),
 
     age INT,
     monthly_income NUMERIC(15,2),
@@ -155,6 +112,8 @@ CREATE TABLE co_applicant (
     employment_tenure INT,
     company_rating INT,
     existing_loans INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (loan_application_id)
         REFERENCES loan_application(id),
@@ -169,15 +128,19 @@ CREATE TABLE guarantor (
     loan_application_id BIGINT NOT NULL,
 
     name VARCHAR(255),
-    contact VARCHAR(20),
+    email VARCHAR(20),
+    phone VARCHAR(20),
     age INT,
     monthly_income NUMERIC(15,2),
     annual_income NUMERIC(15,2),
+    employment_tenure INT,
     credit_score INT,
     net_worth NUMERIC(15,2),
     existing_loans INT,
     relationship VARCHAR(100),
     employment_type_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (loan_application_id)
         REFERENCES loan_application(id),

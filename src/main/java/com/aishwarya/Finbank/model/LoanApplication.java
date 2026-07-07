@@ -1,80 +1,73 @@
 package com.aishwarya.Finbank.model;
 
+import com.aishwarya.Finbank.enums.ApplicationStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "loan_application")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class LoanApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    // Applicant Details
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "loan_type_id", nullable = false)
-    private LoanType loanType;
     @Column(nullable = false, name = "applicant_name")
     private String applicantName;
     @Column(nullable = false, name = "applicant_email")
     private String applicantEmail;
     @Column(nullable = false, name = "applicant_contact")
     private String applicantContact;
-    @Column(nullable = false, name = "credit_score")
-    private Integer creditScore;
-    @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+    @Column(nullable = false)
+    private Integer age;
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region region;
+
+    // Loan Details
+    @ManyToOne
+    @JoinColumn(name = "loan_type_id", nullable = false)
+    private LoanType loanType;
     @Column(nullable = true, length = 500)
     private String remarks;
+    @CreationTimestamp
     @Column(nullable = false, name = "application_date")
     private LocalDateTime applicationDate;
     @Column(nullable = true, name = "approval_date")
     private LocalDateTime approvalDate;
-    @Column(name = "monthly_income", nullable = false)
-    private BigDecimal monthlyIncome;
-    @Column(name = "existing_loans")
-    private Integer existingLoans;
     @Column(name = "loan_amount")
     private BigDecimal loanAmount;
     @Column(name = "interest_rate")
     private Double interestRate;
     @Column(nullable = false, name = "loan_tenure_months")
     private Integer loanTenureMonths;
-    @Column(nullable = false)
-    private Integer age;
-    @Column(name = "company_rating")
-    private Integer companyRating;
-    @Column(nullable = false, name = "employment_tenure")
-    private Integer employmentTenure;
-    @ManyToOne
-    @JoinColumn(name = "job_title_id")
-    private JobTitle jobTitle;
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
-    @ManyToOne
-    @JoinColumn(name = "employment_type_id")
-    private EmploymentType employmentType;
-    // Additional Attributes
-    @ManyToOne
-    @JoinColumn(name = "property_type_id")
-    private PropertyType propertyType;
-    @ManyToOne
-    @JoinColumn(name = "industry_id")
-    private Industry industry;
     @ManyToOne
     @JoinColumn(name = "loan_purpose_id")
     private LoanPurpose loanPurpose;
+    @Column(name = "down_payment")
+    private BigDecimal downPayment;
+
     // Credit Profile
+    @Column(nullable = false, name = "credit_score")
+    private Integer creditScore;
     @Column(name = "credit_history_years")
     private Integer creditHistoryYears;
     @Column(name = "total_outstanding_debt")
@@ -85,7 +78,10 @@ public class LoanApplication {
     private Integer missedPaymentsLast12Months;
     @Column(name = "bankruptcies")
     private Integer bankruptcies;
+
     // Income Profile
+    @Column(name = "monthly_income", nullable = false)
+    private BigDecimal monthlyIncome;
     @Column(name = "annual_income")
     private BigDecimal annualIncome;
     @Column(name = "other_monthly_income")
@@ -94,34 +90,49 @@ public class LoanApplication {
     private Boolean incomeVerified;
     @Column(name = "income_tax_return_available")
     private Boolean incomeTaxReturnAvailable;
+
     // Employment
+    @ManyToOne
+    @JoinColumn(name = "employment_type_id")
+    private EmploymentType employmentType;
     @Column(name = "employer_name")
     private String employerName;
+    @Column(name = "company_rating")
+    private Integer companyRating;
+    @Column(nullable = false, name = "employment_tenure")
+    private Integer employmentTenure;
+    @ManyToOne
+    @JoinColumn(name = "job_title_id")
+    private JobTitle jobTitle;
     @Column(name = "probation_completed")
     private Boolean probationCompleted;
     @Column(name = "salary_account_with_bank")
     private Boolean salaryAccountWithBank;
+    @ManyToOne
+    @JoinColumn(name = "industry_id")
+    private Industry industry;
+
     // Debt Profile
+    @Column(name = "existing_loans")
+    private Integer existingLoans;
     @Column(name = "monthly_emi")
     private BigDecimal monthlyEmi;
     @Column(name = "debt_to_income_ratio")
     private Double debtToIncomeRatio;
     @Column(name = "loan_defaults")
     private Integer loanDefaults;
-    @Column(name = "guarantor_present")
-    private Boolean guarantorPresent;
+
     // Property
+    @ManyToOne
+    @JoinColumn(name = "property_type_id")
+    private PropertyType propertyType;
     @Column(name = "property_value")
     private BigDecimal propertyValue;
     @Column(name = "property_age")
     private Integer propertyAge;
     @Column(name = "property_verified")
     private Boolean propertyVerified;
-    // Loan Details
-    @Column(name = "down_payment")
-    private BigDecimal downPayment;
-    @Column(name = "loan_to_value_ratio")
-    private Double loanToValueRatio;
+
     // Banking Relationship
     @Column(name = "existing_customer")
     private Boolean existingCustomer;
@@ -131,12 +142,18 @@ public class LoanApplication {
     private BigDecimal averageAccountBalance;
     @Column(name = "has_fixed_deposit")
     private Boolean hasFixedDeposit;
+
     // Residence
     @Column(name = "residence_years")
     private Integer residenceYears;
     @Column(name = "owns_house")
     private Boolean ownsHouse;
+
     // Compliance
+    @Column(name = "loan_to_value_ratio")
+    private Double loanToValueRatio;
+    @Column(name = "guarantor_present")
+    private Boolean guarantorPresent;
     @Column(name = "kyc_verified")
     private Boolean kycVerified;
     @Column(name = "pan_verified")
@@ -147,48 +164,36 @@ public class LoanApplication {
     private Boolean fraudFlag;
     @Column(name = "blacklisted")
     private Boolean blacklisted;
+
+    // Guarantor and Co-Applicant
+    @OneToMany(mappedBy = "loanApplication",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Guarantor> guarantors = new ArrayList<>();
+    @OneToMany(mappedBy="loanApplication",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private List<CoApplicant> coApplicants = new ArrayList<>();
+
+
+    // Timestamps
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     // Decision
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
     @OneToOne
     @JoinColumn(name = "result_id")
     private LoanApplicationResult result;
-
-    @Builder
-    public LoanApplication(User user, LoanType loanType, String applicantName, String applicantEmail, String applicantContact, Integer creditScore, String remarks, BigDecimal monthlyIncome, Integer existingLoans, BigDecimal loanAmount, Double interestRate, Integer loanTenureMonths, Integer age, Integer companyRating, Integer employmentTenure, JobTitle jobTitle, Region region, EmploymentType employmentType) {
-
-        this.user = user;
-        this.loanType = loanType;
-        this.applicantName = applicantName;
-        this.applicantEmail = applicantEmail;
-        this.applicantContact = applicantContact;
-        this.creditScore = creditScore;
-        this.remarks = remarks;
-        this.monthlyIncome = monthlyIncome;
-        this.existingLoans = existingLoans != null ? existingLoans : 0;
-        this.loanAmount = loanAmount;
-        this.interestRate = interestRate;
-        this.loanTenureMonths = loanTenureMonths != null ? loanTenureMonths : 15;
-        this.age = age;
-        this.companyRating = companyRating;
-        this.employmentTenure = employmentTenure;
-        this.jobTitle = jobTitle;
-        this.region = region;
-        this.employmentType = employmentType;
-
-        this.status = ApplicationStatus.PENDING;
-        this.applicationDate = LocalDateTime.now();
-
-        this.incomeVerified = incomeVerified != null ? incomeVerified : false;
-        this.propertyVerified = propertyVerified != null ? propertyVerified : false;
-        this.kycVerified = kycVerified != null ? kycVerified : false;
-        this.panVerified = panVerified != null ? panVerified : false;
-        this.aadhaarVerified = aadhaarVerified != null ? aadhaarVerified : false;
-        this.fraudFlag = fraudFlag != null ? fraudFlag : false;
-        this.blacklisted = blacklisted != null ? blacklisted : false;
-        this.existingCustomer = existingCustomer != null ? existingCustomer : false;
-        this.hasFixedDeposit = hasFixedDeposit != null ? hasFixedDeposit : false;
-        this.guarantorPresent = guarantorPresent != null ? guarantorPresent : false;
-        this.probationCompleted = probationCompleted != null ? probationCompleted : true;
-    }
 
     public void updateCreditScore(Integer creditScore) {
         if (creditScore < 300 || creditScore > 900) {
@@ -225,6 +230,16 @@ public class LoanApplication {
         this.companyRating = companyRating;
     }
 
+    public void updateApprovalDate(LocalDateTime approvalDate){
+        if (approvalDate == null) {
+            throw new IllegalArgumentException("Approval date cannot be null");
+        }
+        if (approvalDate.isBefore(applicationDate)) {
+            throw new IllegalArgumentException(
+                    "Approval date cannot be before application date");
+        }
+        this.approvalDate = approvalDate;
+    }
 
     public void approve() {
         if (this.status != ApplicationStatus.PENDING) {
@@ -240,6 +255,50 @@ public class LoanApplication {
         }
         this.status = ApplicationStatus.REJECTED;
         this.remarks = remarks;
+    }
+
+    public void addGuarantor(Guarantor guarantor) {
+        guarantors.add(guarantor);
+        guarantor.setLoanApplication(this);
+    }
+
+    public void removeGuarantor(Guarantor guarantor) {
+        guarantors.remove(guarantor);
+        guarantor.setLoanApplication(null);
+    }
+
+    public void addCoApplicant(CoApplicant coApplicant) {
+        coApplicants.add(coApplicant);
+        coApplicant.setLoanApplication(this);
+    }
+
+    public void removeGuarantor(CoApplicant coApplicant) {
+        guarantors.remove(coApplicant);
+        coApplicant.setLoanApplication(null);
+    }
+
+    public void updateLoanToValueRatio(Double loanToValueRatio){
+        if(loanToValueRatio == null){
+            throw new IllegalArgumentException("loanToValue ratio cannot be null");
+        }
+        if (loanToValueRatio < 0 || loanToValueRatio > 100) {
+            throw new IllegalArgumentException("Loan-to-value ratio must be between 0 and 100");
+        }
+        this.loanToValueRatio = loanToValueRatio;
+    }
+
+    public void updateIncomeVerified(Boolean incomeVerified){
+        if(incomeVerified == null){
+            throw new IllegalArgumentException("Income verification status must be provided.");
+        }
+        this.incomeVerified = incomeVerified;
+    }
+
+    public void UpdateGuarantorsVerified(Boolean guarantorPresent){
+        if(guarantorPresent == null){
+            throw new IllegalArgumentException("Guarantor status must be provided.");
+        }
+        this.guarantorPresent = guarantorPresent;
     }
 
 }

@@ -5,7 +5,6 @@ import com.aishwarya.Finbank.exceptions.DuplicateUserException;
 import com.aishwarya.Finbank.exceptions.UserCreationException;
 import com.aishwarya.Finbank.model.User;
 import com.aishwarya.Finbank.repository.UserRepository;
-import com.aishwarya.Finbank.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,7 +45,7 @@ public class UserServiceTest {
     public void testShouldCreateUserSuccessfully() {
         when(userRepository.findByUsername(user.getUsername()))
                 .thenReturn(null);
-        when(userRepository.findByMobileNumber(user.getMobileNumber()))
+        when(userRepository.findByPhone(user.getMobileNumber()))
                 .thenReturn(null);
 
         when(userRepository.save(any(User.class)))
@@ -67,7 +65,7 @@ public class UserServiceTest {
 
     @Test
     public void testShouldNotCreateUserWithDuplicateMobileNumber() {
-        when(userRepository.findByMobileNumber(user.getMobileNumber()))
+        when(userRepository.findByPhone(user.getMobileNumber()))
                 .thenReturn(user);
          assertThrows(DuplicateUserException.class, () -> userService.saveUser(user));
     }
@@ -76,7 +74,7 @@ public class UserServiceTest {
     void shouldThrowUserCreationExceptionWhenSaveFails() {
         when(userRepository.findByUsername(user.getUsername()))
                 .thenReturn(null);
-        when(userRepository.findByMobileNumber(user.getMobileNumber()))
+        when(userRepository.findByPhone(user.getMobileNumber()))
                 .thenReturn(null);
         when(userRepository.save(any(User.class)))
                 .thenThrow(new RuntimeException("Database error"));

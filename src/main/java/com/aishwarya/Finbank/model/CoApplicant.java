@@ -4,12 +4,17 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "co_applicant")
 @Getter
+@Setter
 @NoArgsConstructor
 public class CoApplicant {
 
@@ -20,47 +25,44 @@ public class CoApplicant {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "loan_application_id", nullable = false)
     private LoanApplication loanApplication;
-
     @Column(name = "name", nullable = false)
     private String name;
-
     @Column(name = "email")
     private String email;
-
-    @Column(name = "contact")
-    private String contact;
-
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "age")
     private Integer age;
-
     @Column(name = "monthly_income")
     private BigDecimal monthlyIncome;
-
     @Column(name = "annual_income")
     private BigDecimal annualIncome;
-
     @Column(name = "credit_score")
     private Integer creditScore;
-
     @Column(name = "employment_tenure")
     private Integer employmentTenure;
-
     @Column(name = "company_rating")
     private Integer companyRating;
-
     @Column(name = "existing_loans")
     private Integer existingLoans;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employment_type_id")
     private EmploymentType employmentType;
+
+    // Timestamps
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Builder
     public CoApplicant(
             LoanApplication loanApplication,
             String name,
             String email,
-            String contact,
+            String phone,
             Integer age,
             BigDecimal monthlyIncome,
             BigDecimal annualIncome,
@@ -73,7 +75,7 @@ public class CoApplicant {
         this.loanApplication = loanApplication;
         this.name = name;
         this.email = email;
-        this.contact = contact;
+        this.phone = phone;
         this.age = age;
         this.monthlyIncome = monthlyIncome;
         this.annualIncome = annualIncome;

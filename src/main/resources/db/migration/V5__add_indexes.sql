@@ -12,8 +12,11 @@ ON region(region_name);
 CREATE UNIQUE INDEX idx_loan_type_name
 ON loan_type(loan_type);
 
-CREATE UNIQUE INDEX idx_users_mobile
-ON users(mobile_number);
+CREATE UNIQUE INDEX idx_users_phone
+ON users(phone);
+
+CREATE UNIQUE INDEX idx_users_email
+ON users(email);
 
 
 

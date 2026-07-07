@@ -4,7 +4,7 @@ package com.aishwarya.Finbank.mapper;
 import com.aishwarya.FinBank.utility.Operator;
 import com.aishwarya.Finbank.dto.rules.staticrules.*;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.model.RuleType;
+import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.model.expression.AndExpression;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.expression.Expression;

@@ -2,9 +2,9 @@ package com.aishwarya.Finbank.ruleengine.parser;
 import com.aishwarya.FinBank.utility.Operator;
 import com.aishwarya.Finbank.LoanRulesLexer;
 import com.aishwarya.Finbank.LoanRulesParser;
-import com.aishwarya.Finbank.model.Action;
+import com.aishwarya.Finbank.enums.Action;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.model.RuleType;
+import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.model.expression.AndExpression;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.expression.OrExpression;
@@ -16,7 +16,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import com.aishwarya.Finbank.ruleengine.parser.LoanRulesVisitor;
 
 
 import static org.junit.jupiter.api.Assertions.*;

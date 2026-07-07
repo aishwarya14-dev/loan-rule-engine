@@ -11,6 +11,7 @@ CREATE TABLE rule_result (
     description VARCHAR(2000),
     loan_application_id BIGINT NOT NULL,
     loan_type_factor_config_id BIGINT NOT NULL,
+    is_hard_reject BOOLEAN NOT NULL DEFAULT FALSE,
 
     CONSTRAINT fk_rule_result_loan_application
         FOREIGN KEY (loan_application_id)

@@ -4,12 +4,17 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "guarantor")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Guarantor {
 
@@ -20,46 +25,46 @@ public class Guarantor {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "loan_application_id", nullable = false)
     private LoanApplication loanApplication;
-
     @Column(nullable = false)
     private String name;
-
-    @Column(name = "contact")
-    private String contact;
-
+    @Column(name = "email")
+    private String email;
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "relationship")
     private String relationship;
-
     @Column(name = "age")
     private Integer age;
-
     @Column(name = "monthly_income")
     private BigDecimal monthlyIncome;
-
     @Column(name = "annual_income")
     private BigDecimal annualIncome;
-
     @Column(name = "credit_score")
     private Integer creditScore;
-
     @Column(name = "net_worth")
     private BigDecimal netWorth;
-
     @Column(name = "existing_loans")
     private Integer existingLoans;
-
     @Column(name = "employment_tenure")
     private Integer employmentTenure;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employment_type_id")
     private EmploymentType employmentType;
+
+    // Timestamps
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Builder
     public Guarantor(
             LoanApplication loanApplication,
             String name,
-            String contact,
+            String email,
+            String phone,
             String relationship,
             Integer age,
             BigDecimal monthlyIncome,
@@ -72,7 +77,8 @@ public class Guarantor {
 
         this.loanApplication = loanApplication;
         this.name = name;
-        this.contact = contact;
+        this.email = email;
+        this.phone = phone;
         this.relationship = relationship;
         this.age = age;
         this.monthlyIncome = monthlyIncome;

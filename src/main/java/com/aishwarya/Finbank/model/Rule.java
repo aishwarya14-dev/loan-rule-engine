@@ -1,6 +1,8 @@
 package com.aishwarya.Finbank.model;
 
+import com.aishwarya.Finbank.enums.Action;
 import com.aishwarya.Finbank.enums.RuleSeverity;
+import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.model.expression.Expression;
 import lombok.Getter;
 import lombok.Setter;
