@@ -1,14 +1,15 @@
 package com.aishwarya.Finbank.ruleengine.evaluation;
 
+import com.aishwarya.Finbank.enums.Action;
 import com.aishwarya.Finbank.exceptions.InvalidRuleConfigurationException;
 import com.aishwarya.Finbank.exceptions.RuleEvaluationException;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Condition;
-import com.aishwarya.Finbank.repository.LoanTypeFactorConfigRepo;
 import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.Finbank.utility.ComparisonEvaluator;
+import com.aishwarya.Finbank.utility.RuleMessageGenerator;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,14 +42,14 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
         Object actualValue = getActualValue(actualValGetterFunction,application,condition.getField());
         //compare the actual value with the expected value based on the operator
         boolean evaluationResult = compareActualVsExpectedValue(actualValue,condition);
-        double score = calculateScore(evaluationResult);
+        double ruleContributionScore = calculateRuleContributionScore(evaluationResult);
         metrics.incrementEvaluationPassed();
         //generate the message based on the evaluation result
         String message = messageGenerator.generateMessage(condition.getField(), condition.getOperator() + "", condition.getValue(), actualValue, evaluationResult);
 
 
         // create and return the RuleResult object
-        RuleResult result = new RuleResult(evaluationResult, message, Double.valueOf(score), application);
+        RuleResult result = new RuleResult(evaluationResult, message, Double.valueOf(ruleContributionScore), application);
         LoanTypeFactorConfig loanTypeFactorConfig = loanTypeFactorConfigService.getLoanTypeFactorConfig(application.getLoanType().getId(),rule.getFactorId());
         result.setLoanTypeFactorConfig(loanTypeFactorConfig);
         return result;
@@ -93,7 +94,7 @@ public class SimpleRuleEvaluation implements RuleEvaluation {
         return evaluationResult;
     }
 
-    private double calculateScore(boolean result){
+    private double calculateRuleContributionScore(boolean result){
         double score = 0.0;
         if(result && rule.getAction() == Action.REJECT){
             score = rule.getEvidenceWeight() * -1;

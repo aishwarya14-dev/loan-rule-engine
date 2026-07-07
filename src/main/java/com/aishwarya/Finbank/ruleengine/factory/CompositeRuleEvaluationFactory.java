@@ -3,11 +3,10 @@ package com.aishwarya.Finbank.ruleengine.factory;
 
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.repository.LoanTypeFactorConfigRepo;
 import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
-import com.aishwarya.Finbank.model.Logic;
-import com.aishwarya.Finbank.model.RuleMessageGenerator;
+import com.aishwarya.Finbank.enums.Logic;
+import com.aishwarya.Finbank.utility.RuleMessageGenerator;
 import com.aishwarya.Finbank.model.expression.AndExpression;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.expression.Expression;

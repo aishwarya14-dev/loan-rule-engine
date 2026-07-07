@@ -10,15 +10,19 @@ CREATE TABLE factor (
 
 INSERT INTO factor(name)
 VALUES
-('Credit Score'),
-('Income'),
-('Employment'),
+('Income Profile'),
+('Employment Profile'),
 ('Debt Profile'),
-('Property Value'),
-('Loan To Value Ratio'),
+('Property'),
 ('Region Check'),
-('Financial Stability'),
-('Employment Stability');
+('Credit Profile'),
+('Loan Purpose'),
+('Guarantor'),
+('Co-Applicant'),
+('Banking Relationship'),
+('Residence'),
+('Compliance')
+;
 
 
 CREATE TABLE importance_level (

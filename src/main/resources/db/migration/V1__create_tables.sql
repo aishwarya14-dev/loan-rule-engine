@@ -29,10 +29,12 @@ CREATE TABLE loan_type (
 -- USERS
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50),
-    mobile_number VARCHAR(15)
+    phone VARCHAR(15),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE dsl_rule (
@@ -64,16 +66,13 @@ CREATE TABLE loan_application (
     credit_score INT,
     status VARCHAR(50),
     remarks TEXT,
-
     application_date TIMESTAMP,
     approval_date TIMESTAMP,
-
     monthly_income NUMERIC(12,2),
     existing_loans INT,
     loan_amount NUMERIC(19,2),
     interest_rate DOUBLE PRECISION,
     loan_tenure_months INT,
-
     age INT,
     company_rating INT,
     employment_tenure INT,

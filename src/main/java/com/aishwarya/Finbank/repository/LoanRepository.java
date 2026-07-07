@@ -1,6 +1,6 @@
 package com.aishwarya.Finbank.repository;
 
-import com.aishwarya.Finbank.model.ApplicationStatus;
+import com.aishwarya.Finbank.enums.ApplicationStatus;
 import com.aishwarya.Finbank.model.LoanApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

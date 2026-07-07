@@ -1,4 +1,4 @@
-package com.aishwarya.Finbank.model;
+package com.aishwarya.Finbank.enums;
 
 public enum RuleType {
     SIMPLE, COMPOSITE
