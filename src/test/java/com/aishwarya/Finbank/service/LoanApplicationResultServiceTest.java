@@ -4,6 +4,8 @@ import com.aishwarya.Finbank.enums.Decision;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.LoanApplicationResultRepo;
+import com.aishwarya.Finbank.repository.LoanRepository;
+import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluationHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +30,9 @@ class LoanApplicationResultServiceTest {
     @Mock
     private RuleEngineMetrics metrics;
 
+    @Mock
+    private LoanRepository loanRepository;
+
     @Test
     void shouldCalculateStaticScoreAndApproveLoan() {
         LoanApplication application = new LoanApplication();
@@ -37,6 +42,11 @@ class LoanApplicationResultServiceTest {
 
         when(rule1.getRuleEvaluationScore()).thenReturn(0.50);
         when(rule2.getRuleEvaluationScore()).thenReturn(0.30);
+
+        when(loanApplicationResultRepo.save(any(LoanApplicationResult.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(loanRepository.save(any(LoanApplication.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
         loanApplicationResultService.calculateAndSaveLoanApplicationResult(
                 List.of(rule1, rule2),
@@ -48,9 +58,11 @@ class LoanApplicationResultServiceTest {
                 ArgumentCaptor.forClass(LoanApplicationResult.class);
 
         verify(loanApplicationResultRepo).save(captor.capture());
+        verify(metrics).incrementApproved();
+        verify(loanApplicationResultRepo).save(any(LoanApplicationResult.class));
+        verify(loanRepository).save(application);
 
         LoanApplicationResult saved = captor.getValue();
-
         assertEquals(0.80, saved.getFinalScore());
         assertEquals(Decision.APPROVE, saved.getDecision());
         assertEquals(application, saved.getApplication());
@@ -88,21 +100,25 @@ class LoanApplicationResultServiceTest {
         when(rule1.getRuleEvaluationScore()).thenReturn(1.0);
         when(rule2.getRuleEvaluationScore()).thenReturn(0.5);
 
-        loanApplicationResultService.calculateAndSaveLoanApplicationResult(
-                List.of(rule1, rule2),
-                loanApplication,
-                true
-        );
+        when(loanApplicationResultRepo.save(any(LoanApplicationResult.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(loanRepository.save(any(LoanApplication.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        ArgumentCaptor<LoanApplicationResult> captor =
-                ArgumentCaptor.forClass(LoanApplicationResult.class);
 
-        verify(loanApplicationResultRepo).save(captor.capture());
+        LoanApplicationResult result =
+                loanApplicationResultService.calculateAndSaveLoanApplicationResult(
+                        List.of(rule1, rule2),
+                        loanApplication,
+                        true
+                );
 
-        LoanApplicationResult saved = captor.getValue();
+        assertEquals(0.8125, result.getFinalScore(), 0.0001);
+        assertEquals(Decision.APPROVE, result.getDecision());
 
-        assertEquals(0.8125, saved.getFinalScore());
-        assertEquals(Decision.APPROVE, saved.getDecision());
+        verify(metrics).incrementApproved();
+        verify(loanApplicationResultRepo).save(any(LoanApplicationResult.class));
+        verify(loanRepository).save(loanApplication);
 
     }
 }
