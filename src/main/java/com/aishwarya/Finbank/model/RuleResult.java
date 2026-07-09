@@ -23,6 +23,8 @@ public class RuleResult {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_type_factor_config_id")
     private LoanTypeFactorConfig loanTypeFactorConfig;
+    @Column(name = "is_hard_reject")
+    private boolean isHardReject = false;
 
     @Builder
     public RuleResult(boolean passed, String message, Double ruleEvaluationScore, LoanApplication loanApplication) {

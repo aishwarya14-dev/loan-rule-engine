@@ -2,7 +2,7 @@ package com.aishwarya.Finbank.controller;
 
 
 import com.aishwarya.Finbank.utility.JwtUtil;
-import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.dto.user.UserResponseDto;
 import com.aishwarya.Finbank.model.User;
 import com.aishwarya.Finbank.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,16 +34,16 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> register(@Valid @RequestBody User user) {
-        log.info("POST /register - username={}, mobile={}", user.getUsername(), user.getMobileNumber());
+        log.info("POST /register - username={}, mobile={}", user.getEmail(), user.getPhone());
         UserResponseDto userResponseDto = userService.saveUser(user);
         return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user) {
-        log.info("POST /login - username={}",  user.getUsername());
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        String jwt = jwtUtil.generateToken(user.getUsername());
+        log.info("POST /login - username={}",  user.getEmail());
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        String jwt = jwtUtil.generateToken(user.getEmail());
         return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 }

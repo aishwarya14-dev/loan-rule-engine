@@ -11,4 +11,8 @@ public interface RuleRepository extends JpaRepository<DslRule, Long> {
     boolean existsByDslRule(String normalized);
 
     List<DslRule> findByLoanTypeLoanType(String loanType);
+
+    List<DslRule> findByDslRule(String normalized);
+
+    boolean existsByDslRuleAndLoanTypeId(String normalized , Long loanTypeId);
 }

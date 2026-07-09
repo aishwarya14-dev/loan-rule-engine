@@ -3,6 +3,7 @@ package com.aishwarya.Finbank.service;
 import com.aishwarya.Finbank.LoanRulesParser;
 import com.aishwarya.Finbank.dto.rules.dynamicrules.RulesRequestDto;
 import com.aishwarya.Finbank.enums.RuleSeverity;
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.model.Factor;
 import com.aishwarya.Finbank.model.LoanType;
@@ -17,6 +18,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -33,6 +35,7 @@ public class RuleService {
     private final DynamicRuleLoader dynamicRuleLoader;
     private final LoanTypeRepo loanTypeRepo;
     private final FactorRepo factorRepo;
+    private final RuleEngineMetrics metrics;
 
     @Transactional
     public DslRule save(RulesRequestDto dto) {
@@ -45,7 +48,7 @@ public class RuleService {
         semanticValidator.validate(tree);
 
         // duplicate — normalized string check
-        duplicateValidator.validate(dslText);
+        duplicateValidator.validate(dslText,dto.getLoanTypeId());
 
         // create entity
         DslRule entity = new DslRule();
@@ -55,8 +58,6 @@ public class RuleService {
         entity.setFactor(factor);
         if(dto.getRuleSeverity() != null)
             entity.setRuleSeverity(dto.getRuleSeverity());
-        else
-            entity.setRuleSeverity(RuleSeverity.NORMAL);
 
         LoanType loanType = loanTypeRepo.findById(dto.getLoanTypeId())
                 .orElseThrow(() -> {
@@ -69,6 +70,7 @@ public class RuleService {
 
         // save rule to the db
         DslRule savedRule = dslRuleRepository.save(entity);
+        metrics.incrementRuleCreated();
         // evict cache
         evictByLoanType(loanType);
         return savedRule;
@@ -81,7 +83,7 @@ public class RuleService {
                     public void afterCommit() {
                         try {
                             dynamicRuleLoader.evictByLoanType(loanType);
-
+                            metrics.incrementCacheEviction();
                         } catch (Exception ex) {
                             log.error("Error evicting rules for loan type: {}", loanType.getId(), ex);
                         }

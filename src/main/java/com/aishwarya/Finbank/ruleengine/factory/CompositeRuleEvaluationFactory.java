@@ -1,12 +1,13 @@
 package com.aishwarya.Finbank.ruleengine.factory;
 
 
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.repository.LoanTypeFactorConfigRepo;
+import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluationHelper;
 import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
-import com.aishwarya.Finbank.model.Logic;
-import com.aishwarya.Finbank.model.RuleMessageGenerator;
+import com.aishwarya.Finbank.enums.Logic;
+import com.aishwarya.Finbank.utility.RuleMessageGenerator;
 import com.aishwarya.Finbank.model.expression.AndExpression;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.expression.Expression;
@@ -23,36 +24,18 @@ import java.util.List;
 @AllArgsConstructor
 public class CompositeRuleEvaluationFactory {
 
-    private LoanFieldAccessorRegistry registry;
+    private final LoanFieldAccessorRegistry registry;
+    private final RuleMessageGenerator ruleMessageGenerator;
+    private final LoanTypeFactorConfigService loanTypeFactorConfigService;
+    private final RuleEngineMetrics metrics;
+    private final RuleEvaluationHelper ruleEvaluationHelper;
 
-    private RuleMessageGenerator ruleMessageGenerator;
-
-    private LoanTypeFactorConfigService loanTypeFactorConfigService;
-
-
-
-    public RuleEvaluation buildCompositeRuleEvaluationObject(Expression expression,Rule rule) {
-        if (expression instanceof Condition condition) {
-            return new SimpleRuleEvaluation(
-                    rule,
-                    registry,
-                    ruleMessageGenerator,
-                    loanTypeFactorConfigService
-            );
-        } else if (expression instanceof AndExpression andExpr) {
-            List<RuleEvaluation> evaluations = List.of(
-                    buildCompositeRuleEvaluationObject(andExpr.getLeft(),rule),
-                    buildCompositeRuleEvaluationObject(andExpr.getRight(),rule)
-            );
-            return new CompositeRuleEvaluation(evaluations, Logic.AND, ruleMessageGenerator, rule,loanTypeFactorConfigService);
-        } else if (expression instanceof OrExpression orExpr) {
-            List<RuleEvaluation> evaluations = List.of(
-                    buildCompositeRuleEvaluationObject(orExpr.getLeft(),rule),
-                    buildCompositeRuleEvaluationObject(orExpr.getRight(),rule)
-            );
-            return new CompositeRuleEvaluation(evaluations, Logic.OR, ruleMessageGenerator, rule,loanTypeFactorConfigService);
-
-        }
-        throw new IllegalArgumentException("Unknown expression type: " + expression.getClass());
+    public RuleEvaluation buildCompositeRuleEvaluationObject() {
+        return new CompositeRuleEvaluation(
+                ruleMessageGenerator,
+                loanTypeFactorConfigService,
+                metrics,
+                ruleEvaluationHelper
+        );
     }
 }

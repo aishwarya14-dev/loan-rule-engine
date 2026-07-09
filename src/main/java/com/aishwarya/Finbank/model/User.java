@@ -4,6 +4,10 @@ import com.aishwarya.Finbank.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 
 @Entity(name = "users")
@@ -19,13 +23,19 @@ public class User {
     private int id;
     @Column(unique = true)
     @NotBlank(message = "Username is mandatory")
-    private String username;
+    private String email;
     @NotBlank(message = "Password is mandatory")
     private String password;
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(unique = true, name = "mobile_number")
+    @Column(unique = true, name = "phone")
     @NotBlank(message = "Mobile number is mandatory")
-    private String mobileNumber;
+    private String phone;
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

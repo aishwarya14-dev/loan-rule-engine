@@ -1,7 +1,7 @@
 package com.aishwarya.Finbank.controller;
 import com.aishwarya.Finbank.enums.Role;
 import com.aishwarya.Finbank.utility.JwtUtil;
-import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.dto.user.UserResponseDto;
 import com.aishwarya.Finbank.model.User;
 import com.aishwarya.Finbank.service.CustomUserDetailsService;
 import com.aishwarya.Finbank.service.UserService;
@@ -48,10 +48,10 @@ public class UserControllerTest {
     @Test
     public void testShouldCreateUserSuccessfully() throws Exception {
         User user = User.builder()
-                .username("semblance@gmail.com")
+                .email("semblance@gmail.com")
                 .password("password123")
                 .role(Role.USER)
-                .mobileNumber("9876543210")
+                .phone("9876543210")
                 .build();
         UserResponseDto response =
                 new UserResponseDto("semblance@gmail.com", "9876543210");
@@ -71,7 +71,7 @@ public class UserControllerTest {
         User user = User.builder()
                 .password("password123")
                 .role(Role.USER)
-                .mobileNumber("9876543210")
+                .phone("9876543210")
                 .build();
 
         mockMvc.perform(post("/user/register")
@@ -83,7 +83,7 @@ public class UserControllerTest {
     @Test
     void shouldReturnBadRequestWhenMobileMissing() throws Exception {
         User user = User.builder()
-                .username("semblance@gmail.com")
+                .email("semblance@gmail.com")
                 .password("password123")
                 .role(Role.USER)
                 .build();
@@ -97,12 +97,12 @@ public class UserControllerTest {
     @Test
     void shouldReturnJwtWhenCredentialsAreValid() throws Exception{
         User user = User.builder()
-                .username("semblance@gmail.com")
+                .email("semblance@gmail.com")
                 .password("password123")
                 .role(Role.USER)
-                .mobileNumber("9876543210")
+                .phone("9876543210")
                 .build();
-        when(jwtUtil.generateToken(user.getUsername())).thenReturn("0febrwFEMCdaftqz3u/im5JKJOAmKGo8Fbyr/r3WA0Q=");
+        when(jwtUtil.generateToken(user.getEmail())).thenReturn("0febrwFEMCdaftqz3u/im5JKJOAmKGo8Fbyr/r3WA0Q=");
         String request = objectMapper.writeValueAsString(user);
         mockMvc.perform(post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -115,25 +115,25 @@ public class UserControllerTest {
     @Test
     public void testLoginUserShouldThrowExceptionWhenIncorrectUsername() {
         User user = User.builder()
-                .username("abcxyz")
+                .email("abcxyz")
                 .password("password123")
                 .role(Role.USER)
-                .mobileNumber("9876543210")
+                .phone("9876543210")
                 .build();
 
-        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()))).thenThrow(new RuntimeException());
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()))).thenThrow(new RuntimeException());
     }
 
     @Test
     public void testLoginUserShouldThrowExceptionWhenIncorrectPassword() {
         User user = User.builder()
-                .username("semblance@gmail.com")
+                .email("semblance@gmail.com")
                 .password("xxxxx")
                 .role(Role.USER)
-                .mobileNumber("9876543210")
+                .phone("9876543210")
                 .build();
 
-        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()))).thenThrow(new RuntimeException());
+        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()))).thenThrow(new RuntimeException());
     }
 
 
