@@ -66,11 +66,7 @@ public class LoanVerificationService {
     }
 
     private void verifyIfExistingCustomer(LoanApplication application){
-        if (application.getUser().getCreatedAt().isBefore(LocalDate.now().minusYears(1).atStartOfDay())) {
-            application.updateExistingCustomer(true);
-        } else {
             application.updateExistingCustomer(false);
-        }
     }
 
     private void checkAverageAccountBalance(LoanApplication application){

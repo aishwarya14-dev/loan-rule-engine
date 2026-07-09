@@ -231,10 +231,10 @@ public class LoanApplication {
         if (approvalDate == null) {
             throw new IllegalArgumentException("Approval date cannot be null");
         }
-        if (approvalDate.isBefore(applicationDate)) {
-            throw new IllegalArgumentException(
-                    "Approval date cannot be before application date");
-        }
+//        if (approvalDate.isBefore(applicationDate)) {
+//            throw new IllegalArgumentException(
+//                    "Approval date cannot be before application date");
+//        }
         this.approvalDate = approvalDate;
     }
 
