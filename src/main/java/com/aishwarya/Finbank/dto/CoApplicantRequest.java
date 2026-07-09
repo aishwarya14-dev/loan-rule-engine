@@ -13,33 +13,22 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class CoApplicantRequest {
-    @NotNull
     @NotBlank
     private String name;
     @NotNull
-    @NotBlank
     private Integer age;
     private String email;
-    @NotNull
     @NotBlank
     private String phone;
     @NotNull
-    @NotBlank
     private BigDecimal monthlyIncome;
-    @NotNull
-    @NotBlank
     private BigDecimal annualIncome;
     @NotNull
-    @NotBlank
     private Integer creditScore;
-    @NotNull
-    @NotBlank
     private Integer employmentTenure;
     private Integer companyRating;
     @NotNull
-    @NotBlank
     private Integer existingLoans;
     @NotNull
-    @NotBlank
-    private EmploymentType employmentType;
+    private Integer employmentTypeId;
 }

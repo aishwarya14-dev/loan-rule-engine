@@ -49,8 +49,8 @@ public class StaticRulesEvaluatorTest {
         RuleEvaluation simpleRuleEvaluationObject = mock(RuleEvaluation.class);
 
         when(rule.getType()).thenReturn(RuleType.SIMPLE);
-        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule)).thenReturn(simpleRuleEvaluationObject);
-        when(simpleRuleEvaluationObject.evaluate(application)).thenReturn(ruleResult);
+        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject()).thenReturn(simpleRuleEvaluationObject);
+        when(simpleRuleEvaluationObject.evaluate(application,rule)).thenReturn(ruleResult);
 
          staticRulesEvaluator.evaluateRules(
                         application,
@@ -79,8 +79,8 @@ public class StaticRulesEvaluatorTest {
       when(rule.getType()).thenReturn(RuleType.COMPOSITE);
       when(rule.getExpression()).thenReturn(expression);
 
-      when(compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(expression,rule)).thenReturn(compositeRuleEvaluationObject);
-      when(compositeRuleEvaluationObject.evaluate(loanApplication)).thenReturn(ruleResult);
+      when(compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject()).thenReturn(compositeRuleEvaluationObject);
+      when(compositeRuleEvaluationObject.evaluate(loanApplication,rule)).thenReturn(ruleResult);
 
         staticRulesEvaluator.evaluateRules(
                 loanApplication,
@@ -95,22 +95,15 @@ public class StaticRulesEvaluatorTest {
 
         Rule invalidRule = mock(Rule.class);
         Rule validRule = mock(Rule.class);
+        RuleEvaluation compositeRuleEvaluationObject = mock(RuleEvaluation.class);
 
         RuleResult validResult = new RuleResult();
 
-        when(invalidRule.getType()).thenReturn(RuleType.SIMPLE);
-        when(validRule.getType()).thenReturn(RuleType.SIMPLE);
-
-        RuleEvaluation ruleEvaluation1 = mock(RuleEvaluation.class);
-        RuleEvaluation ruleEvaluation2 = mock(RuleEvaluation.class);
-
-        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(invalidRule)).thenReturn(ruleEvaluation1);
-        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(validRule)).thenReturn(ruleEvaluation2);
-
-        when(ruleEvaluation1.evaluate(application))
-                .thenThrow(new RuleEvaluationException("evaluation exception"));
-
-        when(ruleEvaluation2.evaluate(application)).thenReturn(validResult);
+        when(invalidRule.getType()).thenReturn(RuleType.COMPOSITE);
+        when(validRule.getType()).thenReturn(RuleType.COMPOSITE);
+        when(compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject()).thenReturn(compositeRuleEvaluationObject);
+        when(compositeRuleEvaluationObject.evaluate(application,invalidRule)).thenThrow(new RuleEvaluationException("failed to evaluate rule"));
+        when(compositeRuleEvaluationObject.evaluate(application,validRule)).thenReturn(validResult);
 
         staticRulesEvaluator.evaluateRules(application,List.of(invalidRule,validRule));
 

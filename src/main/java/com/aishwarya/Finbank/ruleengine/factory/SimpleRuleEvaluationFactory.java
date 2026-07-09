@@ -2,6 +2,7 @@ package com.aishwarya.Finbank.ruleengine.factory;
 
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.Rule;
+import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluationHelper;
 import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.Finbank.utility.RuleMessageGenerator;
@@ -18,8 +19,10 @@ public class SimpleRuleEvaluationFactory {
     private final RuleMessageGenerator ruleMessageGenerator;
     private final LoanTypeFactorConfigService loanTypeFactorConfigService;
     private final RuleEngineMetrics metrics;
+    private final RuleEvaluationHelper ruleEvaluationHelper;
 
-    public RuleEvaluation buildSimpleRuleEvaluationObject(Rule rule) {
-        return new SimpleRuleEvaluation(rule, registry, ruleMessageGenerator,loanTypeFactorConfigService,metrics);
+
+    public RuleEvaluation buildSimpleRuleEvaluationObject() {
+        return new SimpleRuleEvaluation(ruleMessageGenerator,loanTypeFactorConfigService,metrics,ruleEvaluationHelper);
     }
 }

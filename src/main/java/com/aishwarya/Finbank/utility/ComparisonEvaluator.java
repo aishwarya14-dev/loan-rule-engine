@@ -1,9 +1,6 @@
 package com.aishwarya.Finbank.utility;
 import com.aishwarya.FinBank.utility.Operator;
-import com.aishwarya.Finbank.model.value.DoubleValue;
-import com.aishwarya.Finbank.model.value.IntValue;
-import com.aishwarya.Finbank.model.value.RuleValue;
-import com.aishwarya.Finbank.model.value.StringValue;
+import com.aishwarya.Finbank.model.value.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +12,8 @@ public class ComparisonEvaluator {
             case StringValue stringValue -> evaluateString(String.valueOf(actualValue), stringValue.value(), operator.getSymbol());
             case DoubleValue doubleValue ->
                     evaluateNumeric(((Number) actualValue).doubleValue(), doubleValue.value(), operator.getSymbol());
+            case BooleanValue booleanValue ->
+                    evaluateBoolean(Boolean.parseBoolean(actualValue.toString()), booleanValue.value(), operator.getSymbol());
             default ->
                     throw new IllegalArgumentException("Unsupported RuleValue type: " + expectedValue.getClass().getName());
         };
@@ -46,6 +45,14 @@ public class ComparisonEvaluator {
         return switch (operator) {
             case "==" -> actual.equals(expected);
             case "!=" -> !actual.equals(expected);
+            default -> false;
+        };
+    }
+
+    public static boolean evaluateBoolean(Object actual, Object expected, String operator){
+        return switch (operator){
+            case "==" -> actual == expected;
+            case "!=" -> actual != expected;
             default -> false;
         };
     }

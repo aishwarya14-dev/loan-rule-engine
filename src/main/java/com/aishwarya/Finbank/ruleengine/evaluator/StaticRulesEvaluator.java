@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 @Qualifier("staticRulesEvaluator")
-public class StaticRulesEvaluator implements RulesEvaluator {
+public class StaticRulesEvaluator implements RulesEvaluator<LoanApplicationResult> {
 
     private final SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
 
@@ -38,7 +38,7 @@ public class StaticRulesEvaluator implements RulesEvaluator {
 
 
     @Override
-    public void evaluateRules(LoanApplication application, List<Rule> rules) {
+    public LoanApplicationResult evaluateRules(LoanApplication application, List<Rule> rules) {
         List<RuleResult> ruleResultList = new ArrayList<>();
         for (Rule rule : rules) {
             RuleResult ruleResult = null;
@@ -47,8 +47,8 @@ public class StaticRulesEvaluator implements RulesEvaluator {
                     ruleResult = evaluateExpression(application, rule);
                 } else if (rule.getType() == RuleType.COMPOSITE) {
                     Expression expression = rule.getExpression();
-                    RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(expression,rule);
-                    ruleResult = compositeRuleEvaluationObject.evaluate(application);
+                    RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject();
+                    ruleResult = compositeRuleEvaluationObject.evaluate(application,rule);
                 }
                 if (ruleResult != null) {
                     ruleResultService.saveRuleResult(ruleResult);
@@ -61,12 +61,12 @@ public class StaticRulesEvaluator implements RulesEvaluator {
                 metrics.incrementEvaluationSkipped();
             }
         }
-        loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,false);
+        return loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,false);
     }
 
     public RuleResult evaluateExpression(LoanApplication application, Rule rule) {
-        RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule);
+        RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject();
         metrics.incrementEvaluationTotal();
-        return simpleRuleEvaluationObject.evaluate(application);
+        return simpleRuleEvaluationObject.evaluate(application,rule);
     }
 }

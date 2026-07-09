@@ -1,6 +1,4 @@
 package com.aishwarya.Finbank.ruleengine.evaluation;
-
-
 import com.aishwarya.FinBank.utility.Operator;
 import com.aishwarya.Finbank.enums.Action;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
@@ -18,8 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,9 +27,6 @@ public class SimpleRuleEvaluationTest {
    private SimpleRuleEvaluation simpleRuleEvaluation;
 
    @Mock
-   private LoanFieldAccessorRegistry loanFieldAccessorRegistry;
-
-   @Mock
    private RuleMessageGenerator ruleMessageGenerator;
 
    @Mock
@@ -40,6 +34,9 @@ public class SimpleRuleEvaluationTest {
 
    @Mock
    private RuleEngineMetrics metrics;
+
+   @Mock
+   private RuleEvaluationHelper ruleEvaluationHelper;
 
    @Test
    void shouldEvaluateApproveRuleSuccessfully() {
@@ -51,30 +48,28 @@ public class SimpleRuleEvaluationTest {
       condition.setValue(new DoubleValue(50000));
       LoanTypeFactorConfig loanTypeFactorConfig = mock(LoanTypeFactorConfig.class);
 
-      when(rule.getExpression()).thenReturn(condition);
-      when(rule.getAction()).thenReturn(Action.APPROVE);
-      when(rule.getEvidenceWeight()).thenReturn(10.0);
-
-      when(loanFieldAccessorRegistry.getActualValGetterFunction("salary")).thenReturn(app -> 60000);
-
-      when(ruleMessageGenerator.generateMessage(
-              any(), any(), any(), any(), anyBoolean()))
-              .thenReturn("Passed");
-
       LoanType loanType = mock(LoanType.class);
       when(application.getLoanType()).thenReturn(loanType);
       when(loanType.getId()).thenReturn(1L);
       when(rule.getFactorId()).thenReturn(2L);
 
+      when(rule.getExpression()).thenReturn(condition);
+
+      when(ruleEvaluationHelper.getActualValGetterFunction("salary")).thenReturn(app -> 60000);
+      when(ruleEvaluationHelper.getActualValue(any(), eq(application), eq("salary")))
+              .thenReturn(60000);
+      when(ruleEvaluationHelper.compareActualVsExpectedValue(60000, condition))
+              .thenReturn(true);
+      when(ruleMessageGenerator.generateMessage(
+              any(), any(), any(), any(), anyBoolean()))
+              .thenReturn("Passed");
       when(loanTypeFactorConfigService.getLoanTypeFactorConfig(any(),any())).thenReturn(loanTypeFactorConfig);
+      when(ruleEvaluationHelper.calculateRuleContributionScore(rule, true))
+              .thenReturn(10.0);
 
-      SimpleRuleEvaluation evaluation =
-              new SimpleRuleEvaluation(rule, loanFieldAccessorRegistry, ruleMessageGenerator,loanTypeFactorConfigService,metrics);
 
-      RuleResult result = evaluation.evaluate(application);
-
+      RuleResult result = simpleRuleEvaluation.evaluate(application,rule);
       assertTrue(result.isPassed());
       assertEquals(10.0, result.getRuleEvaluationScore());
-
    }
 }

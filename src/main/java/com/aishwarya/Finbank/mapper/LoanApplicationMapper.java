@@ -4,22 +4,12 @@ import com.aishwarya.Finbank.model.LoanApplication;
 import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationRequestDto;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.repository.*;
-import lombok.AllArgsConstructor;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
-@Mapper(componentModel = "spring",
-        uses = {
-                GuarantorMapper.class,
-                CoApplicantMapper.class
-        }
-)
+@Mapper(componentModel = "spring")
 public abstract class LoanApplicationMapper {
 
     @Autowired
@@ -47,6 +37,8 @@ public abstract class LoanApplicationMapper {
     @Mapping(target = "industry", expression = "java(mapIndustry(dto.getIndustryId()))")
     @Mapping(target = "loanPurpose", expression = "java(mapLoanPurpose(dto.getLoanPurposeId()))")
     @Mapping(target = "propertyType", expression = "java(mapPropertyType(dto.getPropertyTypeId()))")
+    @Mapping(target = "guarantors", ignore = true)
+    @Mapping(target = "coApplicants", ignore = true)
     public abstract LoanApplication  toEntity(LoanApplicationRequestDto dto);
 
     protected User mapUser(Integer id) {
@@ -87,21 +79,6 @@ public abstract class LoanApplicationMapper {
     protected PropertyType mapPropertyType(Integer id) {
         return propertyTypeRepo.findById(Long.valueOf(id))
                 .orElseThrow(() -> new RuntimeException("PropertyType not found"));
-    }
-
-    @AfterMapping
-    protected void linkChildren(
-            @MappingTarget LoanApplication application) {
-
-        if (application.getGuarantors() != null) {
-            application.getGuarantors()
-                    .forEach(g -> g.setLoanApplication(application));
-        }
-
-        if (application.getCoApplicants() != null) {
-            application.getCoApplicants()
-                    .forEach(c -> c.setLoanApplication(application));
-        }
     }
 
 }

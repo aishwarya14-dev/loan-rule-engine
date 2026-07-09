@@ -3,6 +3,7 @@ grammar LoanRules;
 options {
     visitor = true;
     listener = true;
+    caseInsensitive = true;
 }
 
 statement
@@ -32,6 +33,9 @@ operator
 value
     : NUMBER          # intValue
     | DECIMAL         # decimalValue
+    | BOOLEAN         # booleanValue
+    | DATETIME        # dateTimeValue
+    | DATE            # dateValue
     | STRING_LITERAL  # stringValue
     ;
 
@@ -55,8 +59,24 @@ NEQ     : '!=';
 AND     : 'AND';
 OR      : 'OR';
 
-IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
+
 NUMBER     : [0-9]+ ;
 DECIMAL    : [0-9]+ '.' [0-9]+ ;
-STRING_LITERAL : '\'' [a-zA-Z0-9_]+ '\'' ;
 WS         : [ \t\r\n]+ -> skip ;
+BOOLEAN    : 'true' | 'false';
+IDENTIFIER : [a-zA-Z_][a-zA-Z0-9_]* ;
+DATETIME
+    : '\'' NUMBER NUMBER NUMBER NUMBER '-'
+         NUMBER NUMBER '-'
+         NUMBER NUMBER
+         'T'
+         NUMBER NUMBER ':'
+         NUMBER NUMBER ':'
+         NUMBER NUMBER '\''
+    ;
+DATE
+    : '\'' NUMBER NUMBER NUMBER NUMBER '-'
+         NUMBER NUMBER '-'
+         NUMBER NUMBER '\''
+    ;
+STRING_LITERAL : '\'' (~['\r\n])* '\'';
