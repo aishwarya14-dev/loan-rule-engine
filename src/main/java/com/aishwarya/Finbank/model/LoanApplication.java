@@ -347,4 +347,22 @@ public class LoanApplication {
     public void updateHasFixedDeposit(Boolean hasFixedDeposit){
         this.hasFixedDeposit = hasFixedDeposit;
     }
+
+    public void setIncomeVerified(Boolean incomeVerified){
+        this.incomeVerified = incomeVerified;
+    }
+
+    public void updateApplicationStatus(ApplicationStatus status){
+        if(status == null){
+            throw new IllegalArgumentException("status cannot be null");
+        }
+        this.status = status;
+    }
+
+    public void updateResult(LoanApplicationResult result){
+        if (result == null){
+            throw new IllegalArgumentException("loan result cannot be null");
+        }
+        this.result = result;
+    }
 }

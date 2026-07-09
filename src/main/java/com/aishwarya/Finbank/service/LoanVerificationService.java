@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @AllArgsConstructor
 public class LoanVerificationService {
 
+    // mocking the verification process
     public void implementVerification(LoanApplication loanApplication){
         calculateLoanToValueRatio(loanApplication);
         checkKycVerification(loanApplication);
@@ -30,6 +30,7 @@ public class LoanVerificationService {
         debtToIncomeRatio(loanApplication);
         checkCompanyRating(loanApplication);
         checkLoanDefaults(loanApplication);
+        checkIncomeVerified(loanApplication);
     }
 
     private void calculateLoanToValueRatio(LoanApplication application){
@@ -82,6 +83,10 @@ public class LoanVerificationService {
 
     private void hasFixedDeposit(LoanApplication application){
         application.updateHasFixedDeposit(true);
+    }
+
+    private void checkIncomeVerified(LoanApplication application){
+        application.updateIncomeVerified(true);
     }
 
     private void checkGuarantorPresent(LoanApplication application){

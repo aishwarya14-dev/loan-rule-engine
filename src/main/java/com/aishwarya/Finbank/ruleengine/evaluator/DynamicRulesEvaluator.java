@@ -3,9 +3,6 @@ import com.aishwarya.Finbank.enums.RuleSeverity;
 import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
-import com.aishwarya.Finbank.model.expression.Expression;
-import com.aishwarya.Finbank.ruleengine.evaluation.CompositeRuleEvaluation;
-import com.aishwarya.Finbank.ruleengine.evaluation.SimpleRuleEvaluation;
 import com.aishwarya.Finbank.ruleengine.factory.CompositeRuleEvaluationFactory;
 import com.aishwarya.Finbank.ruleengine.factory.SimpleRuleEvaluationFactory;
 import com.aishwarya.Finbank.service.FactorEvaluationResultService;
@@ -41,9 +38,8 @@ public class DynamicRulesEvaluator implements RulesEvaluator<LoanApplicationResu
             RuleResult ruleResult = null;
             try{
                 if (rule.getType() == null || rule.getType() == RuleType.SIMPLE) {
-                    ruleResult = evaluateExpression(application, rule);
+                    ruleResult = evaluateSimpleExpression(application, rule);
                 } else if (rule.getType() == RuleType.COMPOSITE) {
-                    Expression expression = rule.getExpression();
                     RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject();
                     ruleResult = compositeRuleEvaluationObject.evaluate(application,rule);
                 }
@@ -75,7 +71,7 @@ public class DynamicRulesEvaluator implements RulesEvaluator<LoanApplicationResu
         return loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,true);
     }
 
-    private RuleResult evaluateExpression(LoanApplication application, Rule rule) {
+    private RuleResult evaluateSimpleExpression(LoanApplication application, Rule rule) {
         RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject();
         RuleResult result = simpleRuleEvaluationObject.evaluate(application,rule);
         metrics.incrementEvaluationTotal();
