@@ -9,10 +9,7 @@ import com.aishwarya.Finbank.model.expression.AndExpression;
 import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.model.expression.Expression;
 import com.aishwarya.Finbank.model.expression.OrExpression;
-import com.aishwarya.Finbank.model.value.DoubleValue;
-import com.aishwarya.Finbank.model.value.IntValue;
-import com.aishwarya.Finbank.model.value.RuleValue;
-import com.aishwarya.Finbank.model.value.StringValue;
+import com.aishwarya.Finbank.model.value.*;
 
 
 public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
@@ -86,6 +83,12 @@ public class LoanRulesVisitor extends LoanRulesBaseVisitor<Object> {
     public StringValue visitStringValue(LoanRulesParser.StringValueContext ctx) {
         String raw = ctx.getText();
         return new StringValue(raw);
+    }
+
+    @Override
+    public BooleanValue visitBooleanValue(LoanRulesParser.BooleanValueContext ctx) {
+        boolean raw = Boolean.parseBoolean(ctx.BOOLEAN().getText());
+        return new BooleanValue(raw);
     }
 
     @Override

@@ -4,11 +4,13 @@ import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.*;
 import com.aishwarya.Finbank.model.expression.Expression;
+import com.aishwarya.Finbank.ruleengine.evaluation.CompositeRuleEvaluation;
+import com.aishwarya.Finbank.ruleengine.evaluation.SimpleRuleEvaluation;
+import com.aishwarya.Finbank.ruleengine.factory.CompositeRuleEvaluationFactory;
+import com.aishwarya.Finbank.ruleengine.factory.SimpleRuleEvaluationFactory;
 import com.aishwarya.Finbank.service.FactorEvaluationResultService;
 import com.aishwarya.Finbank.service.LoanApplicationResultService;
 import com.aishwarya.Finbank.ruleengine.evaluation.RuleEvaluation;
-import com.aishwarya.Finbank.ruleengine.factory.CompositeRuleEvaluationFactory;
-import com.aishwarya.Finbank.ruleengine.factory.SimpleRuleEvaluationFactory;
 import com.aishwarya.Finbank.service.RuleResultService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,23 +24,18 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 @Primary
-public class DynamicRulesEvaluator implements RulesEvaluator {
+public class DynamicRulesEvaluator implements RulesEvaluator<LoanApplicationResult> {
 
     private final SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
-
     private final CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
-
     private final RuleResultService ruleResultService;
-
     private final LoanApplicationResultService loanApplicationResultService;
-
     private final FactorEvaluationResultService factorEvaluationResultService;
-
     private final RuleEngineMetrics metrics;
 
 
     @Override
-    public void evaluateRules(LoanApplication application, List<Rule> rules) {
+    public LoanApplicationResult evaluateRules(LoanApplication application, List<Rule> rules) {
         List<RuleResult> ruleResultList = new ArrayList<>();
         for (Rule rule : rules) {
             RuleResult ruleResult = null;
@@ -47,8 +44,8 @@ public class DynamicRulesEvaluator implements RulesEvaluator {
                     ruleResult = evaluateExpression(application, rule);
                 } else if (rule.getType() == RuleType.COMPOSITE) {
                     Expression expression = rule.getExpression();
-                    RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(expression,rule);
-                    ruleResult = compositeRuleEvaluationObject.evaluate(application);
+                    RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject();
+                    ruleResult = compositeRuleEvaluationObject.evaluate(application,rule);
                 }
 
                 if(ruleResult != null){
@@ -75,13 +72,14 @@ public class DynamicRulesEvaluator implements RulesEvaluator {
                 metrics.incrementEvaluationSkipped();
             }
         }
-        loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,true);
+        return loanApplicationResultService.calculateAndSaveLoanApplicationResult(ruleResultList,application,true);
     }
 
     private RuleResult evaluateExpression(LoanApplication application, Rule rule) {
-        RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule);
+        RuleEvaluation simpleRuleEvaluationObject = simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject();
+        RuleResult result = simpleRuleEvaluationObject.evaluate(application,rule);
         metrics.incrementEvaluationTotal();
-        return simpleRuleEvaluationObject.evaluate(application);
+        return result;
     }
 
     private void logRuleEvaluation(Rule rule, RuleResult ruleResult, LoanApplication application) {

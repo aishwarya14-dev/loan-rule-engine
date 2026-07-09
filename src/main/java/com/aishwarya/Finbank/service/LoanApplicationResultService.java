@@ -20,7 +20,7 @@ public class LoanApplicationResultService {
     private final LoanApplicationResultRepo loanApplicationResultRepo;
     private final RuleEngineMetrics metrics;
 
-    public void calculateAndSaveLoanApplicationResult(List<RuleResult> ruleResultList, LoanApplication loanApplication,boolean isDynamic){
+    public LoanApplicationResult calculateAndSaveLoanApplicationResult(List<RuleResult> ruleResultList, LoanApplication loanApplication,boolean isDynamic){
         double finalScore = 0.0;
         Map<Factor,Integer> factorMap = new ConcurrentHashMap<Factor,Integer>();
         if(!isDynamic)
@@ -30,7 +30,7 @@ public class LoanApplicationResultService {
             Integer totalWeight = storeFactorMappingAndGetTotalWeight(ruleResultList,factorMap);
             finalScore = calculateFinalScoreForDynamicRuleset(ruleResultList,totalWeight,factorMap);
         }
-        saveLoanApplicationResult(loanApplication,finalScore);
+        return saveLoanApplicationResult(loanApplication,finalScore);
     }
 
     private double calculateFinalScoreForStaticRuleSet(List<RuleResult> ruleResultList){
@@ -69,14 +69,14 @@ public class LoanApplicationResultService {
         return finalScore;
     }
 
-    private void saveLoanApplicationResult(LoanApplication loanApplication,double finalScore){
+    private LoanApplicationResult saveLoanApplicationResult(LoanApplication loanApplication,double finalScore){
         LoanApplicationResult loanApplicationResult = new LoanApplicationResult();
         loanApplicationResult.setApplication(loanApplication);
         loanApplicationResult.setFinalScore(finalScore);
         loanApplicationResult.setDecision(getDecision(finalScore));
 
         // Save the loan application result to the database
-        loanApplicationResultRepo.save(loanApplicationResult);
+        return loanApplicationResultRepo.save(loanApplicationResult);
     }
 
     private Decision getDecision(double finalScore){

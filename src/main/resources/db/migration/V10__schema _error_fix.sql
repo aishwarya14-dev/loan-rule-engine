@@ -1,0 +1,2 @@
+ALTER TABLE guarantor
+ALTER COLUMN email TYPE VARCHAR(255);

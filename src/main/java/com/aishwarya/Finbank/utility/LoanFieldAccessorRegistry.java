@@ -49,10 +49,34 @@ public final class LoanFieldAccessorRegistry {
                 app -> app.getMonthlyIncome() != null
                         ? app.getMonthlyIncome().doubleValue()
                         : null);
+        fieldAccessors.put("interestRate",
+                app -> app.getInterestRate() != null
+                        ? app.getInterestRate().doubleValue()
+                        : null);
+        fieldAccessors.put("loanTenureMonths",
+                app -> app.getLoanTenureMonths() != null
+                        ? app.getLoanTenureMonths().intValue()
+                        : null);
 
         fieldAccessors.put("otherMonthlyIncome",
                 app -> app.getOtherMonthlyIncome() != null ?
                         app.getOtherMonthlyIncome().doubleValue()
+                        : null
+        );
+        fieldAccessors.put("loanPurpose",
+                app -> app.getLoanPurpose()!= null ?
+                        app.getLoanPurpose()
+                        : null
+        );
+        fieldAccessors.put("downPayment",
+                app -> app.getDownPayment()!= null ?
+                        app.getDownPayment().doubleValue()
+                        : null
+        );
+
+        fieldAccessors.put("bankruptcies",
+                app -> app.getBankruptcies() != null ?
+                        app.getBankruptcies().intValue()
                         : null
         );
 
@@ -65,6 +89,11 @@ public final class LoanFieldAccessorRegistry {
         fieldAccessors.put("incomeTaxReturnAvailable",
                 app -> app.getIncomeTaxReturnAvailable() != null ?
                         app.getIncomeTaxReturnAvailable().booleanValue()
+                        : null
+        );
+        fieldAccessors.put("salaryAccountWithBank",
+                app -> app.getSalaryAccountWithBank() != null ?
+                        app.getSalaryAccountWithBank().booleanValue()
                         : null
         );
 
@@ -176,6 +205,14 @@ public final class LoanFieldAccessorRegistry {
         fieldAccessors.put("blacklisted",
                 app -> app.getBlacklisted() != null
                         ? app.getBlacklisted().booleanValue()
+                        : null);
+        fieldAccessors.put("totalOutstandingDebt",
+                app -> app.getTotalOutstandingDebt()!= null
+                        ? app.getTotalOutstandingDebt().doubleValue()
+                        : null);
+        fieldAccessors.put("missedPaymentsLast12Months",
+                app -> app.getMissedPaymentsLast12Months()!= null
+                        ? app.getMissedPaymentsLast12Months().intValue()
                         : null);
     }
 

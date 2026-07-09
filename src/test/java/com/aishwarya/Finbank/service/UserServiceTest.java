@@ -1,5 +1,5 @@
 package com.aishwarya.Finbank.service;
-import com.aishwarya.Finbank.dto.response.UserResponseDto;
+import com.aishwarya.Finbank.dto.user.UserResponseDto;
 import com.aishwarya.Finbank.enums.Role;
 import com.aishwarya.Finbank.exceptions.DuplicateUserException;
 import com.aishwarya.Finbank.exceptions.UserCreationException;
@@ -34,47 +34,47 @@ public class UserServiceTest {
     public void setUp() {
         // Initialize any required objects or mock behavior here
          user = User.builder()
-                .username("semblance@gmail.com")
+                .email("semblance@gmail.com")
                 .password("password123")
                 .role(Role.USER)
-                .mobileNumber("9876543210")
+                .phone("9876543210")
                 .build();
     }
 
     @Test
     public void testShouldCreateUserSuccessfully() {
-        when(userRepository.findByUsername(user.getUsername()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(null);
-        when(userRepository.findByPhone(user.getMobileNumber()))
+        when(userRepository.findByPhone(user.getPhone()))
                 .thenReturn(null);
 
         when(userRepository.save(any(User.class)))
                 .thenReturn(user);
         UserResponseDto userResponseDto = userService.saveUser(user);
         assertNotNull(userResponseDto);
-        assertEquals("semblance@gmail.com", userResponseDto.getUsername());
-        assertEquals("9876543210", userResponseDto.getMobileNumber());
+        assertEquals("semblance@gmail.com", userResponseDto.getEmail());
+        assertEquals("9876543210", userResponseDto.getPhone());
     }
 
     @Test
     public void testShouldNotCreateUserWithDuplicateUsername() {
-        when(userRepository.findByUsername(user.getUsername()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(user);
         assertThrows(DuplicateUserException.class, () -> userService.saveUser(user));
     }
 
     @Test
     public void testShouldNotCreateUserWithDuplicateMobileNumber() {
-        when(userRepository.findByPhone(user.getMobileNumber()))
+        when(userRepository.findByPhone(user.getPhone()))
                 .thenReturn(user);
          assertThrows(DuplicateUserException.class, () -> userService.saveUser(user));
     }
 
     @Test
     void shouldThrowUserCreationExceptionWhenSaveFails() {
-        when(userRepository.findByUsername(user.getUsername()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(null);
-        when(userRepository.findByPhone(user.getMobileNumber()))
+        when(userRepository.findByPhone(user.getPhone()))
                 .thenReturn(null);
         when(userRepository.save(any(User.class)))
                 .thenThrow(new RuntimeException("Database error"));

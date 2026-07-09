@@ -2,10 +2,7 @@ package com.aishwarya.Finbank.model;
 
 import com.aishwarya.Finbank.enums.ApplicationStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -262,7 +259,7 @@ public class LoanApplication {
         guarantor.setLoanApplication(this);
     }
 
-    public void removeGuarantor(Guarantor guarantor) {
+    public void removeCoApplicant(Guarantor guarantor) {
         guarantors.remove(guarantor);
         guarantor.setLoanApplication(null);
     }
@@ -272,8 +269,8 @@ public class LoanApplication {
         coApplicant.setLoanApplication(this);
     }
 
-    public void removeGuarantor(CoApplicant coApplicant) {
-        guarantors.remove(coApplicant);
+    public void removeCoApplicant(CoApplicant coApplicant) {
+        coApplicants.remove(coApplicant);
         coApplicant.setLoanApplication(null);
     }
 
@@ -285,6 +282,16 @@ public class LoanApplication {
             throw new IllegalArgumentException("Loan-to-value ratio must be between 0 and 100");
         }
         this.loanToValueRatio = loanToValueRatio;
+    }
+
+    public void updateDebtToIncomeRatio(Double debtToIncomeRatio){
+        if(debtToIncomeRatio == null){
+            throw new IllegalArgumentException("Debt-To-Income ratio cannot be null");
+        }
+        if (debtToIncomeRatio < 0 || debtToIncomeRatio > 100) {
+            throw new IllegalArgumentException("Debt-To-Income ratio must be between 0 and 100");
+        }
+        this.debtToIncomeRatio = debtToIncomeRatio;
     }
 
     public void updateIncomeVerified(Boolean incomeVerified){
@@ -301,4 +308,43 @@ public class LoanApplication {
         this.guarantorPresent = guarantorPresent;
     }
 
+    public void updateKycVerified(Boolean kycVerified){
+        this.kycVerified = kycVerified;
+    }
+
+    public void updateAadharVerified(Boolean aadhaarVerified){
+        this.aadhaarVerified = aadhaarVerified;
+    }
+
+    public void updatePanVerifiied(Boolean panVerified){
+        this.panVerified = panVerified;
+    }
+
+    public void updatePropertyVerified(Boolean propertyVerified){
+        this.propertyVerified = propertyVerified;
+    }
+
+    public void updateFraudFlag(Boolean fraudFlag){
+        this.fraudFlag = fraudFlag;
+    }
+
+    public void updateBlacklistingStatus(Boolean blacklisted){
+        this.blacklisted = blacklisted;
+    }
+
+    public void updateExistingCustomer(Boolean existingCustomer){
+        this.existingCustomer = existingCustomer;
+    }
+
+    public void updateLoanDefaults(Integer loanDefaults){
+        this.loanDefaults = loanDefaults;
+    }
+
+    public void updateAverageAccountBalance(BigDecimal averageAccountBalance){
+        this.averageAccountBalance = averageAccountBalance;
+    }
+
+    public void updateHasFixedDeposit(Boolean hasFixedDeposit){
+        this.hasFixedDeposit = hasFixedDeposit;
+    }
 }

@@ -52,8 +52,8 @@ public class DynamicRulesEvaluatorTest {
         RuleEvaluation simpleRuleEvaluationObject = mock(RuleEvaluation.class);
 
         when(rule.getType()).thenReturn(RuleType.SIMPLE);
-        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(rule)).thenReturn(simpleRuleEvaluationObject);
-        when(simpleRuleEvaluationObject.evaluate(application)).thenReturn(ruleResult);
+        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject()).thenReturn(simpleRuleEvaluationObject);
+        when(simpleRuleEvaluationObject.evaluate(application,rule)).thenReturn(ruleResult);
 
          dynamicRulesEvaluator.evaluateRules(
                 application,
@@ -83,8 +83,8 @@ public class DynamicRulesEvaluatorTest {
         when(rule.getType()).thenReturn(RuleType.COMPOSITE);
         when(rule.getExpression()).thenReturn(expression);
 
-        when(compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject(expression,rule)).thenReturn(compositeRuleEvaluationObject);
-        when(compositeRuleEvaluationObject.evaluate(loanApplication)).thenReturn(ruleResult);
+        when(compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject()).thenReturn(compositeRuleEvaluationObject);
+        when(compositeRuleEvaluationObject.evaluate(loanApplication,rule)).thenReturn(ruleResult);
 
         dynamicRulesEvaluator.evaluateRules(
                 loanApplication,
@@ -108,13 +108,13 @@ public class DynamicRulesEvaluatorTest {
         RuleEvaluation ruleEvaluation1 = mock(RuleEvaluation.class);
         RuleEvaluation ruleEvaluation2 = mock(RuleEvaluation.class);
 
-        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(invalidRule)).thenReturn(ruleEvaluation1);
-        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject(validRule)).thenReturn(ruleEvaluation2);
+        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject()).thenReturn(ruleEvaluation1);
+        when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject()).thenReturn(ruleEvaluation2);
 
-        when(ruleEvaluation1.evaluate(application))
+        when(ruleEvaluation1.evaluate(application,invalidRule))
                 .thenThrow(new RuntimeException("evaluation exception"));
 
-        when(ruleEvaluation2.evaluate(application)).thenReturn(validResult);
+        when(ruleEvaluation2.evaluate(application,validRule)).thenReturn(validResult);
 
         dynamicRulesEvaluator.evaluateRules(application,List.of(invalidRule,validRule));
 
