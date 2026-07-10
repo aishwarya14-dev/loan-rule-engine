@@ -72,7 +72,9 @@ public class DynamicRuleLoader implements RuleLoader {
     }
 
     // Evict only the affected loan type when a new rule is created
-    @CacheEvict(value = "rules", allEntries = true)
+    @CacheEvict(value = "rules", key = "#loanType.loanType")
     public void evictByLoanType(LoanType loanType) {
+        metrics.incrementCacheEviction();    // ✅ track evictions
+        log.info("Cache evicted for: {}", loanType.getLoanType());
     }
 }
