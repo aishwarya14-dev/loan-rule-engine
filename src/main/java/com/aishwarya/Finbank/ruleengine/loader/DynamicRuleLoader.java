@@ -5,14 +5,11 @@ import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.model.LoanTypeFactorConfig;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.repository.LoanTypeFactorConfigRepo;
 import com.aishwarya.Finbank.repository.RuleRepository;
 import com.aishwarya.Finbank.ruleengine.parser.DslRulesParser;
 import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
@@ -47,7 +44,9 @@ public class DynamicRuleLoader implements RuleLoader {
             List<DslRule> entities = repository.findByLoanTypeLoanType(loanType.getLoanType());
             for (DslRule dslRule : entities) {
                 try {
-                    Rule parsedRule = parser.parseDslRule(dslRule.getDslRule());
+                    Rule parsedRule = metrics.recordDslParseDuration(
+                            () -> parser.parseDslRule(dslRule.getDslRule())
+                    );
                     metrics.incrementDslParseSuccess();
                     parsedRule.setEvidenceWeight(dslRule.getEvidenceWeight());
                     parsedRule.setSeverity(dslRule.getRuleSeverity());
@@ -74,7 +73,7 @@ public class DynamicRuleLoader implements RuleLoader {
     // Evict only the affected loan type when a new rule is created
     @CacheEvict(value = "rules", key = "#loanType.loanType")
     public void evictByLoanType(LoanType loanType) {
-        metrics.incrementCacheEviction();    // ✅ track evictions
+        metrics.incrementCacheEviction();
         log.info("Cache evicted for: {}", loanType.getLoanType());
     }
 }

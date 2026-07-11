@@ -38,10 +38,10 @@ public class DynamicRulesEvaluator implements RulesEvaluator<LoanApplicationResu
             RuleResult ruleResult = null;
             try{
                 if (rule.getType() == null || rule.getType() == RuleType.SIMPLE) {
-                    ruleResult = evaluateSimpleExpression(application, rule);
+                    ruleResult = metrics.recordEvaluationDuration(() -> evaluateSimpleExpression(application, rule));
                 } else if (rule.getType() == RuleType.COMPOSITE) {
                     RuleEvaluation compositeRuleEvaluationObject = compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject();
-                    ruleResult = compositeRuleEvaluationObject.evaluate(application,rule);
+                    ruleResult = metrics.recordEvaluationDuration(() -> compositeRuleEvaluationObject.evaluate(application,rule));
                 }
 
                 if(ruleResult != null){
