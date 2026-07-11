@@ -25,6 +25,13 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleBadRequest(IllegalStateException ex) {
+        log.error("Invalid input", ex);
+        return status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleBadRequest(UserNotFoundException ex) {
         log.error("Invalid input", ex);
@@ -80,5 +87,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Invalid username or password");
+    }
+
+    @ExceptionHandler(InvalidRuleConfigurationException.class)
+    public ResponseEntity<String> handleInvalidRuleConfigurationException(
+            InvalidRuleConfigurationException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Invalid rule configuration" + " " + ex.getMessage());
+    }
+
+    @ExceptionHandler(RuleEvaluationException.class)
+    public ResponseEntity<String> handleRuleEvaluationException(
+            RuleEvaluationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Error during rule evaluation " + ex.getMessage());
+    }
+
+    @ExceptionHandler(LoanApplicationException.class)
+    public ResponseEntity<String> handleLoanApplicationException(
+            LoanApplicationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Loan application Error " + ex.getMessage());
     }
 }

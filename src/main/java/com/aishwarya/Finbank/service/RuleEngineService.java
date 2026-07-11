@@ -1,5 +1,6 @@
 package com.aishwarya.Finbank.service;
 
+import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.LoanApplication;
 import com.aishwarya.Finbank.model.LoanApplicationResult;
 import com.aishwarya.Finbank.ruleengine.evaluator.StaticRulesEvaluator;
@@ -19,14 +20,16 @@ import java.util.List;
 @AllArgsConstructor
 public class RuleEngineService {
 
-    private final RulesEvaluator rulesEvaluator;
-
+    private final RulesEvaluator<LoanApplicationResult> rulesEvaluator;
     private final RuleLoader ruleLoader;
+    private final RuleEngineMetrics metrics;
 
     public LoanApplicationResult evaluateLoanApplication(LoanApplication application) {
         log.info("Starting evaluation for loan application with ID: {}", application.getId());
         List<Rule> rules = ruleLoader.loadRules(application.getLoanType());
         log.info("Evaluating loan application with ID: {} using {} rules", application.getId(), rules.size());
-        return (LoanApplicationResult) rulesEvaluator.evaluateRules(application, rules);
+        return metrics.recordApplicationEvaluationDuration( () ->
+                 rulesEvaluator.evaluateRules(application, rules)
+        );
     }
 }

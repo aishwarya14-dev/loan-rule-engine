@@ -50,6 +50,7 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
                         rule.getFactorId()
                 )
         );
+        metrics.incrementEvaluationPassed();
         return result;
     }
 
