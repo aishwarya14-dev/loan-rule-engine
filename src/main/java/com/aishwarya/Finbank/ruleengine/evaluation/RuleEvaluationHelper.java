@@ -24,9 +24,12 @@ public class RuleEvaluationHelper {
 
     protected Function<LoanApplication, Object> getActualValGetterFunction(String field) {
         return Optional.of(registry.getActualValGetterFunction(field))
-                .orElseThrow(() ->
-                        new InvalidRuleConfigurationException(
-                                "Unsupported field: " + field));
+                .orElseThrow(() -> {
+                    metrics.incrementEvaluationSkipped();
+                           return new InvalidRuleConfigurationException(
+                                    "Unsupported field: " + field);
+                        }
+                );
     }
 
     protected Object getActualValue(Function<LoanApplication, Object> actualValGetterFunction,LoanApplication application,String field){

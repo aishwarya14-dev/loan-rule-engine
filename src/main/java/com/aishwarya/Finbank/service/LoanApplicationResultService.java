@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 public class LoanApplicationResultService {
 
-    private final LoanApplicationResultRepo loanApplicationResultRepo;
     private final RuleEngineMetrics metrics;
     private final LoanRepository loanRepository;
 
@@ -77,19 +76,17 @@ public class LoanApplicationResultService {
     }
 
     private LoanApplicationResult saveLoanApplicationResult(LoanApplication loanApplication,double finalScore){
+        // create the loan application result object
         LoanApplicationResult loanApplicationResult = new LoanApplicationResult();
-        loanApplicationResult.setApplication(loanApplication);
         loanApplicationResult.setFinalScore(finalScore);
         Decision decision = getDecision(finalScore,loanApplication);
         loanApplicationResult.setDecision(decision);
 
-        // Save the loan application result to the database
-        LoanApplicationResult result = loanApplicationResultRepo.save(loanApplicationResult);
-        loanApplication.updateResult(result);
-
+        loanApplication.updateResult(loanApplicationResult);
         //save loan application to the db
         loanRepository.save(loanApplication);
-        return result;
+
+        return loanApplicationResult;
     }
 
     private Decision getDecision(double finalScore,LoanApplication loanApplication){
