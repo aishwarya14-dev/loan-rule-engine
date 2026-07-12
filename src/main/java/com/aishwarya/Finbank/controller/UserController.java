@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<String> login(@Valid @RequestBody User user) {
         log.info("POST /login - username={}",  user.getEmail());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         String jwt = jwtUtil.generateToken(user.getEmail());
