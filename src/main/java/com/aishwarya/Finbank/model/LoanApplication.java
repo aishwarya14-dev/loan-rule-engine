@@ -188,8 +188,9 @@ public class LoanApplication {
     // Decision
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
-    @OneToOne
-    @JoinColumn(name = "result_id")
+    @OneToOne(mappedBy = "application",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private LoanApplicationResult result;
 
     public void updateCreditScore(Integer creditScore) {
@@ -364,5 +365,6 @@ public class LoanApplication {
             throw new IllegalArgumentException("loan result cannot be null");
         }
         this.result = result;
+        result.setApplication(this);
     }
 }

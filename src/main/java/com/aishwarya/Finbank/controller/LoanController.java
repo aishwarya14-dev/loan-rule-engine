@@ -28,7 +28,7 @@ public class LoanController {
     private LoanService service;
 
     @PostMapping("/loanApplication")
-    public ResponseEntity<LoanApplicationResult> acceptLoanApplication(@RequestBody LoanApplicationRequestDto application) {
+    public ResponseEntity<LoanApplicationResult> acceptLoanApplication(@Valid @RequestBody LoanApplicationRequestDto application) {
         log.info("POST /loanApplication - username={}, amount={}", application.getApplicantName(), application.getLoanAmount());
         LoanApplicationResult loanApplicationResult = service.acceptLoanApplication(application);
         return ResponseEntity.status(HttpStatus.CREATED)

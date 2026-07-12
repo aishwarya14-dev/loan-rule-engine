@@ -39,6 +39,7 @@ public abstract class LoanApplicationMapper {
     @Mapping(target = "propertyType", expression = "java(mapPropertyType(dto.getPropertyTypeId()))")
     @Mapping(target = "guarantors", ignore = true)
     @Mapping(target = "coApplicants", ignore = true)
+    @Mapping(target = "result", ignore = true)
     public abstract LoanApplication  toEntity(LoanApplicationRequestDto dto);
 
     protected User mapUser(Integer id) {
