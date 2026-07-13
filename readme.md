@@ -18,7 +18,7 @@ The engine supports multiple loan products, configurable factor importance, weig
                                               |
                                               v
                              +-------------------------------+
-                             | Spring Boot REST Controllers  |
+                             |        REST Controllers       |
                              +---------------+---------------+
                                              |
                                              |
@@ -34,23 +34,23 @@ The engine supports multiple loan products, configurable factor importance, weig
                                            |
                                            v
                         +--------------------------------------------+
-                        | Rule Engine Service                        |
+                        |         Rule Engine Service                |
                         +----------------+---------------------------+
                                          |
                        +-----------------+-------------------+
                        |                                     |
                        v                                     v
           +----------------------------+       +-----------------------------+
-          | Static Rule Evaluator      |       | Dynamic Rule Evaluator      |
-          | JSON Rules                 |       | DSL Rules                   |
+          | Static Rule Loader         |       |     Dynamic Rule Loaader    |
+          | JSON Rules                 |       |     DSL Rules               |
           +-------------+--------------+       +-------------+---------------+
                         |                                    |
                         |                                    |
                         v                                    v
              +-----------------------+          +-----------------------------+
-             | Static Rule Factory   |          | DSL Rule Loader             |
+             | Static Rules Evaluator|          | Dynamic Rules Evaluator     |
              +-----------------------+          | Redis Cache                 |
-                                                | PostgreSQL                 |
+                                                | Database                    |
                                                 +-------------+--------------+
                                                               |
                                                               |
@@ -62,7 +62,7 @@ The engine supports multiple loan products, configurable factor importance, weig
                                                             |
                                                             v
                                              +------------------------------+
-                                             | Abstract Syntax Tree (AST)   |
+                                             | Rule Object                  |
                                              |                              |
                                              | Expression                   |
                                              | ├── Condition                |
@@ -96,7 +96,7 @@ The engine supports multiple loan products, configurable factor importance, weig
                                                  v
                                  +------------------------------------+
                                  | Comparison Evaluator               |
-                                 | > >= < <= == !=                   |
+                                 | > >= < <= == !=                    |
                                  +----------------+-------------------+
                                                   |
                                                   |
@@ -114,23 +114,22 @@ The engine supports multiple loan products, configurable factor importance, weig
                            | Loan Application Result Service                  |
                            |                                                  |
                            | Aggregate Rule Results                           |
-                           | Group by Factor                                 |
-                           | Apply Configurable Factor Importance            |
-                           | Calculate Final Weighted Score                 |
-                           | Detect Hard Reject                             |
-                           | Generate Final Decision                        |
+                           | Group by Factor                                  |
+                           | Apply Configurable Factor Importance             |
+                           | Calculate Final Weighted Score                   |
+                           | Detect Hard Reject                               |
+                           | Generate Final Decision                          |
                            +----------------------+---------------------------+
                                                   |
                                                   |
                                                   v
                                     +-------------------------------+
-                                    | PostgreSQL                    |
                                     | LoanApplicationResult         |
                                     | RuleResult                    |
                                     +-------------------------------+
 
                +------------------------------------------------------+
-               | Monitoring                                            |
+               | Monitoring                                           |
                | Micrometer → Prometheus → Grafana                    |
                +------------------------------------------------------+
 ---

@@ -35,7 +35,7 @@ public class DynamicRuleLoader implements RuleLoader {
     private final RuleEngineMetrics metrics;
 
     // Cache per loan type : key = "HOME_LOAN", "CAR_LOAN" etc
-    @Cacheable(value = "rules", key = "#loanType.loanType")
+//    @Cacheable(value = "rules", key = "#loanType.loanType")
     @Override
     public List<Rule> loadRules(LoanType loanType) {
         log.info("Loading rules from DB for {}", loanType.getLoanType());
