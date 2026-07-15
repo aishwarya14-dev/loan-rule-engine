@@ -479,13 +479,14 @@ The project contains
                            │
                     Docker Compose
                            │
-      ┌──────────────┬──────────────┬──────────────┬──────────────┐
-      │              │              │              │
-      ▼              ▼              ▼              ▼
- Loan Rule      PostgreSQL       Redis        Prometheus
-   Engine                                          │
-                                                   ▼
-                                               Grafana
+      ┌──────────────┬──────────────
+      │              │             
+      ▼              ▼                         
+ Loan Rule       Prometheus
+   Engine            |
+                     ▼           
+                  Grafana                                 
+                                            
 ```
 
 ---
