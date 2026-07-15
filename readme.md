@@ -1,12 +1,13 @@
 # Loan Rule Engine
 
+## Demo video : https://youtu.be/WXH0x2GU3ps
+## ER Diagram : https://drive.google.com/file/d/1O52Zm6ex7iAo0v926kP1TeE_JT2CEPVZ/view?usp=sharing
+
 ## Overview
 
 Loan Rule Engine is a configurable backend application built using **Java 21**, **Spring Boot**, **ANTLR4**, **PostgreSQL**, **Redis**, **Docker**, **Prometheus**, and **Grafana** for evaluating loan applications through business-defined rules.
-
 Instead of hardcoding eligibility logic, business users can define loan approval rules using a Domain Specific Language (DSL). These rules are parsed into an Abstract Syntax Tree (AST) and evaluated against loan applications using the Composite and Strategy design patterns.
-
-The engine supports multiple loan products, configurable factor importance, weighted scoring, hard rejection rules, rule caching, metrics collection, and extensible evaluation logic.
+The engine supports multiple loan types, configurable factor importance, weighted scoring, hard rejection rules, rule caching, metrics collection, and extensible evaluation logic.
 
 
 
@@ -139,7 +140,7 @@ The engine supports multiple loan products, configurable factor importance, weig
 * DSL-based business rule definition
 * Dynamic rule parsing using ANTLR4
 * Support for simple and composite (AND/OR) rules
-* Dynamic rule storage in PostgreSQL
+* DslRule storage in PostgreSQL
 * Redis-backed rule caching
 * Configurable factor importance per loan type
 * Weighted loan scoring
@@ -206,6 +207,7 @@ Supported data types
 * String
 * Date
 * DateTime
+* NOTE : (Date & DateTime support to be added)
 
 Supported actions
 
@@ -293,12 +295,12 @@ Example factors include
 * Credit Profile
 * Property
 * Banking Relationship
-* Guarantor
+* Debt Profile
 * Compliance
 
 Each loan type defines the business importance of every factor through the `loan_type_factor_config` table.
 
-This allows different loan products to prioritize different evaluation criteria without modifying application code.
+This allows different loan types to prioritize different evaluation criteria without modifying application code.
 
 For example:
 
@@ -309,19 +311,24 @@ For example:
 
 ---
 
-# Dynamic Weight Calculation
+# Factor-Based Weighted Scoring
 
 Unlike traditional rule engines where every rule has a fixed predefined weight, this engine derives scoring dynamically from configurable factor importance.
-
 For every evaluated rule:
 
-1. The rule's associated factor importance is retrieved from the `loan_type_factor_config` table.
-2. The importance values of all evaluated rules are aggregated.
-3. Each rule contributes proportionally according to the aggregate weight of its business factor.
+1. The rule's associated business factor and its importance level are retrieved from the `loan_type_factor_config` table.
+2. The total importance across all evaluated factors is calculated.
+3. Each factor's normalized weight is computed as:
 
-This design allows business administrators to adjust the relative influence of different evaluation factors simply by updating configuration data rather than modifying application code.
+   `Factor Weight = Factor Importance / Total Factor Importance`
 
-The final score is calculated as the weighted sum of individual rule contributions.
+4. If multiple rules belong to the same factor, the factor's normalized weight is distributed equally among those rules.
+   `Per Rule Share = Factor Share/Number of Rules`
+
+5. Each rule contributes its weighted score to the final application score based on its evidence weight and evaluation result.
+
+This design makes factor influence fully configurable. Business administrators can adjust the relative importance of factors such as **Credit Profile**, **Income Profile**, or **Property** by updating configuration data in the database, without modifying application code.
+The final application score is computed as the weighted sum of all individual rule contributions.
 
 ---
 

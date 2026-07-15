@@ -77,8 +77,8 @@ public class LoanApplicationResultService {
                 .sum();
 
         log.info("Sum of factor weights = {}", sum);
-
         log.info("Total Weight = {}", totalWeight);
+
         factorMap.forEach((factor, weight) ->
                 log.info("{} -> {}", factor.getName(), weight));
         return totalWeight;
@@ -93,7 +93,7 @@ public class LoanApplicationResultService {
             // Get the factor associated with the rule result
             Factor factor = ruleResult.getLoanTypeFactorConfig().getFactor();
             // Calculate the weighted score for the rule result based on its factor's weight
-            log.info("factor weight for factor {} with weight {}", factor.getName(),String.valueOf( factorMap.get(factor) / totalWeight));
+            log.info("normalized factor weight for factor {} with weight {}", factor.getName(),String.valueOf( factorMap.get(factor) / totalWeight));
             log.info("rule evaluation score is  {}",ruleResult.getRuleEvaluationScore());
             finalScore +=  ruleResult.getRuleEvaluationScore() * (factorMap.get(factor) / totalWeight);
             log.info("final score on adding weighted rule evaluation score {}",finalScore);
