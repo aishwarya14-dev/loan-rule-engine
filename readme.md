@@ -137,18 +137,20 @@ The engine supports multiple loan types, configurable factor importance, weighte
 
 # Features
 
-* DSL-based business rule definition
+* DSL-based business rule creation
 * Dynamic rule parsing using ANTLR4
 * Support for simple and composite (AND/OR) rules
-* DslRule storage in PostgreSQL
+* PostgreSQL persistence
 * Redis-backed rule caching
-* Configurable factor importance per loan type
+* Configurable business factor importance per loan type
 * Weighted loan scoring
 * Hard reject rules
+* Global Exception Handling
+* CI/CD pipeline
 * Metrics using Micrometer + Prometheus
 * Grafana dashboards
 * Dockerized deployment on EC2 (AWS)
-* JWT secured APIs
+* JWT Authentication & Authorization
 * OpenAPI / Swagger documentation
 
 ---
@@ -193,7 +195,7 @@ IF employmentTenure >= 2 OR annualIncome >= 1200000 THEN approve
 Supported operators
 
 * >
-* > =
+* >=
 * <
 * <=
 * ==
@@ -452,17 +454,167 @@ The project contains
 * Parser tests
 
 ---
+# Deployment
+
+## Deployment Architecture
+
+```text
+                    GitHub Repository
+                           │
+                     Git Push / PR
+                           │
+                           ▼
+                  GitHub Actions CI
+                           │
+          ┌────────────────┴────────────────┐
+          │                                 │
+      Build Project                   Execute Tests
+          │                                 │
+          └────────────────┬────────────────┘
+                           ▼
+                  Build Docker Image
+                           │
+                           ▼
+                    AWS EC2 Instance
+                           │
+                    Docker Compose
+                           │
+      ┌──────────────┬──────────────┬──────────────┬──────────────┐
+      │              │              │              │
+      ▼              ▼              ▼              ▼
+ Loan Rule      PostgreSQL       Redis        Prometheus
+   Engine                                          │
+                                                   ▼
+                                               Grafana
+```
+
+---
+
+## Deployment Stack
+
+| Component             | Technology                        |
+| --------------------- | --------------------------------- |
+| Cloud Platform        | AWS EC2                           |
+| Containerization      | Docker                            |
+| Service Orchestration | Docker Compose                    |
+| CI Pipeline           | GitHub Actions                    |
+| Application           | Spring Boot 3                     |
+| Database              | PostgreSQL                        |
+| Cache                 | Redis                             |
+| Monitoring            | Spring Boot Actuator + Micrometer |
+| Metrics Collection    | Prometheus                        |
+| Visualization         | Grafana                           |
+
+---
+
+## Deployment Steps
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/<your-github-username>/loan-rule-engine.git
+cd loan-rule-engine
+```
+
+### 2. Configure environment variables
+
+Create a `.env` file containing:
+
+```properties
+DB_URL=
+DB_USERNAME=
+DB_PASSWORD=
+JWT_SECRET=
+REDIS_URL=
+```
+
+### 3. Build the application
+
+```bash
+docker compose build
+```
+
+### 4. Start all services
+
+```bash
+docker compose up -d
+```
+
+### 5. Verify running containers
+
+```bash
+docker ps
+```
+
+---
+
+## Application Endpoints
+
+| Service          | URL                                                                |
+| ---------------- |--------------------------------------------------------------------|
+| Loan Rule Engine | `http://3.106.250.230:8080/loan-rule-engine`                       |
+| Swagger UI       | `http://3.106.250.230:8080/loan-rule-engine/swagger-ui/index.html` |
+| Actuator Health  | `http://3.106.250.230:8080/loan-rule-engine/actuator/health`       |
+| Prometheus       | `http://3.106.250.230:9090/loan-rule-engine`                       |
+| Grafana          | `http://3.106.250.230:3000/loan-rule-engine`                       |
+
+---
+
+## Monitoring & Observability
+
+The application exposes operational metrics through **Spring Boot Actuator** and **Micrometer**.
+
+Prometheus periodically scrapes these metrics, while Grafana provides real-time dashboards for monitoring application health and performance.
+
+The monitoring stack tracks:
+
+* Rule evaluation throughput
+* DSL parsing latency
+* Rule evaluation latency
+* JVM heap usage
+* Live thread count
+* HTTP request rate
+* HTTP response latency
+* HTTP 5xx error rate
+* Container health
+
+---
+
+## Continuous Integration
+
+The project uses **GitHub Actions** to automate the build process.
+
+For every push:
+
+* Checkout source code
+* Configure JDK 21
+* Build the project using Maven
+* Execute unit tests
+* Build the Docker image
+
+This ensures every code change is validated before deployment.
+
+---
+
+## Deployment Highlights
+
+* Containerized using Docker
+* Multi-container deployment with Docker Compose
+* Cloud-hosted on AWS EC2
+* Redis-backed rule caching for improved performance
+* Production monitoring with Prometheus and Grafana
+* Health monitoring via Spring Boot Actuator
+* Automated CI pipeline using GitHub Actions
+
+
 
 # Future Enhancements
 
-* Rule versioning
-* Rule audit history
-* Rule simulation mode
-* Explainable decision reports
+* Kubernetes deployment
+* Idempotency
 * Rule conflict detection
-* Business rule management UI
-* Event-driven rule evaluation
-* Machine Learning assisted score calibration
+* Rule versioning
+
 
 ---
 
