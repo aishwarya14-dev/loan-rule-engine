@@ -10,11 +10,13 @@ import com.aishwarya.Finbank.model.expression.Condition;
 import com.aishwarya.Finbank.utility.ComparisonEvaluator;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class RuleEvaluationHelper {
@@ -73,6 +75,7 @@ public class RuleEvaluationHelper {
                 !result && rule.getAction() == Action.REJECT){
             score = rule.getEvidenceWeight();
         }
+        log.info("rule contribution score is  {} " , score);
         return score;
     }
 }
