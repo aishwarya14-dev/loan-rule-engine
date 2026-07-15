@@ -1,6 +1,6 @@
 # Loan Rule Engine
 
-  Demo video : https://youtu.be/WXH0x2GU3ps
+  Demo video : https://youtu.be/WXH0x2GU3ps \
   ER Diagram : https://drive.google.com/file/d/1O52Zm6ex7iAo0v926kP1TeE_JT2CEPVZ/view?usp=sharing
 
 ## Overview
