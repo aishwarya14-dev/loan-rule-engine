@@ -614,6 +614,8 @@ This ensures every code change is validated before deployment.
 * Kubernetes deployment
 * Idempotency
 * Rule conflict detection
+* CoApplicant & Guarantor details validation
+* Refresh Token
 * Rule versioning
 
 
