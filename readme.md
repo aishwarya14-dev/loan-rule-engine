@@ -313,7 +313,7 @@ For example:
 
 ---
 
-# Factor-Based Weighted Scoring
+## Factor-Based Weighted Scoring
 
 Unlike traditional rule engines where every rule has a fixed predefined weight, this engine derives scoring dynamically from configurable factor importance.
 For every evaluated rule:
@@ -334,7 +334,7 @@ The final application score is computed as the weighted sum of all individual ru
 
 ---
 
-# Hard Reject Rules
+## Hard Reject Rules
 
 Rules marked with **HARD_REJECT** immediately reject an application.
 
