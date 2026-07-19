@@ -613,8 +613,18 @@ This ensures every code change is validated before deployment.
 
 * Kubernetes deployment
 * Idempotency
-* Rule conflict detection
+* CoApplicant & Guarantor details validation
+* Refresh Token
 * Rule versioning
+* Event-Driven Microservices
+  To support future production scalability and high concurrent traffic, the next phase of this project involves migrating the current monolithic architecture into decoupled, event-driven microservices.
+
+* **Target Architecture**: Decouple core domains (Auth, Rule Engine) into autonomous services.
+* **Asynchronous Communication**: Integrate an event broker (like Apache Kafka or RabbitMQ) to eliminate blocking HTTP calls.
+* **Scale-on-Demand**: Allow independent horizontal scaling of high-load services during traffic spikes.
+* **Fault Tolerance**: Prevent single points of failure; downstream outages will no longer crash the entire system.
+
+* Rule conflict detection
 
 
 ---
