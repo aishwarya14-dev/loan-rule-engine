@@ -83,5 +83,5 @@ jobs:
             cd ~/loan-rule-engine
             git pull
             docker compose down --remove-orphans
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d
