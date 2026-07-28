@@ -15,12 +15,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class SimpleRuleEvaluationFactory {
 
-    private final LoanFieldAccessorRegistry registry;
     private final RuleMessageGenerator ruleMessageGenerator;
     private final LoanTypeFactorConfigService loanTypeFactorConfigService;
     private final RuleEngineMetrics metrics;
     private final RuleEvaluationHelper ruleEvaluationHelper;
-
 
     public RuleEvaluation buildSimpleRuleEvaluationObject() {
         return new SimpleRuleEvaluation(ruleMessageGenerator,loanTypeFactorConfigService,metrics,ruleEvaluationHelper);

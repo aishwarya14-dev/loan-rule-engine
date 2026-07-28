@@ -3,8 +3,6 @@ import com.aishwarya.Finbank.exceptions.LoanApplicationException;
 import com.aishwarya.Finbank.mapper.CoApplicantMapper;
 import com.aishwarya.Finbank.mapper.GuarantorMapper;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
-import com.aishwarya.Finbank.model.CoApplicant;
-import com.aishwarya.Finbank.model.Guarantor;
 import com.aishwarya.Finbank.model.LoanApplication;
 
 import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationRequestDto;
@@ -13,13 +11,11 @@ import com.aishwarya.Finbank.model.LoanApplicationResult;
 import com.aishwarya.Finbank.repository.CoApplicantRepo;
 import com.aishwarya.Finbank.repository.GuarantorRepo;
 import com.aishwarya.Finbank.repository.LoanRepository;
+import com.aishwarya.Finbank.validator.LoanApplicationValidator;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,12 +31,10 @@ public class LoanService {
     private final CoApplicantMapper coApplicantMapper;
 
     private final RuleEngineMetrics metrics;
-
     private final GuarantorRepo guarantorRepo;
-
     private final CoApplicantRepo coApplicantRepo;
-
     private final LoanVerificationService verificationService;
+    private final LoanApplicationValidator loanApplicationValidator;
 
 
     public LoanApplicationResult acceptLoanApplication(LoanApplicationRequestDto application) {
@@ -58,6 +52,8 @@ public class LoanService {
         log.info("Creating loan application object from DTO: applicantName={}, loanAmount={}", dto.getApplicantName(), dto.getLoanAmount());
         // Convert DTO to Entity
         LoanApplication entity = loanApplicationMapper.toEntity(dto);
+        // validate application
+        loanApplicationValidator.validateLonApplication(entity);
         verificationService.implementVerification(entity);
 
         if (dto.getGuarantors() != null) {

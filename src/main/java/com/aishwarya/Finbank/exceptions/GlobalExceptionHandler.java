@@ -95,7 +95,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("Invalid rule configuration" + " " + ex.getMessage());
+                .body("Invalid rule configuration : " + " " + ex.getMessage());
     }
 
     @ExceptionHandler(RuleEvaluationException.class)
@@ -103,7 +103,7 @@ public class GlobalExceptionHandler {
             RuleEvaluationException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("Error during rule evaluation " + ex.getMessage());
+                .body("Error during rule evaluation : " + ex.getMessage());
     }
 
     @ExceptionHandler(LoanApplicationException.class)
@@ -111,6 +111,6 @@ public class GlobalExceptionHandler {
             LoanApplicationException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("Loan application Error " + ex.getMessage());
+                .body("Loan application Error : " + ex.getMessage());
     }
 }

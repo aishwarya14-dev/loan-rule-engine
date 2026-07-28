@@ -27,15 +27,12 @@ import java.util.List;
 public class DynamicRuleLoader implements RuleLoader {
 
     private final RuleRepository repository;
-
     private final DslRulesParser parser;
-
     private final LoanTypeFactorConfigService loanTypeFactorConfigService;
-
     private final RuleEngineMetrics metrics;
 
     // Cache per loan type : key = "HOME_LOAN", "CAR_LOAN" etc
-    @Cacheable(value = "rules", key = "#loanType.loanType")
+    @Cacheable(value = "rules_v2", key = "#loanType.loanType")
     @Override
     public List<Rule> loadRules(LoanType loanType) {
         log.info("Loading rules from DB for {}", loanType.getLoanType());
@@ -48,6 +45,7 @@ public class DynamicRuleLoader implements RuleLoader {
                             () -> parser.parseDslRule(dslRule.getDslRule())
                     );
                     metrics.incrementDslParseSuccess();
+
                     parsedRule.setEvidenceWeight(dslRule.getEvidenceWeight());
                     parsedRule.setSeverity(dslRule.getRuleSeverity());
                     LoanTypeFactorConfig loanTypeFactorConfig = loanTypeFactorConfigService.getLoanTypeFactorConfig(dslRule.getLoanType().getId(),dslRule.getFactor().getId());
@@ -67,11 +65,12 @@ public class DynamicRuleLoader implements RuleLoader {
         } catch (DataAccessException e) {
             log.error("Failed to fetch rules for loan type: {}", loanType.getLoanType(), e);
         }
+        log.info("Loading rules from DB for loan type personal loan {}", rules);
         return rules;
     }
 
     // Evict only the affected loan type when a new rule is created
-    @CacheEvict(value = "rules", key = "#loanType.loanType")
+    @CacheEvict(value = "rules_v2", key = "#loanType.loanType")
     public void evictByLoanType(LoanType loanType) {
         metrics.incrementCacheEviction();
         log.info("Cache evicted for: {}", loanType.getLoanType());
