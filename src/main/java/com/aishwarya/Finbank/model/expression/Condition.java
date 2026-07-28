@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Condition implements Expression, Serializable {
+public class Condition implements Expression{
     private String field;
     private Operator operator;
     private RuleValue value;

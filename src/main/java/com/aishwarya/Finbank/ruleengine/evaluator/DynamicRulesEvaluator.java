@@ -34,6 +34,18 @@ public class DynamicRulesEvaluator implements RulesEvaluator<LoanApplicationResu
     @Override
     public LoanApplicationResult evaluateRules(LoanApplication application, List<Rule> rules) {
         List<RuleResult> ruleResultList = new ArrayList<>();
+        log.info("Entered evaluateRules()");
+        log.info("rules object class = {}", rules.getClass());
+        log.info("rules size = {}", rules.size());
+
+        for (int i = 0; i < rules.size(); i++) {
+            try {
+                Object first = rules.get(i);
+                log.info("first class = {}", first.getClass());
+            } catch (Exception e) {
+                log.error("Failed reading first element", e);
+            }
+        }
         for (Rule rule : rules) {
             RuleResult ruleResult = null;
             try{
