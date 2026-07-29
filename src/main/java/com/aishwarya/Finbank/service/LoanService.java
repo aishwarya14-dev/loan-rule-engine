@@ -1,7 +1,9 @@
 package com.aishwarya.Finbank.service;
+import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationResponseDto;
 import com.aishwarya.Finbank.exceptions.LoanApplicationException;
 import com.aishwarya.Finbank.mapper.CoApplicantMapper;
 import com.aishwarya.Finbank.mapper.GuarantorMapper;
+import com.aishwarya.Finbank.mapper.LoanApplicationResultMapper;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.LoanApplication;
 
@@ -35,17 +37,17 @@ public class LoanService {
     private final CoApplicantRepo coApplicantRepo;
     private final LoanVerificationService verificationService;
     private final LoanApplicationValidator loanApplicationValidator;
+    private final LoanApplicationResultMapper loanApplicationResultMapper;
 
 
-    public LoanApplicationResult acceptLoanApplication(LoanApplicationRequestDto application) {
+    public LoanApplicationResponseDto acceptLoanApplication(LoanApplicationRequestDto application) {
         // create loan object
         LoanApplication loanApplication = createLoanApplicationObject(application);
         log.info("Evaluating loan application: applicantName={}, loanType={}", loanApplication.getApplicantName(), loanApplication.getLoanType());
         // send for evaluation
         LoanApplicationResult result = ruleEngineService.evaluateLoanApplication(loanApplication);
         log.info("Accepted loan application: applicantName={}, loanType={}", loanApplication.getApplicantName(), loanApplication.getLoanType());
-
-        return result;
+        return createLoanApplicationResponseObject(result);
     }
 
     private LoanApplication createLoanApplicationObject(LoanApplicationRequestDto dto) {
@@ -75,6 +77,10 @@ public class LoanService {
 
         log.info("Loan application saved successfully with id: {}", saved.getId());
         return saved;
+    }
+
+    private LoanApplicationResponseDto createLoanApplicationResponseObject(LoanApplicationResult result){
+        return loanApplicationResultMapper.toResponse(result);
     }
 
 }

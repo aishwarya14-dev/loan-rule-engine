@@ -1,24 +1,28 @@
 package com.aishwarya.Finbank.dto.loanApplication;
-
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoanApplicationResponseDto {
-    private String loanType;
+    private Integer applicationId;
     private String applicantName;
     private String applicantEmail;
     private String applicantContact;
-    private int creditScore;
-    private String remarks;
-    private BigDecimal monthlyIncome;
-    private int existingLoans;
+    private Integer age;
+    private String region;
+
+    private Integer loanTenureMonths;
+    private BigDecimal downPayment;
+    private LocalDateTime approvalDate;
+    private Double interestRate;
+    private String loanType;
     private BigDecimal loanAmount;
-    private double interestRate;
-    private int loanTenureMonths;
+
+    private Double finalScore;
+    private String decision;
 }
