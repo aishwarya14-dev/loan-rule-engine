@@ -109,7 +109,7 @@ public class LoanApplicationResultService {
         loanApplicationResult.setDecision(decision);
 
         loanApplication.updateResult(loanApplicationResult);
-        //save loan application to the db
+        // save loan application and loan application result to the db
         loanRepository.save(loanApplication);
 
         return loanApplicationResult;
