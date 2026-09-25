@@ -1,10 +1,10 @@
 package com.aishwarya.Finbank.service;
+import com.aishwarya.Finbank.enums.ApplicationStatus;
+import com.aishwarya.Finbank.exceptions.DuplicateLoanApplicationException;
 import com.aishwarya.Finbank.exceptions.LoanApplicationException;
 import com.aishwarya.Finbank.mapper.CoApplicantMapper;
 import com.aishwarya.Finbank.mapper.GuarantorMapper;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
-import com.aishwarya.Finbank.model.CoApplicant;
-import com.aishwarya.Finbank.model.Guarantor;
 import com.aishwarya.Finbank.model.LoanApplication;
 
 import com.aishwarya.Finbank.dto.loanApplication.LoanApplicationRequestDto;
@@ -17,9 +17,9 @@ import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Isolation;
+import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -42,10 +42,14 @@ public class LoanService {
 
     private final LoanVerificationService verificationService;
 
+    //self invocation cuz transactional method is being called from non-transactional method in the service
+    private final LoanService loanService;
+
 
     public LoanApplicationResult acceptLoanApplication(LoanApplicationRequestDto application) {
         // create loan object
-        LoanApplication loanApplication = createLoanApplicationObject(application);
+        LoanApplication loanApplication = loanService.createLoanApplicationObject(application);
+
         log.info("Evaluating loan application: applicantName={}, loanType={}", loanApplication.getApplicantName(), loanApplication.getLoanType());
         // send for evaluation
         LoanApplicationResult result = ruleEngineService.evaluateLoanApplication(loanApplication);
@@ -54,10 +58,26 @@ public class LoanService {
         return result;
     }
 
+    @Transactional
     private LoanApplication createLoanApplicationObject(LoanApplicationRequestDto dto) {
         log.info("Creating loan application object from DTO: applicantName={}, loanAmount={}", dto.getApplicantName(), dto.getLoanAmount());
         // Convert DTO to Entity
         LoanApplication entity = loanApplicationMapper.toEntity(dto);
+
+        // lock the row during check, no other thread can read or write the same user+loanType combination
+        Optional<LoanApplication> existing = loanRepository
+                .findByUserIdAndLoanTypeIdAndStatusWithLock(
+                        (long) entity.getUser().getId(),
+                        entity.getLoanType().getId(),
+                        ApplicationStatus.PENDING
+                );
+
+        if (existing.isPresent()) {
+            throw new DuplicateLoanApplicationException(
+                    "A pending application already exists for this loan type"
+            );
+        }
+
         verificationService.implementVerification(entity);
 
         if (dto.getGuarantors() != null) {
