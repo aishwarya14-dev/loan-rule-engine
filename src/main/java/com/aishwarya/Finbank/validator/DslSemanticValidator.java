@@ -2,12 +2,9 @@ package com.aishwarya.Finbank.validator;
 
 import com.aishwarya.Finbank.LoanRulesParser;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
+import com.aishwarya.Finbank.repository.*;
 import com.aishwarya.Finbank.utility.LoanFieldAccessorRegistry;
 import com.aishwarya.Finbank.exceptions.DslValidationException;
-import com.aishwarya.Finbank.repository.EmploymentTypeRepo;
-import com.aishwarya.Finbank.repository.JobTitleRepo;
-import com.aishwarya.Finbank.repository.LoanTypeRepo;
-import com.aishwarya.Finbank.repository.RegionRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,6 +23,9 @@ public class DslSemanticValidator {
     private final JobTitleRepo jobTitleRepository;
     private final LoanTypeRepo loanTypeRepository;
     private final RuleEngineMetrics metrics;
+    private final IndustryRepo industryRepo;
+    private final PropertyTypeRepo propertyTypeRepo;
+    private final LoanPurposeRepo loanPurposeRepo;
 
     public void validate(LoanRulesParser.StatementContext tree) {
         List<String> errors = new ArrayList<>();
@@ -73,6 +73,43 @@ public class DslSemanticValidator {
             metrics.incrementSemanticFailed();
         }
 
+        // string fields cannot have boolean value
+        if(isStringField(field) && isBooleanValue(rawValue)){
+            errors.add("Field '" + field + "' is a String. " );
+            log.error("Invalid value '{}' for String field '{}'", rawValue, field);
+            metrics.incrementSemanticFailed();
+        }
+
+        // boolean fields cannot use numeric operators
+        if(isBooleanField(field) && isNumericOperator(operator)){
+            errors.add("Field '" + field + "' is a Boolean. " +
+                    "Only == and != are supported, got '" + operator + "'");
+            log.error("Invalid operator '{}' for Boolean field '{}'", operator, field);
+            metrics.incrementSemanticFailed();
+        }
+
+        // boolean fields cannot have numeric value
+        if(isBooleanField(field) && isNumericValue(rawValue)){
+            errors.add("Field '" + field + "' is a Boolean. " +
+                    "Only == and != are supported ");
+            log.error("Invalid value '{}' for Boolean field '{}'", rawValue, field);
+            metrics.incrementSemanticFailed();
+        }
+
+        // numeric fields cannot have boolean values
+        if(isNumericField(field) && isBooleanValue(rawValue)){
+            errors.add("Field '" + field + "' is Numeric. " );
+            log.error("Invalid value '{}' for Numeric field '{}'", rawValue, field);
+            metrics.incrementSemanticFailed();
+        }
+
+        // numeric fields cannot have string value
+        if(isNumericField(field) && rawValue.matches("[a-zA-Z]+")){
+            errors.add("Field '" + field + "' is Numeric. ");
+            log.error("Invalid value '{}' for Numeric field '{}'", rawValue, field);
+            metrics.incrementSemanticFailed();
+        }
+
         // string values must exist in DB lookup tables
         if (isStringField(field)) {
             validateLookupValue(field, rawValue, errors);
@@ -111,15 +148,62 @@ public class DslSemanticValidator {
                     metrics.incrementSemanticFailed();
                 }
             }
+            case "industry" -> {
+                if (!industryRepo.existsByName(value)){
+                    errors.add("Invalid industry '" + value);
+                    log.error("Invalid industry '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
+                }
+            }
+            case "propertyType" -> {
+                if (!propertyTypeRepo.existsByName(value)){
+                    errors.add("Invalid property type '" + value);
+                    log.error("Invalid property type '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
+                }
+            }
+            case "loanPurpose" -> {
+                if (!loanPurposeRepo.existsByName(value)){
+                    errors.add("Invalid loan purpose '" + value);
+                    log.error("Invalid loan purpose '{}' in DSL rule", value);
+                    metrics.incrementSemanticFailed();
+                }
+            }
         }
     }
 
     private boolean isStringField(String field) {
         return Set.of("region", "employmentType",
-                "jobTitle", "loanType").contains(field);
+                "jobTitle", "loanType","industry","propertyType","loanPurpose").contains(field);
+    }
+
+    private boolean isBooleanField(String field) {
+        return Set.of("incomeVerified", "incomeTaxReturnAvailable",
+                "salaryAccountWithBank", "probationCompleted", "propertyVerified", "existingCustomer", "hasFixedDeposit","ownsHouse",
+                "guarantorPresent", "kycVerified", "panVerified", "aadhaarVerified", "fraudFlag", "blacklisted"
+                ).contains(field);
+    }
+
+    private boolean isNumericField(String field) {
+        return Set.of("creditScore", "existingLoans",
+                "employmentTenure", "age", "creditHistoryYears", "creditCardUtilization","bankruptcies",
+                "annualIncome", "loanAmount", "monthlyIncome", "interestRate", "loanTenureMonths", "otherMonthlyIncome",
+                "downPayment" , "companyRating", "monthlyEmi", "missedPaymentsLast12Months", "loanDefaults","propertyValue",
+                "propertyAge","averageAccountBalance","residenceYears","totalOutstandingDebt"
+        ).contains(field);
     }
 
     private boolean isNumericOperator(String operator) {
         return Set.of(">", ">=", "<", "<=").contains(operator);
+    }
+
+    private boolean isBooleanValue(String value) {
+        return Boolean.parseBoolean(value);
+    }
+
+    public static boolean isNumericValue(String str) {
+        if (str == null || str.isEmpty())
+            return false;
+        return str.matches("-?\\d+(\\.\\d+)?");
     }
 }

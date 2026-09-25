@@ -1,6 +1,5 @@
 package com.aishwarya.Finbank.utility;
 
-import com.aishwarya.Finbank.service.CustomUserDetails;
 import com.aishwarya.Finbank.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 

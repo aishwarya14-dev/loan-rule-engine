@@ -90,7 +90,7 @@ public class LoanVerificationService {
     }
 
     private void debtToIncomeRatio(LoanApplication application){
-        BigDecimal monthlyIncome = application.getOtherMonthlyIncome();
+        BigDecimal monthlyIncome = application.getMonthlyIncome();
         BigDecimal monthlyEmi = application.getMonthlyEmi();
         if (monthlyIncome == null || monthlyIncome.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("Monthly income must be greater than zero");

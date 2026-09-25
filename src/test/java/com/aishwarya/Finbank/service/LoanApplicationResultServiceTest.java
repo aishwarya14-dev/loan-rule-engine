@@ -25,9 +25,6 @@ class LoanApplicationResultServiceTest {
     private LoanApplicationResultService loanApplicationResultService;
 
     @Mock
-    private LoanApplicationResultRepo loanApplicationResultRepo;
-
-    @Mock
     private RuleEngineMetrics metrics;
 
     @Mock
@@ -42,30 +39,25 @@ class LoanApplicationResultServiceTest {
 
         when(rule1.getRuleEvaluationScore()).thenReturn(0.50);
         when(rule2.getRuleEvaluationScore()).thenReturn(0.30);
-
-        when(loanApplicationResultRepo.save(any(LoanApplicationResult.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
         when(loanRepository.save(any(LoanApplication.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
-
         loanApplicationResultService.calculateAndSaveLoanApplicationResult(
                 List.of(rule1, rule2),
                 application,
                 false
         );
 
-        ArgumentCaptor<LoanApplicationResult> captor =
-                ArgumentCaptor.forClass(LoanApplicationResult.class);
-
-        verify(loanApplicationResultRepo).save(captor.capture());
-        verify(metrics).incrementApproved();
-        verify(loanApplicationResultRepo).save(any(LoanApplicationResult.class));
         verify(loanRepository).save(application);
+        assertNotNull(application.getResult());
 
-        LoanApplicationResult saved = captor.getValue();
+        LoanApplicationResult saved = application.getResult();
+
         assertEquals(0.80, saved.getFinalScore());
         assertEquals(Decision.APPROVE, saved.getDecision());
         assertEquals(application, saved.getApplication());
+
+        verify(metrics).incrementApproved();
+        verify(loanRepository).save(application);
 
     }
 
@@ -100,8 +92,6 @@ class LoanApplicationResultServiceTest {
         when(rule1.getRuleEvaluationScore()).thenReturn(1.0);
         when(rule2.getRuleEvaluationScore()).thenReturn(0.5);
 
-        when(loanApplicationResultRepo.save(any(LoanApplicationResult.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
         when(loanRepository.save(any(LoanApplication.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -117,7 +107,6 @@ class LoanApplicationResultServiceTest {
         assertEquals(Decision.APPROVE, result.getDecision());
 
         verify(metrics).incrementApproved();
-        verify(loanApplicationResultRepo).save(any(LoanApplicationResult.class));
         verify(loanRepository).save(loanApplication);
 
     }

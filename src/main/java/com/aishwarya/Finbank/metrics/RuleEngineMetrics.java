@@ -6,6 +6,8 @@ import io.micrometer.core.instrument.Timer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Supplier;
+
 @Slf4j
 @Component
 public class RuleEngineMetrics {
@@ -39,7 +41,8 @@ public class RuleEngineMetrics {
     private final Timer   dslParseDuration;
 
     public RuleEngineMetrics(MeterRegistry meterRegistry) {
-        this.ruleEvaluationTotal = Counter.builder("rule.evaluation.total")
+        log.info("RuleEngineMetrics initialized");
+        this.ruleEvaluationTotal = Counter.builder("rule.evaluation")
                 .description("Total rule evaluations")
                 .register(meterRegistry);
         this.ruleEvaluationPassed = Counter.builder("rule.evaluation.passed")
@@ -59,7 +62,7 @@ public class RuleEngineMetrics {
                 .register(meterRegistry);
 
         // Rule management
-        this.ruleCreatedTotal = Counter.builder("rule.created.total")
+        this.ruleCreatedTotal = Counter.builder("rule.created")
                 .description("Total DSL rules created")
                 .register(meterRegistry);
 
@@ -132,15 +135,15 @@ public class RuleEngineMetrics {
     public void incrementDslParseFailed()         { dslParseFailed.increment(); }
 
 
-    public void recordEvaluationDuration(Runnable task) {
-        ruleEvaluationDuration.record(task);
+    public <T> T recordEvaluationDuration(Supplier<T> task) {
+        return ruleEvaluationDuration.record(task);
     }
 
-    public void recordApplicationEvaluationDuration(Runnable task) {
-        loanApplicationEvaluationDuration.record(task);
+    public <T> T recordApplicationEvaluationDuration(Supplier<T> task) {
+        return loanApplicationEvaluationDuration.record(task);
     }
 
-    public void recordDslParseDuration(Runnable task) {
-        dslParseDuration.record(task);
+    public <T> T recordDslParseDuration(Supplier<T> task) {
+        return dslParseDuration.record(task);
     }
 }

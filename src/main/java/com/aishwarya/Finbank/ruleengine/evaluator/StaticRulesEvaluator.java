@@ -25,15 +25,10 @@ import java.util.List;
 public class StaticRulesEvaluator implements RulesEvaluator<LoanApplicationResult> {
 
     private final SimpleRuleEvaluationFactory simpleRuleEvaluationFactory;
-
     private final CompositeRuleEvaluationFactory compositeRuleEvaluationFactory;
-
     private final RuleResultService ruleResultService;
-
     private final LoanApplicationResultService loanApplicationResultService;
-
     private final FactorEvaluationResultService factorEvaluationResultService;
-
     private final RuleEngineMetrics metrics;
 
 

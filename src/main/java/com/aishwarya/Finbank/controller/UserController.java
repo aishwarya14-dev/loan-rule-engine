@@ -36,14 +36,15 @@ public class UserController {
     public ResponseEntity<UserResponseDto> register(@Valid @RequestBody User user) {
         log.info("POST /register - username={}, mobile={}", user.getEmail(), user.getPhone());
         UserResponseDto userResponseDto = userService.saveUser(user);
-        return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userResponseDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<String> login(@Valid @RequestBody User user) {
         log.info("POST /login - username={}",  user.getEmail());
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         String jwt = jwtUtil.generateToken(user.getEmail());
-        return new ResponseEntity<>(jwt, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(jwt);
     }
 }

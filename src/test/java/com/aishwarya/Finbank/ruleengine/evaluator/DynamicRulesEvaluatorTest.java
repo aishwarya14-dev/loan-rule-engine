@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
@@ -54,6 +55,11 @@ public class DynamicRulesEvaluatorTest {
         when(rule.getType()).thenReturn(RuleType.SIMPLE);
         when(simpleRuleEvaluationFactory.buildSimpleRuleEvaluationObject()).thenReturn(simpleRuleEvaluationObject);
         when(simpleRuleEvaluationObject.evaluate(application,rule)).thenReturn(ruleResult);
+        when(metrics.recordEvaluationDuration(any()))
+                .thenAnswer(invocation -> {
+                    Supplier<Rule> supplier = invocation.getArgument(0);
+                    return supplier.get();
+                });
 
          dynamicRulesEvaluator.evaluateRules(
                 application,
@@ -85,6 +91,11 @@ public class DynamicRulesEvaluatorTest {
 
         when(compositeRuleEvaluationFactory.buildCompositeRuleEvaluationObject()).thenReturn(compositeRuleEvaluationObject);
         when(compositeRuleEvaluationObject.evaluate(loanApplication,rule)).thenReturn(ruleResult);
+        when(metrics.recordEvaluationDuration(any()))
+                .thenAnswer(invocation -> {
+                    Supplier<Rule> supplier = invocation.getArgument(0);
+                    return supplier.get();
+                });
 
         dynamicRulesEvaluator.evaluateRules(
                 loanApplication,
@@ -113,8 +124,12 @@ public class DynamicRulesEvaluatorTest {
 
         when(ruleEvaluation1.evaluate(application,invalidRule))
                 .thenThrow(new RuntimeException("evaluation exception"));
-
         when(ruleEvaluation2.evaluate(application,validRule)).thenReturn(validResult);
+        when(metrics.recordEvaluationDuration(any()))
+                .thenAnswer(invocation -> {
+                    Supplier<Rule> supplier = invocation.getArgument(0);
+                    return supplier.get();
+                });
 
         dynamicRulesEvaluator.evaluateRules(application,List.of(invalidRule,validRule));
 

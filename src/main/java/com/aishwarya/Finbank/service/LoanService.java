@@ -4,6 +4,7 @@ import com.aishwarya.Finbank.exceptions.DuplicateLoanApplicationException;
 import com.aishwarya.Finbank.exceptions.LoanApplicationException;
 import com.aishwarya.Finbank.mapper.CoApplicantMapper;
 import com.aishwarya.Finbank.mapper.GuarantorMapper;
+import com.aishwarya.Finbank.mapper.LoanApplicationResultMapper;
 import com.aishwarya.Finbank.metrics.RuleEngineMetrics;
 import com.aishwarya.Finbank.model.LoanApplication;
 
@@ -13,6 +14,7 @@ import com.aishwarya.Finbank.model.LoanApplicationResult;
 import com.aishwarya.Finbank.repository.CoApplicantRepo;
 import com.aishwarya.Finbank.repository.GuarantorRepo;
 import com.aishwarya.Finbank.repository.LoanRepository;
+import com.aishwarya.Finbank.validator.LoanApplicationValidator;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,18 +37,17 @@ public class LoanService {
     private final CoApplicantMapper coApplicantMapper;
 
     private final RuleEngineMetrics metrics;
-
     private final GuarantorRepo guarantorRepo;
-
     private final CoApplicantRepo coApplicantRepo;
-
     private final LoanVerificationService verificationService;
+    private final LoanApplicationValidator loanApplicationValidator;
+    private final LoanApplicationResultMapper loanApplicationResultMapper;
 
     //self invocation cuz transactional method is being called from non-transactional method in the service
     private final LoanService loanService;
 
 
-    public LoanApplicationResult acceptLoanApplication(LoanApplicationRequestDto application) {
+    public LoanApplicationResponseDto acceptLoanApplication(LoanApplicationRequestDto application) {
         // create loan object
         LoanApplication loanApplication = loanService.createLoanApplicationObject(application);
 
@@ -54,8 +55,7 @@ public class LoanService {
         // send for evaluation
         LoanApplicationResult result = ruleEngineService.evaluateLoanApplication(loanApplication);
         log.info("Accepted loan application: applicantName={}, loanType={}", loanApplication.getApplicantName(), loanApplication.getLoanType());
-
-        return result;
+        return createLoanApplicationResponseObject(result);
     }
 
     @Transactional
@@ -99,6 +99,10 @@ public class LoanService {
 
         log.info("Loan application saved successfully with id: {}", saved.getId());
         return saved;
+    }
+
+    private LoanApplicationResponseDto createLoanApplicationResponseObject(LoanApplicationResult result){
+        return loanApplicationResultMapper.toResponse(result);
     }
 
 }

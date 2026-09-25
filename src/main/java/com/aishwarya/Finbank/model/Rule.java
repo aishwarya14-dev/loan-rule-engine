@@ -5,11 +5,13 @@ import com.aishwarya.Finbank.enums.RuleSeverity;
 import com.aishwarya.Finbank.enums.RuleType;
 import com.aishwarya.Finbank.model.expression.Expression;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Rule {
     private Expression expression;
     private Action action;

@@ -22,17 +22,17 @@ public final class LoanFieldAccessorRegistry {
         fieldAccessors.put("jobTitle", LoanApplication :: getJobTitle);
         fieldAccessors.put("creditHistoryYears",
                      app -> app.getCreditHistoryYears() != null ?
-                             app.getCreditHistoryYears().intValue()
+                             app.getCreditHistoryYears()
                              : null
                 );
         fieldAccessors.put("creditCardUtilization",
                 app -> app.getCreditCardUtilization() != null ?
-                        app.getCreditCardUtilization().doubleValue()
+                        app.getCreditCardUtilization()
                         : null
                 );
         fieldAccessors.put("bankruptcies",
                 app -> app.getBankruptcies() != null ?
-                        app.getBankruptcies().intValue()
+                        app.getBankruptcies()
                         : null
         );
         fieldAccessors.put("annualIncome",
@@ -51,11 +51,11 @@ public final class LoanFieldAccessorRegistry {
                         : null);
         fieldAccessors.put("interestRate",
                 app -> app.getInterestRate() != null
-                        ? app.getInterestRate().doubleValue()
+                        ? app.getInterestRate()
                         : null);
         fieldAccessors.put("loanTenureMonths",
                 app -> app.getLoanTenureMonths() != null
-                        ? app.getLoanTenureMonths().intValue()
+                        ? app.getLoanTenureMonths()
                         : null);
 
         fieldAccessors.put("otherMonthlyIncome",
@@ -76,24 +76,24 @@ public final class LoanFieldAccessorRegistry {
 
         fieldAccessors.put("bankruptcies",
                 app -> app.getBankruptcies() != null ?
-                        app.getBankruptcies().intValue()
+                        app.getBankruptcies()
                         : null
         );
 
         fieldAccessors.put("incomeVerified",
                 app -> app.getIncomeVerified() != null ?
-                        app.getIncomeVerified().booleanValue()
+                        app.getIncomeVerified()
                         : null
         );
 
         fieldAccessors.put("incomeTaxReturnAvailable",
                 app -> app.getIncomeTaxReturnAvailable() != null ?
-                        app.getIncomeTaxReturnAvailable().booleanValue()
+                        app.getIncomeTaxReturnAvailable()
                         : null
         );
         fieldAccessors.put("salaryAccountWithBank",
                 app -> app.getSalaryAccountWithBank() != null ?
-                        app.getSalaryAccountWithBank().booleanValue()
+                        app.getSalaryAccountWithBank()
                         : null
         );
 
@@ -113,12 +113,12 @@ public final class LoanFieldAccessorRegistry {
 
         fieldAccessors.put("companyRating",
                 app -> app.getCompanyRating() != null
-                        ? app.getCompanyRating().intValue()
+                        ? app.getCompanyRating()
                         : null);
 
         fieldAccessors.put("probationCompleted",
                 app -> app.getProbationCompleted() != null
-                        ? app.getProbationCompleted().booleanValue()
+                        ? app.getProbationCompleted()
                         : null);
 
         fieldAccessors.put("industry",
@@ -127,16 +127,16 @@ public final class LoanFieldAccessorRegistry {
                         : null);
         fieldAccessors.put("monthlyEmi",
                 app -> app.getMonthlyEmi() != null
-                        ? app.getMonthlyEmi().doubleValue()
+                        ? app.getMonthlyEmi()
                         : null);
 
         fieldAccessors.put("debtToIncomeRatio",
                 app -> app.getDebtToIncomeRatio() != null
-                        ? app.getDebtToIncomeRatio().doubleValue()
+                        ? app.getDebtToIncomeRatio()
                         : null);
         fieldAccessors.put("loanDefaults",
                 app -> app.getLoanDefaults() != null
-                        ? app.getLoanDefaults().intValue()
+                        ? app.getLoanDefaults()
                         : null);
         fieldAccessors.put("propertyType",
                 app -> app.getPropertyType() != null
@@ -148,15 +148,15 @@ public final class LoanFieldAccessorRegistry {
                         : null);
         fieldAccessors.put("propertyAge",
                 app -> app.getPropertyAge() != null
-                        ? app.getPropertyAge().intValue()
+                        ? app.getPropertyAge()
                         : null);
         fieldAccessors.put("propertyVerified",
                 app -> app.getPropertyVerified() != null
-                        ? app.getPropertyVerified().booleanValue()
+                        ? app.getPropertyVerified()
                         : null);
         fieldAccessors.put("existingCustomer",
                 app -> app.getExistingCustomer() != null
-                        ? app.getExistingCustomer().booleanValue()
+                        ? app.getExistingCustomer()
                         : null);
 //        fieldAccessors.put("customerSince",
 //                app -> app.getCustomerSince()!= null
@@ -168,19 +168,19 @@ public final class LoanFieldAccessorRegistry {
                         : null);
         fieldAccessors.put("hasFixedDeposit",
                 app -> app.getHasFixedDeposit() != null
-                        ? app.getHasFixedDeposit().booleanValue()
+                        ? app.getHasFixedDeposit()
                         : null);
         fieldAccessors.put("residenceYears",
                 app -> app.getResidenceYears() != null
-                        ? app.getResidenceYears().intValue()
+                        ? app.getResidenceYears()
                         : null);
         fieldAccessors.put("ownsHouse",
                 app -> app.getOwnsHouse() != null
-                        ? app.getOwnsHouse().booleanValue()
+                        ? app.getOwnsHouse()
                         : null);
         fieldAccessors.put("loanToValueRatio",
                 app -> app.getLoanToValueRatio() != null
-                        ? app.getLoanToValueRatio().doubleValue()
+                        ? app.getLoanToValueRatio()
                         : null);
         fieldAccessors.put("guarantorPresent",
                 app -> app.getGuarantorPresent() != null

@@ -1,436 +1,354 @@
 # Loan Rule Engine
 
-A configurable **Loan Underwriting Decision Engine** that enables business users to define loan approval policies using a custom Domain-Specific Language (DSL). Rules are authored in a human-readable format, validated, parsed at runtime using **ANTLR4**, transformed into an **Abstract Syntax Tree (AST)**, and evaluated against loan applications using the **Composite** and **Strategy** design patterns.
+  Demo video : https://youtu.be/WXH0x2GU3ps \
+  ER Diagram : https://drive.google.com/file/d/1O52Zm6ex7iAo0v926kP1TeE_JT2CEPVZ/view?usp=sharing
+  API Documentation : https://docs.google.com/document/d/19iWziEldmC4sZR0S3bbkItXMAxskklDIwZSlZwVl89c/edit?usp=sharing
 
-Unlike traditional rule engines that rely solely on rule priorities, this engine implements a **factor-based conflict resolution strategy**. Rules are grouped into business factors such as Credit Score, Income, Employment, and Debt, each with configurable importance. Matched rules contribute evidence towards factor scores, which are normalized to produce an explainable final decision while supporting severity-based overrides for non-negotiable business rules.
+## Overview
+
+Loan Rule Engine is a configurable backend application built using **Java 21**, **Spring Boot**, **ANTLR4**, **PostgreSQL**, **Redis**, **Docker**, **Prometheus**, and **Grafana** for evaluating loan applications through business-defined rules.
+Instead of hardcoding eligibility logic, business users can define loan approval rules using a Domain Specific Language (DSL). These rules are parsed into an Abstract Syntax Tree (AST) and evaluated against loan applications using the Composite and Strategy design patterns.
+The engine supports multiple loan types, configurable factor importance, weighted scoring, hard rejection rules, rule caching, metrics collection, and extensible evaluation logic.
+
+
+
+                                    +--------------------+
+                                    |      Client        |
+                                    |  REST / Swagger UI |
+                                    +---------+----------+
+                                              |
+                                              |
+                                              v
+                             +-------------------------------+
+                             |        REST Controllers       |
+                             +---------------+---------------+
+                                             |
+                                             |
+                                             v
+                          +---------------------------------------+
+                          | Loan Application Service              |
+                          | - Validate Request                    |
+                          | - Map DTO → Entity                    |
+                          | - Mock Verification                   |
+                          | - Persist Loan Application            |
+                          +----------------+----------------------+
+                                           |
+                                           |
+                                           v
+                        +--------------------------------------------+
+                        |         Rule Engine Service                |
+                        +----------------+---------------------------+
+                                         |
+                       +-----------------+-------------------+
+                       |                                     |
+                       v                                     v
+          +----------------------------+       +-----------------------------+
+          | Static Rule Loader         |       |     Dynamic Rule Loaader    |
+          | JSON Rules                 |       |     DSL Rules               |
+          +-------------+--------------+       +-------------+---------------+
+                        |                                    |
+                        |                                    |
+                        v                                    v
+             +-----------------------+          +-----------------------------+
+             | Static Rules Evaluator|          | Dynamic Rules Evaluator     |
+             +-----------------------+          | Redis Cache                 |
+                                                | Database                    |
+                                                +-------------+--------------+
+                                                              |
+                                                              |
+                                                              v
+                                            +-------------------------------+
+                                            | ANTLR4 DSL Parser             |
+                                            | Lexer + Parser + Visitor      |
+                                            +---------------+---------------+
+                                                            |
+                                                            v
+                                             +------------------------------+
+                                             | Rule Object                  |
+                                             |                              |
+                                             | Expression                   |
+                                             | ├── Condition                |
+                                             | ├── AndExpression            |
+                                             | └── OrExpression             |
+                                             +---------------+--------------+
+                                                             |
+                                                             |
+                                                             v
+                                   +----------------------------------------------+
+                                   | Rule Evaluation Factory                      |
+                                   +----------------+-----------------------------+
+                                                    |
+                           +------------------------+------------------------+
+                           |                                                 |
+                           v                                                 v
+             +----------------------------+               +------------------------------+
+             | Simple Rule Evaluation     |               | Composite Rule Evaluation    |
+             | Single Condition           |               | Recursive AND / OR           |
+             +-------------+--------------+               +--------------+---------------+
+                           |                                             |
+                           +-------------------+-------------------------+
+                                               |
+                                               v
+                          +-----------------------------------------------+
+                          | Loan Field Accessor Registry                  |
+                          | Field → Getter Function Mapping               |
+                          +----------------------+------------------------+
+                                                 |
+                                                 |
+                                                 v
+                                 +------------------------------------+
+                                 | Comparison Evaluator               |
+                                 | > >= < <= == !=                    |
+                                 +----------------+-------------------+
+                                                  |
+                                                  |
+                                                  v
+                                    +-------------------------------+
+                                    | RuleResult                    |
+                                    | Passed / Failed               |
+                                    | Score Contribution            |
+                                    | LoanTypeFactorConfig          |
+                                    +---------------+---------------+
+                                                    |
+                                                    |
+                                                    v
+                           +--------------------------------------------------+
+                           | Loan Application Result Service                  |
+                           |                                                  |
+                           | Aggregate Rule Results                           |
+                           | Group by Factor                                  |
+                           | Apply Configurable Factor Importance             |
+                           | Calculate Final Weighted Score                   |
+                           | Detect Hard Reject                               |
+                           | Generate Final Decision                          |
+                           +----------------------+---------------------------+
+                                                  |
+                                                  |
+                                                  v
+                                    +-------------------------------+
+                                    | LoanApplicationResult         |
+                                    | RuleResult                    |
+                                    +-------------------------------+
+
+               +------------------------------------------------------+
+               | Monitoring                                           |
+               | Micrometer → Prometheus → Grafana                    |
+               +------------------------------------------------------+
+---
+
+# Features
+
+* DSL-based business rule creation
+* Dynamic rule parsing using ANTLR4
+* Support for simple and composite (AND/OR) rules
+* PostgreSQL persistence
+* Redis-backed rule caching
+* Configurable business factor importance per loan type
+* Weighted loan scoring
+* Hard reject rules
+* Global Exception Handling
+* CI/CD pipeline
+* Metrics using Micrometer + Prometheus
+* Grafana dashboards
+* Dockerized deployment on EC2 (AWS)
+* JWT Authentication & Authorization
+* OpenAPI / Swagger documentation
 
 ---
 
-# Table of Contents
+# Tech Stack
 
-* Overview
-* Key Features
-* System Architecture
-* Rule Authoring using DSL
-* Rule Evaluation Pipeline
-* Conflict Resolution & Decision Strategy
-* Domain Model
-* DSL Grammar
-* Validation Pipeline
-* Rule Sources
-* Design Patterns
-* Duplicate & Idempotency Handling
-* Monitoring
-* Getting Started
-* API Reference
-* Tech Stack
-* Future Enhancements
-
----
-
-# Overview
-
-Loan Rule Engine provides a configurable platform for automating loan underwriting decisions.
-
-Business users define eligibility policies using a custom DSL without modifying application code. Rules are validated, stored as DSL strings, parsed using ANTLR4 at runtime, and evaluated against incoming loan applications.
-
-The engine separates **rule authoring**, **rule evaluation**, and **decision making**, enabling different loan products to have independent underwriting policies while reusing the same evaluation infrastructure.
-
-Unlike traditional rule engines where conflicting APPROVE and REJECT rules compete based on priority, this engine evaluates business evidence using configurable business factors and produces transparent, explainable decisions.
+* Java 21
+* Spring Boot
+* Spring Security
+* Spring Data JPA
+* PostgreSQL
+* Redis
+* ANTLR4
+* Docker & Docker Compose
+* Prometheus
+* Grafana
+* Micrometer
+* Flyway
+* MapStruct
+* Lombok
+* JUnit 5
+* Mockito
 
 ---
 
-# Key Features
+# Rule Definition
 
-* Custom DSL for business rule authoring
-* Runtime parsing using ANTLR4
-* Recursive AST evaluation using Composite Pattern
-* Strategy-based evaluation engine
-* Configurable Loan Types
-* Configurable Business Factors
-* Factor Importance based scoring
-* Rule Strength based contribution
-* Derived Factors for composite business logic
-* Factor-based conflict resolution
-* Severity-based rule overrides
-* Multi-layer rule validation
-* Duplicate rule detection
-* Metrics using Micrometer, Prometheus and Grafana
-* Clean domain model independent of parsing framework
+Business users create rules using a simple DSL.
 
+Example:
 
+```text
+IF creditScore >= 750 THEN approve
 
----
+IF creditScore >= 700 AND monthlyIncome >= 100000 THEN approve
 
-# System Architecture
+IF blacklisted == true THEN reject
 
+IF employmentTenure >= 2 OR annualIncome >= 1200000 THEN approve
 ```
-                     Rule Creation
 
-Business User
-      │
-      ▼
-Custom DSL
-      │
-      ▼
-Validation Pipeline
-      │
-      ▼
-Store DSL String
-      │
-      ▼
-────────────────────────────────────────────
+Supported operators
 
-                 Loan Evaluation
+* >
+* >=
+* <
+* <=
+* ==
+* !=
 
-Loan Application
-      │
-      ▼
-Load Rules
-      │
-      ▼
-ANTLR4 Parser
-      │
-      ▼
-Abstract Syntax Tree
-      │
-      ▼
-Rule Evaluation
-      │
-      ▼
-Matched Rule Results
-      │
-      ▼
-Business Factor Aggregation
-      │
-      ▼
-Conflict Resolution
-      │
-      ▼
-Normalized Score
-      │
-      ▼
-Severity Overrides
-      │
-      ▼
-APPROVE / REVIEW / REJECT
-```
+Supported data types
+
+* Integer
+* Decimal
+* Boolean
+* String
+* Date
+* DateTime
+* NOTE : (Date & DateTime support to be added)
+
+Supported actions
+
+* approve
+* reject
+* review
 
 ---
 
-# Rule Authoring using DSL
+# Rule Processing Pipeline
 
-Business users define rules in a human-readable syntax.
-
-```
-IF creditScore > 700 AND monthlyIncome >= 50000 THEN approve
-
-IF creditScore < 600 AND existingLoans > 3 THEN reject
-
-IF employmentType == 'SALARIED' OR employmentTenure > 5 THEN review
-```
-
-The grammar is defined once using ANTLR.
-
-ANTLR generates the lexer and parser automatically.
-
-The application uses a Visitor implementation to convert the generated parse tree into domain objects independent of ANTLR.
+1. Rule is stored in the database.
+2. ANTLR parses the DSL.
+3. Parser builds an Abstract Syntax Tree.
+4. Dynamic rules are cached in Redis.
+5. Incoming loan applications are evaluated against every rule.
+6. Each rule produces a RuleResult.
+7. Rule results are aggregated into a final application score.
+8. Final recommendation is generated.
 
 ---
 
-# Rule Evaluation Pipeline
+# Rule Evaluation
 
-```
-Loan Application
-       │
-       ▼
-Fetch DSL Rules
-       │
-       ▼
-ANTLR Parser
-       │
-       ▼
-Expression Tree (AST)
-       │
-       ▼
-RuleEvaluation Strategy
-       │
-       ▼
-RuleResult
-       │
-       ▼
-Business Factor Aggregation
-       │
-       ▼
-Normalized Score
-       │
-       ▼
-Final Decision
-```
+The engine supports two categories of rules.
 
----
+## Simple Rules
 
-# Conflict Resolution & Decision Strategy
-
-Traditional rule engines resolve conflicts using rule priorities. As the number of rules grows, priority management becomes difficult and decisions become harder to explain.
-
-This project instead adopts a Factor-Based Scoring Model combined with Severity-Based Overrides**.
-
-## Business Factors
-
-Rules are grouped into configurable business factors.
+Rules containing a single condition.
 
 Example
 
-| Factor              | Importance |
-| ------------------- | ---------- |
-| Credit Score        | Critical   |
-| Income              | High       |
-| Employment          | Medium     |
-| Debt                | Critical   |
-| Property Value      | High       |
-| Financial Stability | Critical   |
-
-Each loan type can define its own factor configuration.
-
----
-
-## Rule Strength
-
-Each rule contributes evidence towards its factor ranging between 0.0 to 1.0.
-
+```text
+IF creditScore >= 750 THEN approve
 ```
-VERY_STRONG = 1
+----
+## ANTLR Parsing Pipleline
 
-STRONG = 0.75
-
-MEDIUM = 0.50
-
-WEAK = 0.25
-```
-
-Matched rules contribute only within their assigned factor.
-
-If multiple rules match inside the same factor, only the strongest matched rule contributes towards the factor score.
-
-This prevents duplicate scoring.
+DSL Rule
+↓
+Lexer
+↓
+Parser
+↓
+AST
+↓
+Visitor
+↓
+Rule Object
 
 ---
 
 ## Composite Rules
 
-Composite rules spanning multiple business dimensions are modeled as derived business factors.
+Rules containing AND / OR operators.
 
 Example
 
-```
-creditScore > 700
-AND
-monthlyIncome >= 50000
-AND
-employmentType == 'SALARIED'
+```text
+IF creditScore >= 700
+AND monthlyIncome >= 100000
+THEN approve
 ```
 
-belongs to
+or
 
+```text
+IF annualIncome >= 1200000
+OR employmentTenure >= 5
+THEN approve
 ```
-FINANCIAL_STABILITY
-```
 
-rather than contributing independently to Credit Score, Income and Employment.
-
-This avoids double counting and improves explainability.
+Composite expressions are recursively evaluated until every leaf condition has been evaluated.
 
 ---
 
-## Rule Severity
+# Configurable Factor-Based Scoring
 
-Severity determines whether a rule participates in scoring or overrides the scoring process.
+Every rule belongs to exactly one business factor.
 
-```
-HARD_REJECT
+Example factors include
 
-NORMAL
-```
+* Income Profile
+* Employment Profile
+* Credit Profile
+* Property
+* Banking Relationship
+* Debt Profile
+* Compliance
 
-Examples of Hard Reject rules include:
+Each loan type defines the business importance of every factor through the `loan_type_factor_config` table.
 
-* Blacklisted customer
-* Fraud detected
-* Sanctioned customer
-* Invalid documentation
+This allows different loan types to prioritize different evaluation criteria without modifying application code.
 
-If any Hard Reject rule matches, evaluation terminates immediately.
+For example:
 
-Review Required rules override automatic approval but still allow scoring to complete.
-
----
-
-## Final Decision
-
-After factor scores are aggregated, the overall score is normalized.
-
-```
-Score ≥ 0.80
-
-APPROVE
-```
-
-```
-Score 0.50–0.75
-
-REVIEW
-```
-
-```
-Score < 0.50
-
-REJECT
-```
-
-Severity overrides are then applied before returning the final decision.
+| Loan Type     | Credit Profile | Income Profile | Property |
+| ------------- | -------------: | -------------: | -------: |
+| Home Loan     |              4 |              5 |        5 |
+| Personal Loan |              5 |              3 |        1 |
 
 ---
 
-# Domain Model
+## Factor-Based Weighted Scoring
 
-```
-LoanType
-      │
-      ▼
-LoanTypeFactorConfig
-      │
-      ▼
-Factor
-      │
-      ▼
-Rule
-```
+Unlike traditional rule engines where every rule has a fixed predefined weight, this engine derives scoring dynamically from configurable factor importance.
+For every evaluated rule:
 
-## LoanType
+1. The rule's associated business factor and its importance level are retrieved from the `loan_type_factor_config` table.
+2. The total importance across all evaluated factors is calculated.
+3. Each factor's normalized weight is computed as:
 
-Represents a configurable loan product.
+   `Factor Weight = Factor Importance / Total Factor Importance`
 
-Examples
+4. If multiple rules belong to the same factor, the factor's normalized weight is distributed equally among those rules.
+   `Per Rule Share = Factor Share/Number of Rules`
 
-* Personal Loan
-* Home Loan
-* Education Loan
+5. Each rule contributes its weighted score to the final application score based on its evidence weight and evaluation result.
+
+This design makes factor influence fully configurable. Business administrators can adjust the relative importance of factors such as **Credit Profile**, **Income Profile**, or **Property** by updating configuration data in the database, without modifying application code.
+The final application score is computed as the weighted sum of all individual rule contributions.
 
 ---
 
-## Factor
+## Hard Reject Rules
 
-Represents a business dimension used for underwriting.
+Rules marked with **HARD_REJECT** immediately reject an application.
 
-Examples
+Example
 
-* Credit Score
-* Income
-* Employment
-* Debt
-* Property Value
-* LTV Ratio
-* Financial Stability
-
----
-
-## LoanTypeFactorConfig
-
-Associates a factor with a loan type and defines its business importance.
-
-Different loan types may assign different importance levels to the same factor.
-
----
-
-## Rule
-
-Each rule belongs to one business factor.
-
-Rules define:
-
-* DSL Expression
-* Action
-* Rule Strength
-* Rule Severity
-
----
-
-# DSL Grammar
-
-```
-statement
-
-    : IF expression THEN action
-
-expression
-
-    : expression OR expression
-    | expression AND expression
-    | '(' expression ')'
-    | condition
-
-condition
-
-    : FIELD operator VALUE
-
-operator
-
-    : > | >= | < | <= | == | !=
-
-action
-
-    : approve
-    | reject
-    | review
+```text
+IF blacklisted == true THEN reject
 ```
 
----
+When a Hard Reject rule evaluates to true:
 
-# Validation Pipeline
-
-Every rule passes through three validation stages.
-
-```
-Rule Submission
-        │
-        ▼
-Syntax Validation
-        │
-        ▼
-Semantic Validation
-        │
-        ▼
-Duplicate Detection
-        │
-        ▼
-Persist Rule
-```
-
-Validation includes
-
-* Lexer errors
-* Parser errors
-* Unknown fields
-* Invalid operators
-* Invalid lookup values
-* Duplicate normalized rules
-
----
-
-# Rule Sources
-
-The engine supports multiple rule sources.
-
-## DSL Rules
-
-Business-authored DSL rules stored in PostgreSQL as a primary source of rules loan application is evaluated against.
-
-## Static JSON Rules
-
-Optional baseline rules loaded using Jackson acting as a fallback.
-
-Both sources produce the same domain model before evaluation.
+* remaining score becomes zero
+* application is immediately rejected
 
 ---
 
@@ -438,187 +356,282 @@ Both sources produce the same domain model before evaluation.
 
 ## Composite Pattern
 
-Represents arbitrarily nested AND/OR expressions as recursive trees.
+Used to represent nested rule expressions.
 
----
-
-## Visitor Pattern
-
-Separates ANTLR parse tree traversal from domain model construction.
+```
+Expression
+│
+├── Condition
+├── AndExpression
+└── OrExpression
+```
 
 ---
 
 ## Strategy Pattern
 
-Provides interchangeable rule evaluation strategies.
+Different evaluation strategies are used for:
+
+* Simple rules
+* Composite rules
+
+---
+
+## Factory Pattern
+
+Factories create appropriate evaluation objects depending on rule type.
 
 ---
 
 ## Registry Pattern
 
-FieldAccessorRegistry decouples DSL field names from LoanApplication object access.
+Loan application fields are mapped dynamically using a registry instead of reflection.
 
 ---
 
-## Open/Closed Principle
-
-The engine can be extended with new
-
-* expression types
-* fields
-* actions
-* factors
-
-without modifying existing evaluation logic.
-
----
-
-# Duplicate & Idempotency Handling
-
-Three layers prevent duplicate processing.
-
-1. Idempotency Key
-
-Protects against client retries.
-
-2. Active Application Validation
-
-Prevents multiple pending applications for the same applicant and loan type.
-
-3. Database Constraints
-
-Guarantees consistency under concurrent requests.
-
----
-
-## Deployment
-
-The application is deployed on **AWS EC2** using **Docker** and **GitHub Actions**.
-
-### Deployment Pipeline
+# Architecture
 
 ```
-Developer
-    │
-git push
-    │
-    ▼
-GitHub Actions
-    │
-    ├── Run Tests
-    ├── Build Docker Image
-    ├── Push Image to Docker Hub
-    └── Deploy to AWS EC2 via SSH
-             │
-             ├── git pull
-             ├── docker-compose pull
-             └── docker-compose up -d
+Client
+   │
+   ▼
+REST Controller
+   │
+   ▼
+Loan Service
+   │
+   ▼
+Rule Engine
+   │
+   ├── Static Rule Evaluator
+   └── Dynamic Rule Evaluator
+           │
+           ▼
+Composite Evaluation
+           │
+           ▼
+Rule Results
+           │
+           ▼
+Loan Application Result
 ```
 
-### Services
-
-- Spring Boot Application
-- Docker
-- GitHub Actions CI/CD
-- Prometheus
-- Grafana
-- Neon PostgreSQL
+---
 
 # Monitoring
 
 Application metrics are exported using Micrometer.
 
-Supported dashboards include
+Collected metrics include
 
-* Rule evaluations
+* Total rules evaluated
+* Passed evaluations
+* Failed evaluations
+* DSL parsing duration
 * Rule evaluation duration
-* Rules created
-* Passed vs failed evaluations
+* HTTP metrics
+* JVM metrics
 
-Prometheus collects metrics while Grafana visualizes them.
+Metrics are scraped by Prometheus and visualized through Grafana dashboards.
 
 ---
 
-# Getting Started
+# Security
 
-Prerequisites
+* JWT Authentication
+* Stateless session management
+* Protected APIs
+* Role-based access support
 
-* Java 17
-* Maven
-* PostgreSQL
-* Docker
-* Docker Compose
+---
 
-Run
+# Testing
+
+The project contains
+
+* Unit Tests
+* Mockito-based service tests
+* Rule evaluation tests
+* Parser tests
+
+---
+# Deployment
+
+## Deployment Architecture
+
+```text
+                    GitHub Repository
+                           │
+                     Git Push / PR
+                           │
+                           ▼
+                  GitHub Actions CI
+                           │
+          ┌────────────────┴────────────────┐
+          │                                 │
+      Build Project                   Execute Tests
+          │                                 │
+          └────────────────┬────────────────┘
+                           ▼
+                  Build Docker Image
+                           │
+                           ▼
+                    AWS EC2 Instance
+                           │
+                    Docker Compose
+                           │
+      ┌──────────────┬──────────────
+      │              │             
+      ▼              ▼                         
+ Loan Rule       Prometheus
+   Engine            |
+                     ▼           
+                  Grafana                                 
+                                            
+```
+
+---
+
+## Deployment Stack
+
+| Component             | Technology                        |
+| --------------------- | --------------------------------- |
+| Cloud Platform        | AWS EC2                           |
+| Containerization      | Docker                            |
+| Service Orchestration | Docker Compose                    |
+| CI Pipeline           | GitHub Actions                    |
+| Application           | Spring Boot 3                     |
+| Database              | PostgreSQL                        |
+| Cache                 | Redis                             |
+| Monitoring            | Spring Boot Actuator + Micrometer |
+| Metrics Collection    | Prometheus                        |
+| Visualization         | Grafana                           |
+
+---
+
+## Deployment Steps
+
+### 1. Clone the repository
 
 ```bash
-mvn clean install
+git clone https://github.com/<your-github-username>/loan-rule-engine.git
+cd loan-rule-engine
+```
 
-docker-compose up -d
+### 2. Configure environment variables
 
-mvn spring-boot:run
+Create a `.env` file containing:
+
+```properties
+DB_URL=
+DB_USERNAME=
+DB_PASSWORD=
+JWT_SECRET=
+REDIS_URL=
+```
+
+### 3. Build the application
+
+```bash
+docker compose build
+```
+
+### 4. Start all services
+
+```bash
+docker compose up -d
+```
+
+### 5. Verify running containers
+
+```bash
+docker ps
 ```
 
 ---
 
-# API Reference
+## Application Endpoints
 
-Typical endpoints include
-
-```
-POST /rule-engine/loan/loan-applications
-
-POST /rule-engine/
-
-POST /rule-engine/rules/dsl
-
-POST /rule-engine/user/register
-
-POST /rule-engine/user/login
-```
+| Service          | URL                                                                |
+| ---------------- |--------------------------------------------------------------------|
+| Loan Rule Engine | `http://3.106.250.230:8080/loan-rule-engine`                       |
+| Swagger UI       | `http://3.106.250.230:8080/loan-rule-engine/swagger-ui/index.html` |
+| Actuator Health  | `http://3.106.250.230:8080/loan-rule-engine/actuator/health`       |
+| Prometheus       | `http://3.106.250.230:9090/loan-rule-engine`                       |
+| Grafana          | `http://3.106.250.230:3000/loan-rule-engine`                       |
 
 ---
 
-# Tech Stack
+## Monitoring & Observability
 
-| Technology      | Purpose                         |
-|-----------------| ------------------------------- |
-| Java 21         | Core language                   |
-| Spring Boot 3   | Backend framework               |
-| Spring Data JPA | Persistence                     |
-| PostgreSQL      | Database                        |
-| ANTLR4          | DSL parsing                     |
-| Jackson         | Static rule deserialization     |
-| Micrometer      | Metrics                         |
-| Prometheus      | Metrics collection              |
-| Grafana         | Monitoring dashboards           |
-| Redis           | Caching and idempotency support |
-| Docker Compose  | Local infrastructure            |
-| Maven           | Build tool                      |
+The application exposes operational metrics through **Spring Boot Actuator** and **Micrometer**.
+
+Prometheus periodically scrapes these metrics, while Grafana provides real-time dashboards for monitoring application health and performance.
+
+The monitoring stack tracks:
+
+* Rule evaluation throughput
+* DSL parsing latency
+* Rule evaluation latency
+* JVM heap usage
+* Live thread count
+* HTTP request rate
+* HTTP response latency
+* HTTP 5xx error rate
+* Container health
 
 ---
 
-# Future Enhancements (Work in Progress)
+## Continuous Integration
 
+The project uses **GitHub Actions** to automate the build process.
+
+For every push:
+
+* Checkout source code
+* Configure JDK 21
+* Build the project using Maven
+* Execute unit tests
+* Build the Docker image
+
+This ensures every code change is validated before deployment.
+
+---
+
+## Deployment Highlights
+
+* Containerized using Docker
+* Multi-container deployment with Docker Compose
+* Cloud-hosted on AWS EC2
+* Redis-backed rule caching for improved performance
+* Production monitoring with Prometheus and Grafana
+* Health monitoring via Spring Boot Actuator
+* Automated CI pipeline using GitHub Actions
+
+
+
+# Future Enhancements
+
+* Kubernetes deployment
+* Idempotency
+* CoApplicant & Guarantor details validation
+* Refresh Token
 * Rule versioning
-* Role based access control
-* Rule execution audit trail
-* Swagger Integration
+* Event-Driven Microservices
+  To support future production scalability and high concurrent traffic, the next phase of this project involves migrating the current monolithic architecture into decoupled, event-driven microservices.
 
+* **Target Architecture**: Decouple core domains (Auth, Rule Engine) into autonomous services.
+* **Asynchronous Communication**: Integrate an event broker (like Apache Kafka or RabbitMQ) to eliminate blocking HTTP calls.
+* **Scale-on-Demand**: Allow independent horizontal scaling of high-load services during traffic spikes.
+* **Fault Tolerance**: Prevent single points of failure; downstream outages will no longer crash the entire system.
 
-## Live Demo
+* Rule conflict detection
 
-The application is deployed on AWS EC2.
-
-| Service | URL                                                                  |
-|---------|----------------------------------------------------------------------|
-| API | `http://3.106.250.230:8080/loan-rule-engine`                         |
-| Health Check | `http://3.106.250.230:8080/loan-rule-engine/actuator/health`       |
-| Prometheus | `http://3.106.250.230:9090`                                        |
-| Grafana | `http://3.106.250.230:3000`                                        |
 
 ---
 
-## Why This Project?
+# Author
 
-The objective of this project is to demonstrate how a production-grade decision engine can be built using clean architecture and extensible design principles. It combines parsing, validation, domain modeling, configurable business rules, conflict resolution, observability, and explainable decision making into a reusable underwriting platform. Rather than implementing a simple rule evaluator, the project focuses on solving real-world challenges such as rule maintainability, business configurability, conflict resolution, and scalability that are commonly encountered in enterprise lending systems.
+**Aishwarya Mehrotra**
+
+Backend Engineer | Java | Spring Boot | Rule Engine | System Design

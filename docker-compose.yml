@@ -1,7 +1,10 @@
 
 services:
 
-  app:
+  loan-rule-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: aishwaryamehrotra/loan-rule-engine:latest
     container_name: loan-rule-engine
     restart: unless-stopped
@@ -33,7 +36,7 @@ services:
     networks:
       - monitoring
     depends_on:
-      - app
+      - loan-rule-engine
 
   grafana:
     image: grafana/grafana:12.1.1

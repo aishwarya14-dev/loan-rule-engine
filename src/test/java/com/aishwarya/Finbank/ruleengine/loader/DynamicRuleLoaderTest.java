@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,6 +80,12 @@ public class DynamicRuleLoaderTest {
     void shouldLoadAndEnrichRulesSuccessfully() {
         when(ruleRepository.findByLoanTypeLoanType("HOME_LOAN"))
                 .thenReturn(List.of(dslRule1, dslRule2));
+
+        when(metrics.recordDslParseDuration(any()))
+                .thenAnswer(invocation -> {
+                    Supplier<Rule> supplier = invocation.getArgument(0);
+                    return supplier.get();
+                });
 
         when(dslRulesParser.parseDslRule(dslRule1.getDslRule()))
                 .thenReturn(rule1);
@@ -150,6 +157,11 @@ public class DynamicRuleLoaderTest {
 
         when(dslRulesParser.parseDslRule(dslRule2.getDslRule()))
                 .thenReturn(rule2);
+        when(metrics.recordDslParseDuration(any()))
+                .thenAnswer(invocation -> {
+                    Supplier<Rule> supplier = invocation.getArgument(0);
+                    return supplier.get();
+                });
 
         LoanType loanType = new LoanType();
         loanType.setId(1L);
@@ -195,6 +207,11 @@ public class DynamicRuleLoaderTest {
 
         when(dslRulesParser.parseDslRule(any()))
                 .thenThrow(new RuntimeException("Parse failed"));
+        when(metrics.recordDslParseDuration(any()))
+                .thenAnswer(invocation -> {
+                    Supplier<Rule> supplier = invocation.getArgument(0);
+                    return supplier.get();
+                });
 
         // when
         List<Rule> result = dynamicRuleLoader.loadRules(homeLoanType);

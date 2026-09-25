@@ -5,14 +5,11 @@ import com.aishwarya.Finbank.model.DslRule;
 import com.aishwarya.Finbank.model.LoanType;
 import com.aishwarya.Finbank.model.LoanTypeFactorConfig;
 import com.aishwarya.Finbank.model.Rule;
-import com.aishwarya.Finbank.repository.LoanTypeFactorConfigRepo;
 import com.aishwarya.Finbank.repository.RuleRepository;
 import com.aishwarya.Finbank.ruleengine.parser.DslRulesParser;
 import com.aishwarya.Finbank.service.LoanTypeFactorConfigService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
@@ -33,11 +30,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class DynamicRuleLoader implements RuleLoader {
 
     private final RuleRepository repository;
-
     private final DslRulesParser parser;
-
     private final LoanTypeFactorConfigService loanTypeFactorConfigService;
-
     private final RuleEngineMetrics metrics;
 
     // locking mechanism to prevent cache evict while another request thread is reading rules for a loan type
@@ -118,7 +112,7 @@ public class DynamicRuleLoader implements RuleLoader {
     }
 
     // Evict only the affected loan type when a new rule is created
-    @CacheEvict(value = "rules", allEntries = true)
+    @CacheEvict(value = "rules_v2", key = "#loanType.loanType")
     public void evictByLoanType(LoanType loanType) {
         ReadWriteLock lock = getLockForLoanType(loanType.getLoanType());
         lock.writeLock().lock();

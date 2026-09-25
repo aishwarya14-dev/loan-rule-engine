@@ -19,10 +19,10 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class CompositeRuleEvaluation implements RuleEvaluation {
-    private RuleMessageGenerator messageGenerator;
-    private LoanTypeFactorConfigService loanTypeFactorConfigService;
-    private RuleEngineMetrics metrics;
-    private RuleEvaluationHelper ruleEvaluationHelper;
+    private final RuleMessageGenerator messageGenerator;
+    private final LoanTypeFactorConfigService loanTypeFactorConfigService;
+    private final RuleEngineMetrics metrics;
+    private final RuleEvaluationHelper ruleEvaluationHelper;
 
     public CompositeRuleEvaluation(RuleMessageGenerator messageGenerator,LoanTypeFactorConfigService loanTypeFactorConfigService,RuleEngineMetrics metrics,RuleEvaluationHelper ruleEvaluationHelper) {
         this.messageGenerator = messageGenerator;
@@ -36,7 +36,13 @@ public class CompositeRuleEvaluation implements RuleEvaluation {
         boolean evaluationResult = evaluateExpression(application, rule.getExpression());
         double score = ruleEvaluationHelper.calculateRuleContributionScore(rule,evaluationResult);
         String message = messageGenerator.generateMessage(rule, evaluationResult);
-
+        // update evaluation metrics
+        if (evaluationResult || ( !evaluationResult && rule.getAction() == Action.REJECT)) {
+            metrics.incrementEvaluationPassed();
+        } else {
+            metrics.incrementEvaluationFailed();
+        }
+        metrics.incrementEvaluationTotal();
         RuleResult result =
                 new RuleResult(
                         evaluationResult,
